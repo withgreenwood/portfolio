@@ -22,14 +22,19 @@ driven by CSS sibling selectors, so the grid filters even if scripts fail.
 ## Everyday workflow
 
 1. Open `admin.html` (double-click it). Add or edit items, drag to reorder.
-2. **Download thumbnails** → numbered 1080×1350 JPEGs. Move them into
-   `content/images/`.
-3. **Export items.json** → move it into `content/`.
-4. Rebuild and publish:
+2. Click **Download thumbnails**, then **Export items.json**. Both land in
+   `~/Downloads`.
+3. Run `./publish.sh` — it moves those files into `content/`, rebuilds the site,
+   and lists any images no longer used.
+4. Publish:
 
 ```bash
-python3 build.py && git add -A && git commit -m "Update grid" && git push
+git add -A && git commit -m "Update grid" && git push
 ```
+
+If macOS blocks access to `~/Downloads`, drag the files in yourself
+(`items.json` → `content/`, `NN-name.jpg` → `content/images/`) and run
+`./publish.sh` anyway — it rebuilds regardless.
 
 Cloudflare rebuilds automatically. Edit `content/profile.json` directly for your
 name, bio, links, columns, and gap.
