@@ -1,17 +1,86 @@
 # Portfolio Grid
 
-A curated Instagram-style grid for Squarespace: selected Instagram posts and article
-links in one 4:5 feed with All / Instagram / Writing filter tabs.
+A minimalist 4:5 Instagram-style grid of curated Instagram posts and article links,
+with All / Instagram / Writing filter tabs — as a standalone site deployed to
+Cloudflare Pages.
 
-Two pieces:
+```
+admin.html          local editor: add, crop, reorder, preview, export
+build.py            content/ -> site/index.html
+content/
+  profile.json      your name, bio, links, layout
+  items.json        the grid items
+  images/           thumbnails
+site/               the built site — this is what Cloudflare serves
+```
 
-| File | Runs | Purpose |
-|---|---|---|
-| `admin.html` | On your machine | Add, edit, reorder, crop, preview. Generates the embed. |
-| *(the embed)* | On Squarespace | Pure HTML + CSS. Pasted into a Code block. |
+The generated page needs **no JavaScript**. The filter tabs are hidden radio inputs
+driven by CSS sibling selectors, so the grid filters even if scripts fail.
 
-Open `admin.html` by double-clicking it. It needs no server, no install, no account.
-Your work autosaves in that browser.
+---
+
+## Everyday workflow
+
+1. Open `admin.html` (double-click it). Add or edit items, drag to reorder.
+2. **Download thumbnails** → numbered 1080×1350 JPEGs. Move them into
+   `content/images/`.
+3. **Export items.json** → move it into `content/`.
+4. Rebuild and publish:
+
+```bash
+python3 build.py && git add -A && git commit -m "Update grid" && git push
+```
+
+Cloudflare rebuilds automatically. Edit `content/profile.json` directly for your
+name, bio, links, columns, and gap.
+
+To preview locally before pushing:
+
+```bash
+python3 -m http.server 8747 --directory site
+```
+
+---
+
+## One-time setup
+
+These two steps need your accounts, so they're yours to do — I can't create accounts
+or enter credentials.
+
+**1. GitHub.** Create an empty repository (no README — this folder already has one),
+then connect it:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git push -u origin main
+```
+
+**2. Cloudflare Pages.** In the dashboard: *Workers & Pages* → *Create* → *Pages* →
+*Connect to Git*. Pick the repo and set:
+
+- **Framework preset:** None
+- **Build command:** *(leave empty)*
+- **Build output directory:** `site`
+
+The build output is committed, so Cloudflare only has to serve it — no build
+environment, no Python on their side, nothing to break.
+
+After that, every `git push` deploys. You get a `*.pages.dev` URL immediately, plus
+version history and one-click rollback in the Pages dashboard.
+
+Git identity for this repo is set to `sg / smg0254@gmail.com`. Change it with
+`git config user.name "..."` if you'd rather commit under something else.
+
+---
+
+## Custom domain
+
+Do this **last**, once the new site is live and you've looked at it. In the Pages
+project: *Custom domains* → *Set up a domain*. Cloudflare walks you through the DNS
+records.
+
+Don't cancel Squarespace until the domain is switched over and working — moving DNS
+away is reversible, but a lapsed domain registration is painful.
 
 ---
 
