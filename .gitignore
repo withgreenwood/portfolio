@@ -11,3 +11,10 @@ node_modules/
 *.zone
 dns-backup*
 withgreenwood.com.txt
+
+# never commit credentials
+cdp_api_key.json
+*api_key*.json
+*.pem
+*.key
+.env
