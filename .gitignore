@@ -2,3 +2,7 @@
 *.log
 # admin exports land in ~/Downloads; if you stage them here, ignore the raw drops
 /downloads/
+
+# wrangler local state
+.wrangler/
+node_modules/

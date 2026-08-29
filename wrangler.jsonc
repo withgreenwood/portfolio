@@ -1,0 +1,13 @@
+{
+  // Static-assets-only Worker: no server-side script, so no "main" entry point.
+  // Cloudflare serves everything in ./site directly from its edge.
+  //
+  // "name" must match the Worker in your Cloudflare dashboard. If the deploy
+  // creates a second Worker instead of updating the existing one, that name
+  // is the thing to fix.
+  "name": "portfolio",
+  "compatibility_date": "2026-08-29",
+  "assets": {
+    "directory": "./site"
+  }
+}
