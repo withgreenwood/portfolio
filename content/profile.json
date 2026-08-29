@@ -1,11 +1,11 @@
 {
-  "name": "Your Name",
-  "tagline": "Photographer & writer",
-  "bio": "One or two sentences about what you make and why. Keep it short — the grid below is doing the real talking.",
-  "email": "you@example.com",
+  "name": "Stephen Greenwood",
+  "tagline": "Brand Marketing",
+  "bio": "",
+  "email": "stephen@withgreenwood.com",
   "links": [
-    { "label": "Instagram", "url": "https://instagram.com/yourhandle" },
-    { "label": "Email", "url": "mailto:you@example.com" }
+    { "label": "Instagram", "url": "https://instagram.com/withgreenwood" },
+    { "label": "Email", "url": "mailto:stephen@withgreenwood.com" }
   ],
   "tabs": { "all": "All", "ig": "Instagram", "wr": "Writing" },
   "layout": {
@@ -15,5 +15,5 @@
     "radius": 0,
     "maxWidth": 960
   },
-  "footer": "© 2026 Your Name"
+  "footer": "© 2026 Stephen Greenwood"
 }
