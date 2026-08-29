@@ -42,16 +42,18 @@ ARTICLE_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
 
 
 def stylesheet(lay):
-    cols = int(lay.get("columns", 3))
-    colsm = int(lay.get("columnsMobile", 2))
-    gap = int(lay.get("gap", 3))
+    cols = int(lay.get("columns", 4))
+    colsm = int(lay.get("columnsMobile", 3))
+    gap = int(lay.get("gap", 4))
+    gapm = int(lay.get("gapMobile", 2))
     radius = int(lay.get("radius", 0))
-    maxw = lay.get("maxWidth", 960)
+    pad = int(lay.get("pagePadding", 20))
+    maxw = lay.get("maxWidth", 935)
     maxw = "100%" if maxw in ("100%", "full") else "%dpx" % int(maxw)
     return f"""
 :root{{
   --ink:#16150f; --bg:#fcfcfb; --muted:#77756b; --line:#e6e4de;
-  --max:{maxw}; --gap:{gap}px; --radius:{radius}px;
+  --max:{maxw}; --gap:{gap}px; --radius:{radius}px; --pad:{pad}px;
 }}
 @media (prefers-color-scheme:dark){{
   :root{{--ink:#efedE6; --bg:#121210; --muted:#96938a; --line:#2c2b27}}
@@ -61,7 +63,7 @@ html{{-webkit-text-size-adjust:100%}}
 body{{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased}}
-.wrap{{max-width:var(--max);margin:0 auto;padding:0 20px}}
+.wrap{{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}}
 header{{padding:76px 0 8px}}
 h1{{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}}
 .tagline{{color:var(--muted);font-size:13px;letter-spacing:.13em;
@@ -84,9 +86,10 @@ hr.rule{{border:0;border-top:1px solid var(--line);margin:52px 0 0}}
   transition:opacity .2s,border-color .2s;-webkit-user-select:none;user-select:none;
   display:inline-block}}
 .pgf-tab:hover{{opacity:.85}}
-.pgf-grid{{display:grid;grid-template-columns:repeat({colsm},1fr);gap:var(--gap);
-  margin:0;padding:0}}
-@media(min-width:700px){{.pgf-grid{{grid-template-columns:repeat({cols},1fr)}}}}
+.pgf-grid{{display:grid;grid-template-columns:repeat({colsm},1fr);gap:{gapm}px;
+  margin:0 calc(-1 * var(--pad));padding:0}}
+@media(min-width:700px){{.pgf-grid{{grid-template-columns:repeat({cols},1fr);
+  gap:var(--gap);margin:0}}}}
 .pgf-i{{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;
   border-radius:var(--radius);background:rgba(128,128,128,.12);
   text-decoration:none;color:inherit}}
@@ -121,6 +124,18 @@ hr.rule{{border:0;border-top:1px solid var(--line);margin:52px 0 0}}
   outline-offset:3px}}
 .empty{{text-align:center;color:var(--muted);font-size:14px;padding:60px 0;
   border:1px dashed var(--line);border-radius:8px}}
+
+/* Full-bleed 3-up tiles are ~130px wide, far smaller than the desktop grid.
+   Overlay type has to shrink with them or a headline swamps the image, so
+   drop a step in size, clamp to two lines, and hide the source line. */
+@media(max-width:699px){{
+  .pgf-i{{border-radius:0}}
+  .pgf-ov{{padding:7px}}
+  .pgf-t{{font-size:10.5px;line-height:1.25;-webkit-line-clamp:2}}
+  .pgf-s{{display:none}}
+  .pgf-b{{top:5px;right:5px;width:15px;height:15px}}
+  .pgf-b svg{{width:8px;height:8px}}
+}}
 """
 
 

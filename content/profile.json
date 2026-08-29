@@ -4,16 +4,28 @@
   "bio": "",
   "email": "stephen@withgreenwood.com",
   "links": [
-    { "label": "Instagram", "url": "https://instagram.com/withgreenwood" },
-    { "label": "Email", "url": "mailto:stephen@withgreenwood.com" }
+    {
+      "label": "Instagram",
+      "url": "https://instagram.com/withgreenwood"
+    },
+    {
+      "label": "Email",
+      "url": "mailto:stephen@withgreenwood.com"
+    }
   ],
-  "tabs": { "all": "All", "ig": "Instagram", "wr": "Writing" },
+  "tabs": {
+    "all": "All",
+    "ig": "Instagram",
+    "wr": "Writing"
+  },
   "layout": {
-    "columns": 3,
-    "columnsMobile": 2,
-    "gap": 3,
+    "columns": 4,
+    "columnsMobile": 3,
+    "gap": 4,
+    "gapMobile": 2,
     "radius": 0,
-    "maxWidth": 960
+    "maxWidth": 975,
+    "pagePadding": 20
   },
   "footer": "© 2026 Stephen Greenwood"
 }
