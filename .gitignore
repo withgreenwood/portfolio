@@ -6,3 +6,8 @@
 # wrangler local state
 .wrangler/
 node_modules/
+
+# never commit DNS exports or zone files — this repo is public
+*.zone
+dns-backup*
+withgreenwood.com.txt
