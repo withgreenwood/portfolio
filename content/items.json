@@ -1,0 +1,8 @@
+[
+  { "type": "ig", "url": "https://www.instagram.com/p/EXAMPLE1/", "title": "Morning light, Lisbon", "source": "", "image": "demo-01.svg" },
+  { "type": "ig", "url": "https://www.instagram.com/p/EXAMPLE2/", "title": "Studio detail", "source": "", "image": "demo-02.svg" },
+  { "type": "wr", "url": "https://example.com/cities", "title": "What we lose when cities optimise for cars", "source": "The Atlantic · 2026", "image": "demo-03.svg" },
+  { "type": "ig", "url": "https://www.instagram.com/p/EXAMPLE4/", "title": "Portrait no. 12", "source": "", "image": "demo-04.svg" },
+  { "type": "wr", "url": "https://example.com/presses", "title": "The quiet economics of small presses", "source": "n+1 · 2025", "image": "demo-05.svg" },
+  { "type": "ig", "url": "https://www.instagram.com/p/EXAMPLE6/", "title": "Coastline, 6am", "source": "", "image": "demo-06.svg" }
+]

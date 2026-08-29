@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio Grid — Admin</title>
+<style>
+  :root{
+    --bg:#fbfbfa;--panel:#fff;--fg:#16150f;--muted:#78766c;--line:#e4e2dc;
+    --accent:#1f6feb;--danger:#c0392b;--ok:#1f8a4c;--warn:#b7791f;
+    --radius:10px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#131311;--panel:#1c1c19;--fg:#eeece4;--muted:#9a978c;--line:#31302b;--accent:#5b9dff}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+  header{padding:20px 26px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:20}
+  header h1{font-size:15px;margin:0;font-weight:600;letter-spacing:-.01em}
+  header .sub{color:var(--muted);font-size:12.5px}
+  .wrap{display:grid;grid-template-columns:minmax(350px,410px) 1fr}
+  @media(max-width:940px){.wrap{grid-template-columns:1fr}}
+  .col{padding:22px 26px}
+  .col.left{border-right:1px solid var(--line);min-height:calc(100vh - 62px)}
+  h2{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin:0 0 11px;font-weight:600}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:18px}
+  label.f{display:block;margin-bottom:11px}
+  label.f span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+  input[type=text],input[type=url],textarea,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--fg);font:inherit;font-size:13px}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+  textarea{resize:vertical;min-height:70px;font-family:var(--mono);font-size:11.5px;line-height:1.5}
+  .seg{display:flex;gap:6px;margin-bottom:11px}
+  .seg button{flex:1;padding:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;cursor:pointer;font:inherit;font-size:12.5px;transition:.15s}
+  .seg button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  button.btn{padding:9px 14px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;font:inherit;font-size:13px;transition:.15s}
+  button.btn:hover{border-color:var(--muted)}
+  button.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  button.btn.primary:hover{opacity:.86}
+  button.btn:disabled{opacity:.4;cursor:not-allowed}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .drop{border:1.5px dashed var(--line);border-radius:9px;padding:16px;text-align:center;color:var(--muted);cursor:pointer;font-size:12.5px;transition:.15s;background:var(--bg)}
+  .drop:hover,.drop.over{border-color:var(--accent);color:var(--fg)}
+  .thumbprev{width:112px;aspect-ratio:4/5;object-fit:cover;border-radius:6px;display:block;margin-top:10px;border:1px solid var(--line)}
+  ul.items{list-style:none;margin:0;padding:0}
+  ul.items li{display:flex;gap:11px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:var(--panel);cursor:grab}
+  ul.items li.dragging{opacity:.35}
+  ul.items li.over-top{box-shadow:0 -2px 0 var(--accent)}
+  ul.items li.over-bot{box-shadow:0 2px 0 var(--accent)}
+  ul.items img{width:40px;aspect-ratio:4/5;object-fit:cover;border-radius:4px;flex:none;background:var(--line)}
+  .it-meta{flex:1;min-width:0}
+  .it-meta b{display:block;font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .it-meta small{color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .pill{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:99px;border:1px solid var(--line);color:var(--muted);flex:none}
+  .pill.host{border-color:var(--ok);color:var(--ok)}
+  .pill.emb{border-color:var(--warn);color:var(--warn)}
+  .ico{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;font-size:13px;border-radius:5px;line-height:1}
+  .ico:hover{color:var(--fg);background:var(--line)}
+  .meter{margin-top:8px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--ok);transition:width .3s,background .3s}
+  .meter.warn i{background:var(--warn)}.meter.over i{background:var(--danger)}
+  .mtext{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .mtext.warn{color:var(--warn)}.mtext.over{color:var(--danger)}
+  .empty{color:var(--muted);font-size:12.5px;padding:24px;text-align:center;border:1px dashed var(--line);border-radius:9px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .hint{font-size:11.5px;color:var(--muted);margin:8px 0 0}
+  .note{font-size:12px;line-height:1.5;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);margin-top:10px}
+  .note b{font-weight:600}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  details{margin-top:10px}
+  summary{cursor:pointer;font-size:12px;color:var(--muted)}
+  .frame{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+  @media (prefers-color-scheme:dark){.frame{background:#0e0e0c}}
+  .frame-bar{padding:7px 12px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  iframe{width:100%;border:0;display:block;height:660px;background:transparent}
+  code{font-family:var(--mono);font-size:11.5px;background:var(--line);padding:1px 4px;border-radius:3px}
+  ol.steps{margin:8px 0 0;padding-left:18px;font-size:12.5px;line-height:1.65;color:var(--muted)}
+  ol.steps b{color:var(--fg);font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1>Portfolio Grid</h1>
+  <span class="sub">4:5 Instagram-style grid &middot; generates a no-JavaScript embed for Squarespace</span>
+</header>
+
+<div class="wrap">
+  <div class="col left">
+    <h2 id="formTitle">Add item</h2>
+    <div class="card">
+      <div class="seg" id="typeSeg">
+        <button type="button" data-t="ig" aria-pressed="true">Instagram</button>
+        <button type="button" data-t="wr" aria-pressed="false">Writing</button>
+      </div>
+      <label class="f"><span>Link URL</span>
+        <input type="url" id="fUrl" placeholder="https://www.instagram.com/p/..."></label>
+      <label class="f"><span>Title — shown on hover</span>
+        <input type="text" id="fTitle" placeholder="Short caption or headline"></label>
+      <label class="f"><span>Source / date — optional second line</span>
+        <input type="text" id="fSource" placeholder="The Atlantic · 2026"></label>
+
+      <label class="f" style="margin-bottom:6px"><span>Image</span></label>
+      <div class="drop" id="drop">Drop an image, or click to choose<br><small>centre-cropped to 4:5</small></div>
+      <label class="f" style="margin-top:10px"><span>…or paste a hosted image URL</span>
+        <input type="url" id="fThumbUrl" placeholder="https://images.squarespace-cdn.com/..."></label>
+      <img id="thumbPrev" class="thumbprev" alt="" hidden>
+      <div class="row" style="margin-top:13px">
+        <button class="btn primary" id="saveBtn">Add to grid</button>
+        <button class="btn" id="cancelBtn" hidden>Cancel</button>
+      </div>
+    </div>
+
+    <h2>Where images live</h2>
+    <div class="card">
+      <div class="seg" id="modeSeg">
+        <button type="button" data-m="host" aria-pressed="true">Hosted</button>
+        <button type="button" data-m="embed" aria-pressed="false">Embedded</button>
+      </div>
+      <div id="modeHost">
+        <p class="hint" style="margin-top:0">Images are uploaded to Squarespace and served from its CDN at full Instagram-grade quality, with retina <code>srcset</code>. Unlimited items, tiny embed.</p>
+        <div class="row" style="margin-top:11px">
+          <button class="btn" id="exportImgs">Download thumbnails</button>
+          <button class="btn" id="bulkBtn">Paste URLs in bulk</button>
+          <button class="btn" id="exportItems">Export items.json</button>
+        </div>
+        <label class="f" style="margin-top:12px"><span>Folder base URL &mdash; fills every item at once</span>
+          <input type="url" id="fBaseUrl" placeholder="https://your-grid.pages.dev"></label>
+        <button class="btn" id="applyBase">Apply base URL</button>
+        <ol class="steps">
+          <li><b>Download thumbnails</b> &mdash; numbered 1080&times;1350 JPEGs.</li>
+          <li>Upload the folder to a static host (Cloudflare Pages, Netlify), or to
+              Squarespace via <b>Link &rarr; Files</b>.</li>
+          <li>Static host: paste the folder URL above, hit <b>Apply</b> &mdash; done.<br>
+              Squarespace: copy each URL, then <b>Paste URLs in bulk</b>.</li>
+        </ol>
+      </div>
+      <div id="modeEmbed" hidden>
+        <p class="hint" style="margin-top:0">Images are baked into the code block as data URIs. No uploading — but Squarespace caps a Code block at 400&nbsp;KB, so quality and item count trade against each other.</p>
+        <label class="f" style="margin-top:11px"><span>Thumbnail quality</span>
+          <select id="sQual">
+            <option value="320|0.72">Small — 320&times;400 · ~16 items</option>
+            <option value="400|0.75" selected>Medium — 400&times;500 · ~10 items</option>
+            <option value="480|0.78">Large — 480&times;600 · ~6 items</option>
+            <option value="640|0.80">Instagram retina — 640&times;800 · ~4 items</option>
+          </select></label>
+        <p class="hint">Item counts are averages from real photographs; detailed images cost more. The meter below is the truth.</p>
+      </div>
+    </div>
+
+    <h2>Appearance</h2>
+    <div class="card">
+      <div class="grid2">
+        <label class="f"><span>Columns (desktop)</span>
+          <select id="sCols"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label>
+        <label class="f"><span>Columns (mobile)</span>
+          <select id="sColsM"><option>1</option><option selected>2</option><option>3</option></select></label>
+        <label class="f"><span>Gap</span>
+          <select id="sGap"><option value="0">None</option><option value="3" selected>Hairline (3px)</option><option value="8">Small (8px)</option><option value="16">Medium (16px)</option><option value="28">Wide (28px)</option></select></label>
+        <label class="f"><span>Corners</span>
+          <select id="sRadius"><option value="0" selected>Square</option><option value="4">Soft (4px)</option><option value="10">Rounded (10px)</option></select></label>
+        <label class="f"><span>Max width</span>
+          <select id="sMax"><option value="720">720px</option><option value="960" selected>960px</option><option value="1200">1200px</option><option value="100%">Full width</option></select></label>
+        <label class="f"><span>Text colour</span>
+          <select id="sTheme"><option value="auto" selected>Inherit from site</option><option value="light">Force dark text</option><option value="dark">Force light text</option></select></label>
+      </div>
+      <label class="f" style="margin-bottom:0"><span>Tab labels — comma separated</span>
+        <input type="text" id="sTabs" value="All, Instagram, Writing"></label>
+    </div>
+
+    <h2>Backup</h2>
+    <div class="card">
+      <div class="row">
+        <button class="btn" id="expBtn">Export project</button>
+        <button class="btn" id="impBtn">Import project</button>
+        <button class="btn" id="clrBtn" style="margin-left:auto;color:var(--danger)">Clear all</button>
+      </div>
+      <p class="hint">Autosaves in this browser. Export a <code>.json</code> before switching machines — it holds your full-resolution originals.</p>
+      <input type="file" id="impFile" accept="application/json" hidden>
+    </div>
+  </div>
+
+  <div class="col">
+    <h2>Items <span id="count" style="color:var(--muted);font-weight:400"></span></h2>
+    <ul class="items" id="list"></ul>
+    <div class="empty" id="emptyMsg">Nothing yet. Add your first post on the left.</div>
+
+    <h2 style="margin-top:24px">Live preview</h2>
+    <div class="frame">
+      <div class="frame-bar"><span>Exactly what visitors see — no JavaScript</span>
+        <span class="row" style="gap:4px">
+          <button class="ico" data-w="375" title="Mobile">▯</button>
+          <button class="ico" data-w="768" title="Tablet">▭</button>
+          <button class="ico" data-w="100%" title="Desktop">▬</button>
+        </span></div>
+      <iframe id="pv" title="Preview"></iframe>
+    </div>
+
+    <h2 style="margin-top:24px">Embed code</h2>
+    <div class="card">
+      <div class="meter" id="meter"><i style="width:0%"></i></div>
+      <div class="mtext" id="mtext">0 KB of 400 KB Squarespace limit</div>
+      <div class="row" style="margin:13px 0">
+        <button class="btn primary" id="copyBtn">Copy embed code</button>
+        <button class="btn" id="dlBtn">Download .html</button>
+      </div>
+      <details><summary>Show the code</summary>
+        <textarea id="out" readonly style="margin-top:8px;min-height:200px"></textarea></details>
+      <div class="note"><b>To install:</b> Squarespace &rarr; edit the page &rarr; add a <b>Code</b> block &rarr; paste &rarr; leave <i>Display Source</i> unchecked &rarr; Save. Works on every Squarespace plan, including Basic — the embed contains no JavaScript.</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='pgf-admin-v2';
+const $=s=>document.querySelector(s);
+const AR=4/5; // width/height — Instagram profile grid
+const defCfg={mode:'host',cols:3,colsM:2,gap:3,radius:0,max:'960',theme:'auto',
+  tabs:'All, Instagram, Writing',qual:'400|0.75',baseUrl:''};
+let state={items:[],cfg:Object.assign({},defCfg)};
+let editing=null,pendingSrc=null,pendingThumb=null,curType='ig';
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){toast('Browser storage full — export your project');}}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);state.items=d.items||[];state.cfg=Object.assign({},defCfg,d.cfg||{});}}catch(e){}}
+
+/* ---------- 4:5 centre-crop ---------- */
+function crop45(src,w,q){
+  const h=Math.round(w/AR);
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const srcR=img.width/img.height;
+      let sw,sh;
+      if(srcR>AR){ sh=img.height; sw=sh*AR; } else { sw=img.width; sh=sw/AR; }
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      const x=c.getContext('2d'); x.imageSmoothingQuality='high';
+      x.drawImage(img,(img.width-sw)/2,(img.height-sh)/2,sw,sh,0,0,w,h);
+      res(c.toDataURL('image/jpeg',q));
+    };
+    img.onerror=()=>rej(new Error('Could not read that image'));
+    img.src=src;
+  });
+}
+function readFile(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
+function qual(){const[s,q]=state.cfg.qual.split('|');return[parseInt(s),parseFloat(q)];}
+function thumbFor(src){ // what the editor shows + what embed mode bakes in
+  const [w,q]=state.cfg.mode==='embed'?qual():[400,0.78];
+  return crop45(src,w,q);
+}
+
+async function handleFile(f){
+  if(!f||!f.type.startsWith('image/'))return toast('That is not an image file');
+  try{
+    pendingSrc=await readFile(f);
+    pendingThumb=await thumbFor(pendingSrc);
+    $('#thumbPrev').src=pendingThumb;$('#thumbPrev').hidden=false;
+    $('#fThumbUrl').value='';
+  }catch(e){toast(e.message);}
+}
+
+/* ---------- form ---------- */
+$('#typeSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  curType=b.dataset.t;
+  [...$('#typeSeg').children].forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $('#fUrl').placeholder=curType==='ig'?'https://www.instagram.com/p/...':'https://publication.com/your-article';
+});
+const drop=$('#drop');
+drop.addEventListener('click',()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>handleFile(i.files[0]);i.click();});
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+$('#fThumbUrl').addEventListener('input',e=>{
+  const v=e.target.value.trim();
+  if(v){pendingThumb=null;pendingSrc=null;$('#thumbPrev').src=v;$('#thumbPrev').hidden=false;}
+});
+function resetForm(){
+  editing=null;pendingSrc=null;pendingThumb=null;
+  $('#fUrl').value='';$('#fTitle').value='';$('#fSource').value='';$('#fThumbUrl').value='';
+  $('#thumbPrev').hidden=true;$('#thumbPrev').removeAttribute('src');
+  $('#saveBtn').textContent='Add to grid';$('#cancelBtn').hidden=true;$('#formTitle').textContent='Add item';
+}
+$('#cancelBtn').addEventListener('click',resetForm);
+$('#saveBtn').addEventListener('click',()=>{
+  const url=$('#fUrl').value.trim(),turl=$('#fThumbUrl').value.trim();
+  if(!url)return toast('A link URL is required');
+  if(!pendingThumb&&!turl&&!(editing&&editing.thumb))return toast('Add an image');
+  const rec=editing||{id:'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+  rec.type=curType;rec.url=url;
+  rec.title=$('#fTitle').value.trim();rec.source=$('#fSource').value.trim();
+  if(turl){rec.hostedUrl=turl;if(pendingThumb){rec.thumb=pendingThumb;rec.src=pendingSrc;}else if(!rec.thumb)rec.thumb=turl;}
+  else if(pendingThumb){rec.thumb=pendingThumb;rec.src=pendingSrc;}
+  if(!editing)state.items.push(rec);
+  resetForm();save();render();toast('Saved');
+});
+function edit(id){
+  const it=state.items.find(x=>x.id===id);if(!it)return;
+  editing=it;curType=it.type;
+  [...$('#typeSeg').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.t===it.type));
+  $('#fUrl').value=it.url;$('#fTitle').value=it.title||'';$('#fSource').value=it.source||'';
+  $('#fThumbUrl').value=it.hostedUrl||'';
+  pendingThumb=it.thumb;pendingSrc=it.src;
+  $('#thumbPrev').src=it.thumb;$('#thumbPrev').hidden=false;
+  $('#saveBtn').textContent='Update';$('#cancelBtn').hidden=false;$('#formTitle').textContent='Edit item';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function del(id){
+  const it=state.items.find(x=>x.id===id);
+  if(!confirm('Remove "'+((it&&it.title)||'this item')+'" from the grid?'))return;
+  state.items=state.items.filter(x=>x.id!==id);
+  if(editing&&editing.id===id)resetForm();
+  save();render();
+}
+
+/* ---------- list + drag reorder ---------- */
+let dragId=null;
+function render(){
+  const ul=$('#list');ul.innerHTML='';
+  $('#emptyMsg').hidden=state.items.length>0;
+  $('#count').textContent=state.items.length?'· '+state.items.length:'';
+  state.items.forEach(it=>{
+    const li=document.createElement('li');li.draggable=true;li.dataset.id=it.id;
+    const img=document.createElement('img');img.src=it.thumb;img.alt='';
+    const meta=document.createElement('div');meta.className='it-meta';
+    const b=document.createElement('b');b.textContent=it.title||'(no title)';
+    const s=document.createElement('small');s.textContent=it.url;
+    meta.append(b,s);
+    const pill=document.createElement('span');pill.className='pill';
+    pill.textContent=it.type==='ig'?'IG':'Article';
+    const hp=document.createElement('span');
+    hp.className='pill '+(it.hostedUrl?'host':'emb');
+    hp.textContent=it.hostedUrl?'hosted':'embedded';
+    hp.title=it.hostedUrl?'Served from a URL — costs no embed bytes':'Baked into the code block as a data URI';
+    const e=document.createElement('button');e.className='ico';e.textContent='✎';e.title='Edit';e.onclick=()=>edit(it.id);
+    const d=document.createElement('button');d.className='ico';d.textContent='✕';d.title='Remove';d.onclick=()=>del(it.id);
+    li.append(img,meta,pill,hp,e,d);ul.append(li);
+  });
+  build();
+}
+$('#list').addEventListener('dragstart',e=>{const li=e.target.closest('li');if(!li)return;dragId=li.dataset.id;li.classList.add('dragging');});
+$('#list').addEventListener('dragend',()=>document.querySelectorAll('#list li').forEach(l=>l.className=''));
+$('#list').addEventListener('dragover',e=>{
+  e.preventDefault();
+  const li=e.target.closest('li');if(!li||li.dataset.id===dragId)return;
+  document.querySelectorAll('#list li').forEach(l=>l.classList.remove('over-top','over-bot'));
+  const r=li.getBoundingClientRect();
+  li.classList.add(e.clientY<r.top+r.height/2?'over-top':'over-bot');
+});
+$('#list').addEventListener('drop',e=>{
+  e.preventDefault();
+  const li=e.target.closest('li');if(!li||!dragId||li.dataset.id===dragId)return;
+  const r=li.getBoundingClientRect(),before=e.clientY<r.top+r.height/2;
+  const from=state.items.findIndex(x=>x.id===dragId);
+  const moved=state.items.splice(from,1)[0];
+  const to=state.items.findIndex(x=>x.id===li.dataset.id);
+  state.items.splice(before?to:to+1,0,moved);
+  dragId=null;save();render();
+});
+
+/* ---------- config ---------- */
+const cfgMap={sCols:'cols',sColsM:'colsM',sGap:'gap',sRadius:'radius',sMax:'max',sTheme:'theme',sTabs:'tabs',sQual:'qual'};
+Object.entries(cfgMap).forEach(([el,k])=>{
+  $('#'+el).addEventListener('change',async()=>{
+    state.cfg[k]=$('#'+el).value;
+    if(k==='qual')await recompress();
+    save();build();
+  });
+});
+$('#modeSeg').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  state.cfg.mode=b.dataset.m;
+  [...$('#modeSeg').children].forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $('#modeHost').hidden=state.cfg.mode!=='host';
+  $('#modeEmbed').hidden=state.cfg.mode!=='embed';
+  if(state.cfg.mode==='embed')await recompress();
+  save();render();
+});
+async function recompress(){
+  const[s,q]=qual();let n=0;
+  for(const it of state.items){
+    if(!it.src)continue;
+    try{it.thumb=await crop45(it.src,s,q);n++;}catch(e){}
+  }
+  if(n)toast('Re-encoded '+n+' image'+(n>1?'s':''));
+}
+function syncCfg(){
+  $('#fBaseUrl').value=state.cfg.baseUrl||'';
+  Object.entries(cfgMap).forEach(([el,k])=>{$('#'+el).value=state.cfg[k];});
+  [...$('#modeSeg').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.m===state.cfg.mode));
+  $('#modeHost').hidden=state.cfg.mode!=='host';
+  $('#modeEmbed').hidden=state.cfg.mode!=='embed';
+}
+
+/* ---------- hosted-image helpers ---------- */
+const SQSP=/(squarespace-cdn\.com|static1\.squarespace\.com)/i;
+function sqspVariant(u,w){
+  if(!SQSP.test(u))return null;
+  const base=u.split('?')[0];
+  return base+'?format='+w+'w';
+}
+function srcsetFor(u){
+  if(!SQSP.test(u))return null;
+  // verified supported widths: 100/300/500/750/1000/1500/2500 (others snap up)
+  return [300,500,750,1000,1500].map(w=>sqspVariant(u,w)+' '+w+'w').join(', ');
+}
+
+/* ---------- embed generation (NO JavaScript in output) ---------- */
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function buildEmbed(){
+  const c=state.cfg;
+  const tabs=c.tabs.split(',').map(t=>t.trim()).filter(Boolean);
+  const tAll=tabs[0]||'All',tIg=tabs[1]||'Instagram',tWr=tabs[2]||'Writing';
+  const hasIg=state.items.some(i=>i.type==='ig'),hasWr=state.items.some(i=>i.type==='wr');
+  const max=c.max==='100%'?'100%':c.max+'px';
+  const fg=c.theme==='light'?'#16150f':c.theme==='dark'?'#f4f2ec':'currentColor';
+
+  let css=`
+.pgf{--g:${c.gap}px;--r:${c.radius}px;position:relative;max-width:${max};margin:0 auto;color:${fg};font-family:inherit}
+.pgf *{box-sizing:border-box}
+.pgf-r{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.pgf-tabs{display:flex;gap:26px;justify-content:center;margin:0 0 24px;flex-wrap:wrap;padding:0}
+.pgf-tab{cursor:pointer;font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;padding-bottom:5px;border-bottom:1px solid transparent;transition:opacity .2s,border-color .2s;-webkit-user-select:none;user-select:none;display:inline-block}
+.pgf-tab:hover{opacity:.85}
+.pgf-grid{display:grid;grid-template-columns:repeat(${c.colsM},1fr);gap:var(--g);margin:0;padding:0}
+@media(min-width:700px){.pgf-grid{grid-template-columns:repeat(${c.cols},1fr)}}
+.pgf-i{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r);background:rgba(128,128,128,.12);text-decoration:none;color:inherit}
+.pgf-i img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0;transition:transform .55s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover img{transform:scale(1.045)}
+.pgf-ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:13px;background:linear-gradient(to top,rgba(0,0,0,.74),rgba(0,0,0,.2) 52%,rgba(0,0,0,0));opacity:0;transition:opacity .28s}
+.pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{opacity:1}
+.pgf-t{color:#fff;font-size:12.5px;line-height:1.35;font-weight:500;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pgf-s{color:rgba(255,255,255,.72);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;margin-top:5px}
+.pgf-b{position:absolute;top:9px;right:9px;width:19px;height:19px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.pgf-b svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pgf-i:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+@media(hover:none){.pgf-i[data-t="wr"] .pgf-ov{opacity:1}}
+@media(prefers-reduced-motion:reduce){.pgf-i img{transition:none}.pgf-i:hover img{transform:none}}`;
+  ['all','ig','wr'].forEach(id=>{css+=`\n#pgf-${id}:checked~.pgf-tabs [for="pgf-${id}"]{opacity:1;border-bottom-color:currentColor}`;});
+  css+=`\n#pgf-ig:checked~.pgf-grid .pgf-i[data-t="wr"]{display:none}`;
+  css+=`\n#pgf-wr:checked~.pgf-grid .pgf-i[data-t="ig"]{display:none}`;
+  css+=`\n#pgf-all:focus-visible~.pgf-tabs [for="pgf-all"],#pgf-ig:focus-visible~.pgf-tabs [for="pgf-ig"],#pgf-wr:focus-visible~.pgf-tabs [for="pgf-wr"]{outline:2px solid currentColor;outline-offset:3px}`;
+
+  const sizes=`(min-width:700px) calc(${c.max==='100%'?'100vw':'min(100vw, '+c.max+'px)'} / ${c.cols}), calc(100vw / ${c.colsM})`;
+  const icon='<svg viewBox="0 0 24 24"><path d="M4 5h13v14H4z"/><path d="M8 9h5M8 13h5"/></svg>';
+
+  const tiles=state.items.map(it=>{
+    const t=esc(it.title),s=esc(it.source);
+    const alt=esc(it.title||(it.type==='ig'?'Instagram post':'Article'));
+    const useHosted=c.mode==='host'&&it.hostedUrl;
+    const src=useHosted?(sqspVariant(it.hostedUrl,500)||it.hostedUrl):it.thumb;
+    const ss=useHosted?srcsetFor(it.hostedUrl):null;
+    const ov=(t||s)?`<span class="pgf-ov">${t?`<span class="pgf-t">${t}</span>`:''}${s?`<span class="pgf-s">${s}</span>`:''}</span>`:'';
+    const badge=it.type==='wr'?`<span class="pgf-b">${icon}</span>`:'';
+    return `<a class="pgf-i" data-t="${it.type}" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">`
+      +`<img src="${esc(src)}"${ss?` srcset="${esc(ss)}" sizes="${esc(sizes)}"`:''} alt="${alt}" width="1080" height="1350" loading="lazy" decoding="async">`
+      +`${ov}${badge}</a>`;
+  }).join('\n  ');
+
+  const showTabs=hasIg&&hasWr;
+  const radios=`<input class="pgf-r" type="radio" name="pgf-f" id="pgf-all" checked>
+<input class="pgf-r" type="radio" name="pgf-f" id="pgf-ig">
+<input class="pgf-r" type="radio" name="pgf-f" id="pgf-wr">`;
+  const tabbar=`<div class="pgf-tabs">
+  <label class="pgf-tab" for="pgf-all">${esc(tAll)}</label>
+  <label class="pgf-tab" for="pgf-ig">${esc(tIg)}</label>
+  <label class="pgf-tab" for="pgf-wr">${esc(tWr)}</label>
+</div>`;
+  return `<style>${css}\n</style>
+<div class="pgf">
+${showTabs?radios+'\n'+tabbar:''}
+<div class="pgf-grid">
+  ${tiles}
+</div>
+</div>`;
+}
+
+/* ---------- output, meter, preview ---------- */
+function build(){
+  const code=buildEmbed();
+  $('#out').value=code;
+  const bytes=new Blob([code]).size,kb=bytes/1024,pct=Math.min(100,kb/400*100);
+  const m=$('#meter'),mt=$('#mtext');
+  const over=kb>400,warn=kb>320;
+  m.className='meter'+(over?' over':warn?' warn':'');
+  mt.className='mtext'+(over?' over':warn?' warn':'');
+  m.firstElementChild.style.width=pct+'%';
+  const embedded=state.items.filter(i=>!(state.cfg.mode==='host'&&i.hostedUrl));
+  const missing=state.cfg.mode==='host'?state.items.filter(i=>!i.hostedUrl).length:0;
+  let msg=kb.toFixed(0)+' KB of 400 KB Squarespace limit';
+  if(embedded.length&&kb>2){
+    const per=(bytes-2000)/Math.max(1,embedded.length)/1024;
+    const room=Math.max(0,Math.floor((400-kb)/Math.max(per,.1)));
+    msg+=` · ${embedded.length} embedded image${embedded.length>1?'s':''}, room for ~${room} more`;
+  }
+  if(over)msg+=' — too large to paste. Host the images, or drop the quality.';
+  else if(warn)msg+=' — close to the cap.';
+  if(missing)msg+=` · ${missing} item${missing>1?'s':''} still ${missing>1?'need':'needs'} a hosted URL`;
+  mt.textContent=msg;
+  const bgc=state.cfg.theme==='dark'?'#111':state.cfg.theme==='light'?'#fff':'transparent';
+  const fgc=state.cfg.theme==='dark'?'#eee':'#16150f';
+  $('#pv').srcdoc=`<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">`
+    +`<style>body{margin:0;padding:26px 18px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:${bgc};color:${fgc}}</style>`+code;
+}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{
+  const f=$('#pv');f.style.width=b.dataset.w==='100%'?'100%':b.dataset.w+'px';f.style.margin='0 auto';
+});
+
+/* ---------- bulk URLs + thumbnail export ---------- */
+$('#bulkBtn').addEventListener('click',()=>{
+  const n=state.items.length;
+  const cur=state.items.map(i=>i.hostedUrl||'').join('\n');
+  const v=prompt(`Paste ${n} image URL${n===1?'':'s'}, one per line, in the same order as the grid:`,cur);
+  if(v===null)return;
+  // map positionally: a blank line means "leave this item alone", so gaps
+  // never shift the URLs after them onto the wrong posts
+  const lines=v.split('\n').map(s=>s.trim());
+  let linked=0;
+  lines.forEach((u,i)=>{if(u&&state.items[i]){state.items[i].hostedUrl=u;linked++;}});
+  save();render();toast('Linked '+linked+' image'+(linked===1?'':'s'));
+});
+function fileNameFor(it,i){
+  const slug=(it.title||'item').toLowerCase().replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'').slice(0,40)||'item';
+  return String(i+1).padStart(2,'0')+'-'+slug+'.jpg';
+}
+$('#exportImgs').addEventListener('click',async()=>{
+  // number by position in the full list so filenames stay stable even when
+  // some items are URL-only, keeping export and base-URL fill in lockstep
+  const list=state.items.map((it,i)=>({it,i})).filter(o=>o.it.src);
+  if(!list.length)return toast('No uploaded originals to export');
+  toast('Preparing '+list.length+' thumbnail'+(list.length>1?'s':'')+'…');
+  for(const {it,i} of list){
+    const big=await crop45(it.src,1080,0.86);
+    const blob=await(await fetch(big)).blob();
+    const u=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=u;a.download=fileNameFor(it,i);a.click();
+    setTimeout(()=>URL.revokeObjectURL(u),4000);
+    await new Promise(r=>setTimeout(r,320));
+  }
+  toast('Done — upload these, then set the base URL');
+});
+$('#exportItems').addEventListener('click',()=>{
+  // shape matches content/items.json consumed by build.py
+  const out=state.items.map((it,i)=>({
+    type: it.type==='wr'?'wr':'ig',
+    url: it.url||'',
+    title: it.title||'',
+    source: it.source||'',
+    image: it.hostedUrl && /^https?:/i.test(it.hostedUrl)
+      ? it.hostedUrl              // already hosted elsewhere; build.py leaves it alone
+      : fileNameFor(it,i)         // local file exported by "Download thumbnails"
+  }));
+  dl('items.json',JSON.stringify(out,null,2),'application/json');
+  toast('items.json exported — drop it in content/');
+});
+$('#applyBase').addEventListener('click',()=>{
+  const base=$('#fBaseUrl').value.trim().replace(/\/+$/,'');
+  if(!base)return toast('Enter the folder URL first');
+  let n=0;
+  state.items.forEach((it,i)=>{if(it.src){it.hostedUrl=base+'/'+fileNameFor(it,i);n++;}});
+  state.cfg.baseUrl=base;save();render();
+  toast('Filled '+n+' URL'+(n===1?'':'s')+' from the base URL');
+});
+
+/* ---------- actions ---------- */
+$('#copyBtn').addEventListener('click',async()=>{
+  const t=$('#out');
+  try{await navigator.clipboard.writeText(t.value);toast('Copied — paste into a Squarespace Code block');}
+  catch(e){t.closest('details').open=true;t.select();document.execCommand('copy');toast('Copied');}
+});
+$('#dlBtn').addEventListener('click',()=>dl('portfolio-grid-embed.html',$('#out').value,'text/html'));
+$('#expBtn').addEventListener('click',()=>dl('portfolio-grid-project.json',JSON.stringify(state),'application/json'));
+$('#impBtn').addEventListener('click',()=>$('#impFile').click());
+$('#impFile').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const d=JSON.parse(await f.text());
+    if(!d.items)throw new Error('bad file');
+    state.items=d.items;state.cfg=Object.assign({},defCfg,d.cfg||{});
+    syncCfg();save();render();toast('Project imported');
+  }catch(err){toast('That file is not a project export');}
+  e.target.value='';
+});
+$('#clrBtn').addEventListener('click',()=>{
+  if(!confirm('Delete all items? Export first if you want a backup.'))return;
+  state.items=[];resetForm();save();render();toast('Cleared');
+});
+function dl(name,txt,type){
+  const b=new Blob([txt],{type}),u=URL.createObjectURL(b);
+  const a=document.createElement('a');a.href=u;a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+let tt;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400);}
+
+load();syncCfg();render();
+</script>
+</body>
+</html>
