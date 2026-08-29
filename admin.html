@@ -82,7 +82,7 @@
 <body>
 <header>
   <h1>Portfolio Grid</h1>
-  <span class="sub">4:5 Instagram-style grid &middot; generates a no-JavaScript embed for Squarespace</span>
+  <span class="sub">4:5 Instagram-style grid &middot; exports to your site at work.withgreenwood.com</span>
 </header>
 
 <div class="wrap">
@@ -118,7 +118,7 @@
         <button type="button" data-m="embed" aria-pressed="false">Embedded</button>
       </div>
       <div id="modeHost">
-        <p class="hint" style="margin-top:0">Images are uploaded to Squarespace and served from its CDN at full Instagram-grade quality, with retina <code>srcset</code>. Unlimited items, tiny embed.</p>
+        <p class="hint" style="margin-top:0">Images are exported as files and served from your own site. Full quality, unlimited items. This is the mode you want.</p>
         <div class="row" style="margin-top:11px">
           <button class="btn" id="exportImgs">Download thumbnails</button>
           <button class="btn" id="bulkBtn">Paste URLs in bulk</button>
@@ -128,15 +128,13 @@
           <input type="url" id="fBaseUrl" placeholder="https://your-grid.pages.dev"></label>
         <button class="btn" id="applyBase">Apply base URL</button>
         <ol class="steps">
-          <li><b>Download thumbnails</b> &mdash; numbered 1080&times;1350 JPEGs.</li>
-          <li>Upload the folder to a static host (Cloudflare Pages, Netlify), or to
-              Squarespace via <b>Link &rarr; Files</b>.</li>
-          <li>Static host: paste the folder URL above, hit <b>Apply</b> &mdash; done.<br>
-              Squarespace: copy each URL, then <b>Paste URLs in bulk</b>.</li>
+          <li><b>Download thumbnails</b>, then <b>Export items.json</b>.</li>
+          <li>Run <code>./publish.sh</code> &mdash; it files them into <code>content/</code> and rebuilds.</li>
+          <li>Commit and push. Cloudflare deploys automatically.</li>
         </ol>
       </div>
       <div id="modeEmbed" hidden>
-        <p class="hint" style="margin-top:0">Images are baked into the code block as data URIs. No uploading — but Squarespace caps a Code block at 400&nbsp;KB, so quality and item count trade against each other.</p>
+        <p class="hint" style="margin-top:0">Images are baked into the HTML as data URIs. Only useful if you want a single self-contained block to paste into <em>another</em> site. Not needed for your own site.</p>
         <label class="f" style="margin-top:11px"><span>Thumbnail quality</span>
           <select id="sQual">
             <option value="320|0.72">Small — 320&times;400 · ~16 items</option>
@@ -199,14 +197,14 @@
     <h2 style="margin-top:24px">Embed code</h2>
     <div class="card">
       <div class="meter" id="meter"><i style="width:0%"></i></div>
-      <div class="mtext" id="mtext">0 KB of 400 KB Squarespace limit</div>
+      <div class="mtext" id="mtext">0 KB page size</div>
       <div class="row" style="margin:13px 0">
         <button class="btn primary" id="copyBtn">Copy embed code</button>
         <button class="btn" id="dlBtn">Download .html</button>
       </div>
       <details><summary>Show the code</summary>
         <textarea id="out" readonly style="margin-top:8px;min-height:200px"></textarea></details>
-      <div class="note"><b>To install:</b> Squarespace &rarr; edit the page &rarr; add a <b>Code</b> block &rarr; paste &rarr; leave <i>Display Source</i> unchecked &rarr; Save. Works on every Squarespace plan, including Basic — the embed contains no JavaScript.</div>
+      <div class="note"><b>You normally do not need this.</b> To update your site, use <b>Download thumbnails</b> + <b>Export items.json</b> above, then run <code>./publish.sh</code> and push. This embed is only for pasting the grid into some other website.</div>
     </div>
   </div>
 </div>
@@ -488,7 +486,7 @@ function build(){
   m.firstElementChild.style.width=pct+'%';
   const embedded=state.items.filter(i=>!(state.cfg.mode==='host'&&i.hostedUrl));
   const missing=state.cfg.mode==='host'?state.items.filter(i=>!i.hostedUrl).length:0;
-  let msg=kb.toFixed(0)+' KB of 400 KB Squarespace limit';
+  let msg=kb.toFixed(0)+' KB page size';
   if(embedded.length&&kb>2){
     const per=(bytes-2000)/Math.max(1,embedded.length)/1024;
     const room=Math.max(0,Math.floor((400-kb)/Math.max(per,.1)));
@@ -567,7 +565,7 @@ $('#applyBase').addEventListener('click',()=>{
 /* ---------- actions ---------- */
 $('#copyBtn').addEventListener('click',async()=>{
   const t=$('#out');
-  try{await navigator.clipboard.writeText(t.value);toast('Copied — paste into a Squarespace Code block');}
+  try{await navigator.clipboard.writeText(t.value);toast('Copied');}
   catch(e){t.closest('details').open=true;t.select();document.execCommand('copy');toast('Copied');}
 });
 $('#dlBtn').addEventListener('click',()=>dl('portfolio-grid-embed.html',$('#out').value,'text/html'));
