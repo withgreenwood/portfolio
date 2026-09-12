@@ -64,18 +64,24 @@ body{{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased}}
 .wrap{{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}}
-header{{padding:76px 0 8px}}
+header{{padding:40px 0 4px}}
 h1{{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}}
 .tagline{{color:var(--muted);font-size:13px;letter-spacing:.13em;
-  text-transform:uppercase;margin:9px 0 0}}
+  text-transform:uppercase;margin:7px 0 0}}
 .bio{{max-width:52ch;margin:26px 0 0;color:var(--ink);opacity:.85;font-size:15.5px}}
-.links{{display:flex;gap:20px;flex-wrap:wrap;margin:24px 0 0;padding:0;list-style:none}}
+.links{{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 0;padding:0;list-style:none;
+  align-items:center}}
 .links a{{color:var(--ink);font-size:13px;letter-spacing:.05em;text-decoration:none;
   border-bottom:1px solid var(--line);padding-bottom:2px;transition:border-color .2s}}
 .links a:hover{{border-bottom-color:currentColor}}
-main{{padding:56px 0 0}}
+.links a.ic{{border:0;padding:0;display:inline-flex;width:21px;height:21px;
+  opacity:.75;transition:opacity .2s}}
+.links a.ic:hover{{opacity:1;border:0}}
+.links a.ic svg{{width:100%;height:100%;display:block;fill:currentColor}}
+.links a.ic svg *{{fill:currentColor}}
+main{{padding:30px 0 0}}
 footer{{padding:64px 0 56px;color:var(--muted);font-size:12.5px}}
-hr.rule{{border:0;border-top:1px solid var(--line);margin:52px 0 0}}
+hr.rule{{border:0;border-top:1px solid var(--line);margin:28px 0 0}}
 
 .pgf{{position:relative}}
 .pgf-r{{position:absolute;width:1px;height:1px;opacity:0;margin:0}}
@@ -207,9 +213,18 @@ def build():
     </div>
     """
 
-    links = "".join(
-        f'<li><a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a></li>'
-        for l in profile.get("links", []) if l.get("url"))
+    icons = profile.get("icons", {})
+
+    def link_html(l):
+        # a link naming an icon present in profile.icons renders as that glyph,
+        # labelled for screen readers; anything else stays a text link
+        key = l.get("icon")
+        if key and key in icons:
+            return (f'<li><a class="ic" href="{esc(l.get("url"))}" '
+                    f'aria-label="{esc(l.get("label"))}">{icons[key]}</a></li>')
+        return f'<li><a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a></li>'
+
+    links = "".join(link_html(l) for l in profile.get("links", []) if l.get("url"))
     links_html = f'<ul class="links">{links}</ul>' if links else ""
 
     name = esc(profile.get("name", "Portfolio"))
