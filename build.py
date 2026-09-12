@@ -79,6 +79,12 @@ h1{{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}}
 .links a.ic:hover{{opacity:1;border:0}}
 .links a.ic svg{{width:100%;height:100%;display:block;fill:currentColor}}
 .links a.ic svg *{{fill:currentColor}}
+.links a.ic:has(img){{width:auto;height:18px}}
+.links a.ic img{{height:100%;width:auto;display:block}}
+.links a.ic img.d{{display:none}}
+@media(prefers-color-scheme:dark){{
+  .links a.ic img.l{{display:none}} .links a.ic img.d{{display:block}}
+}}
 main{{padding:30px 0 0}}
 footer{{padding:64px 0 56px;color:var(--muted);font-size:12.5px}}
 hr.rule{{border:0;border-top:1px solid var(--line);margin:28px 0 0}}
