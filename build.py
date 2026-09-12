@@ -64,7 +64,7 @@ body{{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased}}
 .wrap{{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}}
-header{{padding:40px 0 4px}}
+header{{padding:36px 0 0}}
 h1{{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}}
 .tagline{{color:var(--muted);font-size:13px;letter-spacing:.13em;
   text-transform:uppercase;margin:7px 0 0}}
@@ -85,9 +85,8 @@ h1{{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}}
 @media(prefers-color-scheme:dark){{
   .links a.ic img.l{{display:none}} .links a.ic img.d{{display:block}}
 }}
-main{{padding:30px 0 0}}
+main{{padding:34px 0 0}}
 footer{{padding:64px 0 56px;color:var(--muted);font-size:12.5px}}
-hr.rule{{border:0;border-top:1px solid var(--line);margin:28px 0 0}}
 
 .pgf{{position:relative}}
 .pgf-r{{position:absolute;width:1px;height:1px;opacity:0;margin:0}}
@@ -270,7 +269,6 @@ def build():
     {f'<p class="tagline">{esc(tagline)}</p>' if tagline else ''}
     {f'<p class="bio">{esc(bio)}</p>' if bio else ''}
     {links_html}
-    <hr class="rule">
   </header>
   <main>
     <div class="pgf">
