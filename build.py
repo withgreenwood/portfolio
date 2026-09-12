@@ -215,10 +215,16 @@ def build():
     name = esc(profile.get("name", "Portfolio"))
     tagline = profile.get("tagline")
     bio = profile.get("bio")
+    # metaDescription lets a minimal page (no visible bio) still have a real
+    # description for search results and link previews.
+    meta = profile.get("metaDescription") or bio
+    # og:image must be an absolute URL — relative paths are ignored by most
+    # link-preview crawlers. siteUrl in profile.json supplies the origin.
+    site_url = str(profile.get("siteUrl", "")).rstrip("/")
     og = ""
     if items:
         first = items[0]["image"]
-        og = esc(first) if is_remote(first) else "images/" + esc(first)
+        og = esc(first) if is_remote(first) else esc(site_url + "/images/" + str(first))
 
     page = f"""<!DOCTYPE html>
 <html lang="en">
@@ -226,10 +232,12 @@ def build():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{name}</title>
-<meta name="description" content="{esc(bio)}">
+<meta name="description" content="{esc(meta)}">
 <meta property="og:title" content="{name}">
-<meta property="og:description" content="{esc(bio)}">
+<meta property="og:description" content="{esc(meta)}">
 <meta property="og:type" content="website">
+{f'<meta property="og:url" content="{esc(site_url)}/">' if site_url else ''}
+<meta name="twitter:card" content="summary_large_image">
 {f'<meta property="og:image" content="{og}">' if og else ''}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>◼</text></svg>">
 <style>{stylesheet(lay)}</style>

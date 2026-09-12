@@ -1,12 +1,16 @@
 {
   "name": "Stephen Greenwood",
-  "tagline": "Brand Marketing",
+  "tagline": "Brand Experience — Music, Sport & Culture",
   "bio": "",
   "email": "stephen@withgreenwood.com",
   "links": [
     {
       "label": "Instagram",
       "url": "https://instagram.com/withgreenwood"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/stephen-greenwood-/"
     },
     {
       "label": "Email",
@@ -27,5 +31,7 @@
     "maxWidth": 975,
     "pagePadding": 20
   },
-  "footer": "© 2026 Stephen Greenwood"
+  "footer": "© 2026 Stephen Greenwood",
+  "metaDescription": "Selected brand experience work across music, sport and culture — Apple Music, Apple TV, Beats. Stephen Greenwood, Los Angeles.",
+  "siteUrl": "https://withgreenwood.com"
 }
