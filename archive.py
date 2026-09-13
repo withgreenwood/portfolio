@@ -5,7 +5,11 @@ These are the prose and case-study pages that used to live on the Squarespace
 site, rebuilt in the same "full flip" treatment as the grid. They are served
 from the same Worker as the grid, at /archive/*.
 
-Images open in a lightbox, the one part of the archive that uses JavaScript;\nwithout it the page still reads, the images just don't open.\n\nPage slugs may nest: a slug of "work/trillectro" builds
+Images and the two h.264 loops open in a lightbox — the one part of the
+archive that needs JavaScript. Without it the page still reads; the images
+just don't open, and the loops fall back to their poster frame.
+
+Page slugs may nest: a slug of "work/trillectro" builds
 site/archive/work/trillectro/index.html and links back up two levels. Only
 pages with "nav": true appear in the page nav.
 
@@ -95,7 +99,9 @@ PROSE_CSS = """
 .gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
   box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
-.gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
+.gal img,.gal .mov{display:block;width:100%;height:auto;border:0;
+  aspect-ratio:var(--r)}
+.gal .mov{background:var(--panel)}
 .gal figcaption{padding:0 12px 12px}
 @media(max-width:619px){
   .gal-row{flex-direction:column;gap:1px}
@@ -154,8 +160,9 @@ PROSE_CSS = """
 .lb[hidden]{display:none}
 .lb-stage{display:flex;align-items:center;justify-content:center;
   max-width:100%;max-height:100%}
-.lb-img{display:block;width:auto;height:auto;
+.lb-img,.lb-vid{display:block;width:auto;height:auto;
   max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-stage [hidden]{display:none}
 .lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
   cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
 .lb-btn:hover{color:var(--accent)}
@@ -182,7 +189,10 @@ PROSE_CSS = """
 
 LIGHTBOX = """
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
-  <div class="lb-stage"><img class="lb-img" alt=""></div>
+  <div class="lb-stage">
+    <img class="lb-img" alt="">
+    <video class="lb-vid" loop muted playsinline hidden></video>
+  </div>
   <button type="button" class="lb-btn lb-x" data-act="close" aria-label="Close">&times;</button>
   <button type="button" class="lb-btn lb-prev" data-act="prev" aria-label="Previous image">&larr;</button>
   <button type="button" class="lb-btn lb-next" data-act="next" aria-label="Next image">&rarr;</button>
@@ -190,23 +200,53 @@ LIGHTBOX = """
 </div>
 <script>
 (function(){
-  var imgs = [].slice.call(document.querySelectorAll(".zoom img"));
+  var imgs = [].slice.call(document.querySelectorAll(".zoom img, .zoom video"));
   if (!imgs.length) return;
   var lb = document.getElementById("lb"),
       big = lb.querySelector(".lb-img"),
+      vid = lb.querySelector(".lb-vid"),
       stage = lb.querySelector(".lb-stage"),
       cur = lb.querySelector(".lb-i"),
+      reduce = window.matchMedia &&
+               window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       i = 0, opener = null;
   lb.querySelector(".lb-t").textContent = imgs.length;
 
+  if (reduce) {                             // honour the OS setting
+    [].forEach.call(document.querySelectorAll(".gal .mov"), function(v){
+      v.autoplay = false;
+      v.pause();
+    });
+  }
+
+  function stopVideo(){
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.innerHTML = "";
+    vid.load();
+    vid.hidden = true;
+  }
   function show(n){
     i = (n + imgs.length) % imgs.length;
-    big.src = imgs[i].currentSrc || imgs[i].src;
-    big.alt = imgs[i].alt || "";
+    var el = imgs[i];
     cur.textContent = i + 1;
+    if (el.tagName === "VIDEO") {
+      big.hidden = true;
+      big.removeAttribute("src");
+      vid.poster = el.getAttribute("poster") || "";
+      vid.innerHTML = el.innerHTML;          // carry every <source> across
+      vid.load();
+      vid.hidden = false;
+      if (!reduce) { var p = vid.play(); if (p) p.catch(function(){}); }
+      return;
+    }
+    stopVideo();
+    big.hidden = false;
+    big.src = el.currentSrc || el.src;
+    big.alt = el.alt || "";
     [1, -1].forEach(function(d){            // warm the neighbours
-      var a = new Image();
-      a.src = imgs[(i + d + imgs.length) % imgs.length].src;
+      var nb = imgs[(i + d + imgs.length) % imgs.length];
+      if (nb.tagName === "IMG") { var a = new Image(); a.src = nb.src; }
     });
   }
   function open(n, from){
@@ -220,6 +260,7 @@ LIGHTBOX = """
     lb.hidden = true;
     document.documentElement.style.overflow = "";
     big.removeAttribute("src");
+    stopVideo();
     if (opener) opener.focus();
   }
 
@@ -306,6 +347,20 @@ def ratio(name, default=1.5):
         pass
     _RATIOS[name] = r
     return r
+
+
+def video_sources(name, pfx):
+    """<source> tags for a clip: the named file, plus a .webm sibling if present.
+
+    h.264 is first because it is both smaller here and understood everywhere;
+    the WebM only gets picked up by a build without the proprietary codec.
+    A browser downloads the first source it can play, never both.
+    """
+    out = ['<source src="%s" type="video/mp4">' % esc(img_src(name, pfx))]
+    alt = str(name)[:-4] + ".webm"
+    if (CONTENT / "archive-images" / alt).exists():
+        out.append('<source src="%s" type="video/webm">' % esc(img_src(alt, pfx)))
+    return "".join(out)
 
 
 def img_src(src, pfx):
@@ -395,11 +450,23 @@ def block_html(b, pfx):
                 i = items[n]
                 n += 1
                 cap = i.get("caption")
-                f = ('<button type="button" class="zoom">'
-                     '<img src="%s" alt="%s" loading="lazy" decoding="async">'
-                     '</button>' % (
-                         esc(img_src(i.get("src"), pfx)),
-                         esc(i.get("alt") or cap or "")))
+                if i.get("video"):
+                    # Poster is the first frame, so the cell looks right before
+                    # the video has loaded and if it never plays at all.
+                    f = ('<button type="button" class="zoom">'
+                         '<video class="mov" poster="%s" autoplay loop muted '
+                         'playsinline preload="metadata" aria-label="%s">'
+                         '%s</video>'
+                         '</button>' % (
+                             esc(img_src(i.get("src"), pfx)),
+                             esc(i.get("alt") or cap or "Animation"),
+                             video_sources(i.get("video"), pfx)))
+                else:
+                    f = ('<button type="button" class="zoom">'
+                         '<img src="%s" alt="%s" loading="lazy" decoding="async">'
+                         '</button>' % (
+                             esc(img_src(i.get("src"), pfx)),
+                             esc(i.get("alt") or cap or "")))
                 if cap:
                     f += "<figcaption>%s</figcaption>" % esc(cap)
                 # The row's 1px gaps come out of the 100% before it is split,
@@ -628,7 +695,11 @@ def build_archive(profile=None, quiet=False):
                 check(b.get("src"), where)
             elif b.get("type") == "gallery":
                 for i in b.get("items", []):
-                    check(i if isinstance(i, str) else i.get("src"), where)
+                    if isinstance(i, str):
+                        check(i, where)
+                    else:
+                        check(i.get("src"), where)
+                        check(i.get("video"), where)
             elif b.get("type") == "cards":
                 for i in b.get("items", []):
                     check(i.get("image"), where)

@@ -43,12 +43,25 @@ def imgs(slug):
 def gallery(slug, cols=3):
     """Every image on the page except the lead and any repeat frames."""
     drop = set(DROP.get(slug, [])) | {COVER.get(slug, 1)}
-    items = [f for n, f in enumerate(imgs(slug), 1) if n not in drop]
+    vid = VIDEO.get(slug, set())
+    items = []
+    for n, f in enumerate(imgs(slug), 1):
+        if n in drop:
+            continue
+        items.append({"src": f, "video": f[:-4] + ".mp4"} if n in vid else f)
     return {"type": "gallery", "cols": cols, "items": items}
 
 
 # A page whose first image makes a poor 4:3 crop can name a different one.
 COVER = {"google-mixtape": 3}
+
+# The two animated frames. Squarespace served them as GIFs of 19 MB and 18 MB —
+# between them more than the other 128 photographs combined — so they are h.264
+# now, 584 KB and 1.3 MB, and the .jpg of their first frame is the poster.
+VIDEO = {
+    "google-pixel-3-grammy-activation": {2},
+    "youtube-black-creator-summit": {15},
+}
 
 # Shelved case studies. The copy and the images stay in the repo and in
 # pages.json; the page is just not built, not listed on the Projects index,

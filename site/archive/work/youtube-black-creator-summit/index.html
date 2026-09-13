@@ -195,7 +195,9 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
   box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
-.gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
+.gal img,.gal .mov{display:block;width:100%;height:auto;border:0;
+  aspect-ratio:var(--r)}
+.gal .mov{background:var(--panel)}
 .gal figcaption{padding:0 12px 12px}
 @media(max-width:619px){
   .gal-row{flex-direction:column;gap:1px}
@@ -254,8 +256,9 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .lb[hidden]{display:none}
 .lb-stage{display:flex;align-items:center;justify-content:center;
   max-width:100%;max-height:100%}
-.lb-img{display:block;width:auto;height:auto;
+.lb-img,.lb-vid{display:block;width:auto;height:auto;
   max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-stage [hidden]{display:none}
 .lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
   cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
 .lb-btn:hover{color:var(--accent)}
@@ -298,7 +301,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Project Contributions</h2>
     <ul><li>Served as the lead producer and client lead for the overall #YouTubeBlack Creator Summit experience</li><li>Acted as the driving force behind creative development of event narratives and themes pulling from modern and nostalgic Black culture references</li><li>Identified and booked noteworthy Black DJs, entertainers, photographers, and videographers to elevate the Creator experience</li><li>Curated custom music playlists featuring contemporary, throwback, and global music by Black artists</li><li>Scouted and secured venues that were both culturally relevant and on-brand</li><li>Managed all event planning, logistics, venue, and vendor relations</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-02.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-03.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33311)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-04.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.7794;flex-basis:calc((100% - 1px) * 0.54136)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-05.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5075;flex-basis:calc((100% - 1px) * 0.45864)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-06.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.39529)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-07.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.8006;flex-basis:calc((100% - 2px) * 0.21098)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-08.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4941;flex-basis:calc((100% - 2px) * 0.39373)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-09.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.34008)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-10.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33974)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-11.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4136;flex-basis:calc((100% - 2px) * 0.32017)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-12.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.4985;flex-basis:calc((100% - 2px) * 0.37462)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-13.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.37538)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-14.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1;flex-basis:calc((100% - 2px) * 0.25000)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-15.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.25011)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-16.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 3px) * 0.25036)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-17.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5017;flex-basis:calc((100% - 3px) * 0.25040)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-18.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4941;flex-basis:calc((100% - 3px) * 0.24913)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-19.jpg" alt="" loading="lazy" decoding="async"></button></figure></div></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-02.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-03.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33311)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-04.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.7794;flex-basis:calc((100% - 1px) * 0.54136)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-05.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5075;flex-basis:calc((100% - 1px) * 0.45864)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-06.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.39529)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-07.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.8006;flex-basis:calc((100% - 2px) * 0.21098)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-08.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4941;flex-basis:calc((100% - 2px) * 0.39373)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-09.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.34008)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-10.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33974)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-11.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4136;flex-basis:calc((100% - 2px) * 0.32017)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-12.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.4985;flex-basis:calc((100% - 2px) * 0.37462)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-13.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.37538)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-14.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1;flex-basis:calc((100% - 2px) * 0.25000)"><button type="button" class="zoom"><video class="mov" poster="../../images/youtube-black-creator-summit-15.jpg" autoplay loop muted playsinline preload="metadata" aria-label="Animation"><source src="../../images/youtube-black-creator-summit-15.mp4" type="video/mp4"><source src="../../images/youtube-black-creator-summit-15.webm" type="video/webm"></video></button></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.25011)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-16.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 3px) * 0.25036)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-17.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5017;flex-basis:calc((100% - 3px) * 0.25040)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-18.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4941;flex-basis:calc((100% - 3px) * 0.24913)"><button type="button" class="zoom"><img src="../../images/youtube-black-creator-summit-19.jpg" alt="" loading="lazy" decoding="async"></button></figure></div></div>
   </article>
 </div>
 <footer>
@@ -309,7 +312,10 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 </footer>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
-  <div class="lb-stage"><img class="lb-img" alt=""></div>
+  <div class="lb-stage">
+    <img class="lb-img" alt="">
+    <video class="lb-vid" loop muted playsinline hidden></video>
+  </div>
   <button type="button" class="lb-btn lb-x" data-act="close" aria-label="Close">&times;</button>
   <button type="button" class="lb-btn lb-prev" data-act="prev" aria-label="Previous image">&larr;</button>
   <button type="button" class="lb-btn lb-next" data-act="next" aria-label="Next image">&rarr;</button>
@@ -317,23 +323,53 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 </div>
 <script>
 (function(){
-  var imgs = [].slice.call(document.querySelectorAll(".zoom img"));
+  var imgs = [].slice.call(document.querySelectorAll(".zoom img, .zoom video"));
   if (!imgs.length) return;
   var lb = document.getElementById("lb"),
       big = lb.querySelector(".lb-img"),
+      vid = lb.querySelector(".lb-vid"),
       stage = lb.querySelector(".lb-stage"),
       cur = lb.querySelector(".lb-i"),
+      reduce = window.matchMedia &&
+               window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       i = 0, opener = null;
   lb.querySelector(".lb-t").textContent = imgs.length;
 
+  if (reduce) {                             // honour the OS setting
+    [].forEach.call(document.querySelectorAll(".gal .mov"), function(v){
+      v.autoplay = false;
+      v.pause();
+    });
+  }
+
+  function stopVideo(){
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.innerHTML = "";
+    vid.load();
+    vid.hidden = true;
+  }
   function show(n){
     i = (n + imgs.length) % imgs.length;
-    big.src = imgs[i].currentSrc || imgs[i].src;
-    big.alt = imgs[i].alt || "";
+    var el = imgs[i];
     cur.textContent = i + 1;
+    if (el.tagName === "VIDEO") {
+      big.hidden = true;
+      big.removeAttribute("src");
+      vid.poster = el.getAttribute("poster") || "";
+      vid.innerHTML = el.innerHTML;          // carry every <source> across
+      vid.load();
+      vid.hidden = false;
+      if (!reduce) { var p = vid.play(); if (p) p.catch(function(){}); }
+      return;
+    }
+    stopVideo();
+    big.hidden = false;
+    big.src = el.currentSrc || el.src;
+    big.alt = el.alt || "";
     [1, -1].forEach(function(d){            // warm the neighbours
-      var a = new Image();
-      a.src = imgs[(i + d + imgs.length) % imgs.length].src;
+      var nb = imgs[(i + d + imgs.length) % imgs.length];
+      if (nb.tagName === "IMG") { var a = new Image(); a.src = nb.src; }
     });
   }
   function open(n, from){
@@ -347,6 +383,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     lb.hidden = true;
     document.documentElement.style.overflow = "";
     big.removeAttribute("src");
+    stopVideo();
     if (opener) opener.focus();
   }
 

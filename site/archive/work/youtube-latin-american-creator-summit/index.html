@@ -195,7 +195,9 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
   box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
-.gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
+.gal img,.gal .mov{display:block;width:100%;height:auto;border:0;
+  aspect-ratio:var(--r)}
+.gal .mov{background:var(--panel)}
 .gal figcaption{padding:0 12px 12px}
 @media(max-width:619px){
   .gal-row{flex-direction:column;gap:1px}
@@ -254,8 +256,9 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .lb[hidden]{display:none}
 .lb-stage{display:flex;align-items:center;justify-content:center;
   max-width:100%;max-height:100%}
-.lb-img{display:block;width:auto;height:auto;
+.lb-img,.lb-vid{display:block;width:auto;height:auto;
   max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-stage [hidden]{display:none}
 .lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
   cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
 .lb-btn:hover{color:var(--accent)}
@@ -309,7 +312,10 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 </footer>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
-  <div class="lb-stage"><img class="lb-img" alt=""></div>
+  <div class="lb-stage">
+    <img class="lb-img" alt="">
+    <video class="lb-vid" loop muted playsinline hidden></video>
+  </div>
   <button type="button" class="lb-btn lb-x" data-act="close" aria-label="Close">&times;</button>
   <button type="button" class="lb-btn lb-prev" data-act="prev" aria-label="Previous image">&larr;</button>
   <button type="button" class="lb-btn lb-next" data-act="next" aria-label="Next image">&rarr;</button>
@@ -317,23 +323,53 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 </div>
 <script>
 (function(){
-  var imgs = [].slice.call(document.querySelectorAll(".zoom img"));
+  var imgs = [].slice.call(document.querySelectorAll(".zoom img, .zoom video"));
   if (!imgs.length) return;
   var lb = document.getElementById("lb"),
       big = lb.querySelector(".lb-img"),
+      vid = lb.querySelector(".lb-vid"),
       stage = lb.querySelector(".lb-stage"),
       cur = lb.querySelector(".lb-i"),
+      reduce = window.matchMedia &&
+               window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       i = 0, opener = null;
   lb.querySelector(".lb-t").textContent = imgs.length;
 
+  if (reduce) {                             // honour the OS setting
+    [].forEach.call(document.querySelectorAll(".gal .mov"), function(v){
+      v.autoplay = false;
+      v.pause();
+    });
+  }
+
+  function stopVideo(){
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.innerHTML = "";
+    vid.load();
+    vid.hidden = true;
+  }
   function show(n){
     i = (n + imgs.length) % imgs.length;
-    big.src = imgs[i].currentSrc || imgs[i].src;
-    big.alt = imgs[i].alt || "";
+    var el = imgs[i];
     cur.textContent = i + 1;
+    if (el.tagName === "VIDEO") {
+      big.hidden = true;
+      big.removeAttribute("src");
+      vid.poster = el.getAttribute("poster") || "";
+      vid.innerHTML = el.innerHTML;          // carry every <source> across
+      vid.load();
+      vid.hidden = false;
+      if (!reduce) { var p = vid.play(); if (p) p.catch(function(){}); }
+      return;
+    }
+    stopVideo();
+    big.hidden = false;
+    big.src = el.currentSrc || el.src;
+    big.alt = el.alt || "";
     [1, -1].forEach(function(d){            // warm the neighbours
-      var a = new Image();
-      a.src = imgs[(i + d + imgs.length) % imgs.length].src;
+      var nb = imgs[(i + d + imgs.length) % imgs.length];
+      if (nb.tagName === "IMG") { var a = new Image(); a.src = nb.src; }
     });
   }
   function open(n, from){
@@ -347,6 +383,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     lb.hidden = true;
     document.documentElement.style.overflow = "";
     big.removeAttribute("src");
+    stopVideo();
     if (opener) opener.focus();
   }
 

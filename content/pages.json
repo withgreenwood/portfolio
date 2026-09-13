@@ -395,7 +395,10 @@
           "type": "gallery",
           "cols": 3,
           "items": [
-            "google-pixel-3-grammy-activation-02.jpg",
+            {
+              "src": "google-pixel-3-grammy-activation-02.jpg",
+              "video": "google-pixel-3-grammy-activation-02.mp4"
+            },
             "google-pixel-3-grammy-activation-03.jpg",
             "google-pixel-3-grammy-activation-04.jpg",
             "google-pixel-3-grammy-activation-05.jpg",
@@ -750,7 +753,10 @@
             "youtube-black-creator-summit-12.jpg",
             "youtube-black-creator-summit-13.jpg",
             "youtube-black-creator-summit-14.jpg",
-            "youtube-black-creator-summit-15.jpg",
+            {
+              "src": "youtube-black-creator-summit-15.jpg",
+              "video": "youtube-black-creator-summit-15.mp4"
+            },
             "youtube-black-creator-summit-16.jpg",
             "youtube-black-creator-summit-17.jpg",
             "youtube-black-creator-summit-18.jpg",
