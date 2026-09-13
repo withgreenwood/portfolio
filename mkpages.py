@@ -265,10 +265,10 @@ RESUME = {
     "blocks": [
         {"type": "h2", "text": "Agency and Brand Experience"},
         {"type": "cells", "items": [
-            {"label": "Apple Music", "url": "https://music.apple.com/"},
-            {"label": "Apple TV", "url": "https://tv.apple.com/"},
-            {"label": "Beats", "url": "https://www.beatsbydre.com/"},
-            {"label": "JOOPITER", "url": "https://joopiter.com/"},
+            "Apple Music",
+            "Apple TV",
+            "Beats",
+            "JOOPITER",
             {"label": "MAS", "url": "https://moremas.com/"},
             {"label": "McKinney", "url": "https://mckinney.com/"},
             {"label": "Trillectro", "url": "https://www.instagram.com/trillectro/"},
