@@ -116,6 +116,22 @@
           "type": "cells",
           "items": [
             {
+              "label": "Apple Music",
+              "url": "https://music.apple.com/"
+            },
+            {
+              "label": "Apple TV",
+              "url": "https://tv.apple.com/"
+            },
+            {
+              "label": "Beats",
+              "url": "https://www.beatsbydre.com/"
+            },
+            {
+              "label": "JOOPITER",
+              "url": "https://joopiter.com/"
+            },
+            {
               "label": "MAS",
               "url": "https://moremas.com/"
             },
@@ -130,10 +146,6 @@
             {
               "label": "360i",
               "url": "https://www.360i.com/"
-            },
-            {
-              "label": "Barkley Kalpak (now First)",
-              "url": "https://firstagency.com/"
             },
             {
               "label": "GEICO",

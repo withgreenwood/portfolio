@@ -265,11 +265,14 @@ RESUME = {
     "blocks": [
         {"type": "h2", "text": "Agency and Brand Experience"},
         {"type": "cells", "items": [
+            {"label": "Apple Music", "url": "https://music.apple.com/"},
+            {"label": "Apple TV", "url": "https://tv.apple.com/"},
+            {"label": "Beats", "url": "https://www.beatsbydre.com/"},
+            {"label": "JOOPITER", "url": "https://joopiter.com/"},
             {"label": "MAS", "url": "https://moremas.com/"},
             {"label": "McKinney", "url": "https://mckinney.com/"},
             {"label": "Trillectro", "url": "https://www.instagram.com/trillectro/"},
             {"label": "360i", "url": "https://www.360i.com/"},
-            {"label": "Barkley Kalpak (now First)", "url": "https://firstagency.com/"},
             {"label": "GEICO", "url": "https://www.geico.com/"}]},
         {"type": "h2", "text": "Clients & Brand Partners"},
         {"type": "cells", "items": [
