@@ -121,7 +121,7 @@ CASES = [
          "Owned project management, planning, and logistics"],
         [("Awards",
           ["Adweek finalist for Best Use of Celebrity in an Experiential Activation",
-           "Event Marketers Experience Design and Technology Award"])]),
+           "Event Marketer’s Experience Design & Technology Award"])]),
     case(
         "trillectro",
         "Trillectro Music Festival",
@@ -270,7 +270,7 @@ RESUME = {
         {"type": "cells", "items": [
             "Capitol Records", "Virgin Music", "RCA Records", "Warner Records",
             "Columbia Records", "Atlantic Records", "Roc Nation", "Interscope",
-            "EQT", "LVRN", "YouTube Music", "Spotify", "SoundCloud", "Audius"]},
+            "EQT Recordings", "LVRN", "YouTube Music", "Spotify", "SoundCloud", "Audius"]},
     ],
 }
 
