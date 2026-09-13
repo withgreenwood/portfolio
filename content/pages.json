@@ -110,7 +110,7 @@
       "blocks": [
         {
           "type": "h2",
-          "text": "Agency and Brand Experience"
+          "text": "Brand Experience"
         },
         {
           "type": "cells",
@@ -120,6 +120,23 @@
             "Beats",
             "JOOPITER",
             {
+              "label": "Trillectro",
+              "url": "https://www.instagram.com/trillectro/"
+            },
+            {
+              "label": "GEICO",
+              "url": "https://www.geico.com/"
+            }
+          ]
+        },
+        {
+          "type": "h2",
+          "text": "Agency Experience"
+        },
+        {
+          "type": "cells",
+          "items": [
+            {
               "label": "MAS",
               "url": "https://moremas.com/"
             },
@@ -128,16 +145,8 @@
               "url": "https://mckinney.com/"
             },
             {
-              "label": "Trillectro",
-              "url": "https://www.instagram.com/trillectro/"
-            },
-            {
               "label": "360i",
               "url": "https://www.360i.com/"
-            },
-            {
-              "label": "GEICO",
-              "url": "https://www.geico.com/"
             }
           ]
         },

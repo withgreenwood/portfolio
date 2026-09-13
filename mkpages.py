@@ -263,17 +263,22 @@ RESUME = {
     "nav": True,
     "metaDescription": "Agencies, brand partners, and label and platform contacts — Stephen Greenwood.",
     "blocks": [
-        {"type": "h2", "text": "Agency and Brand Experience"},
+        # Split brand-side from agency-side. Trillectro and GEICO sit with the
+        # brands: a festival he helped run and an in-house app team, neither an
+        # agency. Both keep the links they came over from Squarespace with.
+        {"type": "h2", "text": "Brand Experience"},
         {"type": "cells", "items": [
             "Apple Music",
             "Apple TV",
             "Beats",
             "JOOPITER",
+            {"label": "Trillectro", "url": "https://www.instagram.com/trillectro/"},
+            {"label": "GEICO", "url": "https://www.geico.com/"}]},
+        {"type": "h2", "text": "Agency Experience"},
+        {"type": "cells", "items": [
             {"label": "MAS", "url": "https://moremas.com/"},
             {"label": "McKinney", "url": "https://mckinney.com/"},
-            {"label": "Trillectro", "url": "https://www.instagram.com/trillectro/"},
-            {"label": "360i", "url": "https://www.360i.com/"},
-            {"label": "GEICO", "url": "https://www.geico.com/"}]},
+            {"label": "360i", "url": "https://www.360i.com/"}]},
         {"type": "h2", "text": "Clients & Brand Partners"},
         {"type": "cells", "items": [
             "Google", "Google Consumer Products", "Google Pixel",
