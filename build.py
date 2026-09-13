@@ -75,11 +75,9 @@ a{color:inherit}
 .idcell{display:flex;align-items:center;padding:0 var(--pad);min-height:52px}
 .idcell+.idcell{border-left:1px solid var(--line)}
 .idcell-name{width:100%;border-bottom:1px solid var(--line)}
-.idcell-role{display:none}
 .idcell+.idcell-links{border-left:0}
 .wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
   letter-spacing:-.045em;white-space:nowrap}
-.role{font:500 11px/1.4 var(--mono);letter-spacing:.13em;white-space:nowrap}
 .links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 .links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
   padding-bottom:2px;border-bottom:1px solid transparent;
@@ -143,15 +141,12 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   :root{--pad:__PAD__px}
   .idcell{min-height:62px}
   .idcell-name{width:auto;border-bottom:0}
-  .idcell-links{margin-left:auto}
+  .idcell+.idcell-links{border-left:1px solid var(--line);margin-left:auto}
   .pgf-grid{grid-template-columns:repeat(__COLSMID__,1fr)}
   .push{margin-left:auto}
 }
 @media(min-width:940px){
   .pgf-grid{grid-template-columns:repeat(__COLS__,1fr)}
-}
-@media(min-width:1000px){
-  .idcell-role{display:flex}
 }
 """
 
@@ -281,7 +276,6 @@ def build():
 {ticker}
 <header class="idbar">
   <div class="idcell idcell-name"><span class="wordmark">{name}</span></div>
-  {f'<div class="idcell idcell-role"><span class="role">{esc(tagline)}</span></div>' if tagline else ''}
   <div class="idcell idcell-links">{links_html}</div>
 </header>
 <div class="wrap">
