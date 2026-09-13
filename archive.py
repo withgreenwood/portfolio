@@ -77,14 +77,31 @@ PROSE_CSS = """
   border-top:0}
 .lead img{display:block;width:100%;height:auto}
 
-/* ---- gallery: hairline mosaic, same language as the grid ---- */
-.gal{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em}
-.gal figure{margin:0;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
-.gal img{display:block;width:100%;height:auto;border:0}
+/* ---- gallery: justified rows ----
+   These photographs are 3:2, 2:3, 4:3, square and 16:9 all mixed together, so
+   a fixed column grid leaves every short image sitting in a pocket of white --
+   which, in a layout made of flush hairlines, reads as broken.
+
+   Instead each figure carries its own aspect ratio in --r (written by
+   archive.py from the JPEG header) and flexes in proportion to it. Within any
+   one line, widths are proportional to ratios, so every image on that line
+   lands on the same height and the line fills the width exactly. Nothing is
+   cropped and no row is ragged. The ::after with an enormous flex-grow eats
+   the slack on the final line so a short last row keeps its natural size
+   instead of being stretched across the page.
+
+   --gh is the base row height; the real height per line is whatever filling
+   the width requires, so this is a floor rather than a fixed value. */
+.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
+.gal::after{content:"";flex-grow:999999}
+.gal figure{margin:0;min-width:0;background:var(--bg);
+  box-shadow:0 0 0 1px var(--line);
+  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+.gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:940px){.gal--3{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:620px){.gal{--gh:165px}}
+@media(min-width:940px){.gal{--gh:215px}}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -135,6 +152,43 @@ def rel(slug):
     return "../" * (slug.strip("/").count("/") + 1)
 
 
+# Justified rows need every image's shape at build time. Reading the JPEG
+# header directly avoids a Pillow dependency for what is four bytes of data.
+_RATIOS = {}
+_SOF = {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+        0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}
+
+
+def ratio(name, default=1.5):
+    """Width/height of an image in content/archive-images, 1.5 if unknown."""
+    if name in _RATIOS:
+        return _RATIOS[name]
+    r = default
+    path = CONTENT / "archive-images" / str(name)
+    try:
+        data = path.read_bytes()
+        i = 2
+        while i < len(data) - 9:
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if marker in _SOF:
+                h = (data[i + 5] << 8) | data[i + 6]
+                w = (data[i + 7] << 8) | data[i + 8]
+                if h:
+                    r = round(w / h, 4)
+                break
+            if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
+                i += 2
+                continue
+            i += 2 + ((data[i + 2] << 8) | data[i + 3])
+    except (OSError, IndexError, ZeroDivisionError):
+        pass
+    _RATIOS[name] = r
+    return r
+
+
 def img_src(src, pfx):
     src = str(src or "")
     if src.lower().startswith(("http://", "https://")):
@@ -180,19 +234,20 @@ def block_html(b, pfx):
             fig += "<figcaption>%s</figcaption>" % esc(cap)
         return "<figure>%s</figure>" % fig
     if t == "gallery":
+        # "cols" is still accepted in pages.json but no longer does anything:
+        # justified rows decide how many images a line holds by their shapes.
         figs = []
         for i in b.get("items", []):
             if isinstance(i, str):
                 i = {"src": i}
             cap = i.get("caption")
+            r = ratio(i.get("src"))
             f = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
                 esc(img_src(i.get("src"), pfx)), esc(i.get("alt") or cap or ""))
             if cap:
                 f += "<figcaption>%s</figcaption>" % esc(cap)
-            figs.append("<figure>%s</figure>" % f)
-        cols = int(b.get("cols", 3))
-        cls = "gal gal--3" if cols >= 3 else "gal"
-        return '<div class="%s">%s</div>' % (cls, "".join(figs))
+            figs.append('<figure style="--r:%g">%s</figure>' % (r, f))
+        return '<div class="gal">%s</div>' % "".join(figs)
     if t == "cards":
         cs = []
         for i in b.get("items", []):

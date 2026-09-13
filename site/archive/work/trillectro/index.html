@@ -177,14 +177,31 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   border-top:0}
 .lead img{display:block;width:100%;height:auto}
 
-/* ---- gallery: hairline mosaic, same language as the grid ---- */
-.gal{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em}
-.gal figure{margin:0;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
-.gal img{display:block;width:100%;height:auto;border:0}
+/* ---- gallery: justified rows ----
+   These photographs are 3:2, 2:3, 4:3, square and 16:9 all mixed together, so
+   a fixed column grid leaves every short image sitting in a pocket of white --
+   which, in a layout made of flush hairlines, reads as broken.
+
+   Instead each figure carries its own aspect ratio in --r (written by
+   archive.py from the JPEG header) and flexes in proportion to it. Within any
+   one line, widths are proportional to ratios, so every image on that line
+   lands on the same height and the line fills the width exactly. Nothing is
+   cropped and no row is ragged. The ::after with an enormous flex-grow eats
+   the slack on the final line so a short last row keeps its natural size
+   instead of being stretched across the page.
+
+   --gh is the base row height; the real height per line is whatever filling
+   the width requires, so this is a floor rather than a fixed value. */
+.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
+.gal::after{content:"";flex-grow:999999}
+.gal figure{margin:0;min-width:0;background:var(--bg);
+  box-shadow:0 0 0 1px var(--line);
+  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+.gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:940px){.gal--3{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:620px){.gal{--gh:165px}}
+@media(min-width:940px){.gal{--gh:215px}}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -247,7 +264,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Responsibilities</h2>
     <ul><li>Comprehensive Marketing Strategy</li><li>Digital Marketing</li><li>Partner Relations and Business Development</li><li>On-site Activation Lead</li><li>Talent Booking and Management</li></ul>
     <h2>Gallery</h2>
-    <div class="gal gal--3"><figure><img src="../../images/trillectro-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-11.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/trillectro-14.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+    <div class="gal"><figure style="--r:1.5"><img src="../../images/trillectro-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.8006"><img src="../../images/trillectro-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/trillectro-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6559"><img src="../../images/trillectro-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.8"><img src="../../images/trillectro-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667"><img src="../../images/trillectro-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/trillectro-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4525"><img src="../../images/trillectro-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.8"><img src="../../images/trillectro-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.8076"><img src="../../images/trillectro-11.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6627"><img src="../../images/trillectro-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.7034"><img src="../../images/trillectro-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6683"><img src="../../images/trillectro-14.jpg" alt="" loading="lazy" decoding="async"></figure></div>
   </article>
 </div>
 <footer>
