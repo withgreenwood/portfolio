@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stephen Greenwood</title>
-<meta name="description" content="Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, and the long story.">
+<meta name="description" content="Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.">
 <meta property="og:title" content="Stephen Greenwood">
-<meta property="og:description" content="Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, and the long story.">
+<meta property="og:description" content="Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://archive.withgreenwood.com/">
+<meta property="og:url" content="https://withgreenwood.com/archive/">
+
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9642;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,62 +66,34 @@ a{color:inherit}
 .rule-meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin-left:auto}
 
 /* ---- grid ---- */
+/* The hairlines are a 1px shadow on each tile, not a black container showing
+   through the gap -- a part-filled last row would leave a black slab. */
 .pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
-  gap:var(--gap);background:var(--line);border:1px solid var(--line);
-  margin:18px var(--pad) 0;padding:0}
+  gap:var(--gap);background:var(--bg);
+  margin:18px var(--pad) 0;padding:1px}
 .pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
   overflow:hidden;border-radius:var(--radius);background:var(--panel);
-  text-decoration:none;color:inherit}
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
 .pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .5s cubic-bezier(.2,.7,.3,1)}
 .pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
-/* Two-up tiles are ~178px wide, so the caption is sized for those here and
-   scaled up with the grid at >=620px; unclamped it swallows a third of a
-   tile. */
 .pgf-ov{position:absolute;left:0;right:0;bottom:0;background:var(--ink);
-  color:var(--bg);padding:7px 8px;transform:translateY(101%);
+  color:var(--bg);padding:9px 10px;transform:translateY(101%);
   transition:transform .22s cubic-bezier(.2,.7,.3,1)}
 .pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{transform:translateY(0)}
-.pgf-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;font:500 9.5px/1.25 var(--mono);letter-spacing:.05em}
-.pgf-s{display:block;margin-top:3px;font:400 8.5px/1.3 var(--mono);
+.pgf-t{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.05em}
+.pgf-s{display:block;margin-top:4px;font:400 9.5px/1.3 var(--mono);
   letter-spacing:.1em;color:var(--accent)}
-.pgf-a{position:absolute;top:5px;right:5px;width:16px;height:16px;
+.pgf-a{position:absolute;top:8px;right:8px;width:20px;height:20px;
   display:flex;align-items:center;justify-content:center;background:var(--bg);
-  border:1px solid var(--line);font:500 9px/1 var(--mono);opacity:0;
+  border:1px solid var(--line);font:500 11px/1 var(--mono);opacity:0;
   transition:opacity .22s}
 .pgf-i:hover .pgf-a,.pgf-i:focus-visible .pgf-a{opacity:1}
 .pgf-i:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
-/* No hover on touch, so the tiles were inert with the caption parked open.
-   Where scroll-driven animations exist, scroll position stands in for the
-   pointer: the caption and arrow come in as a tile enters the viewport and
-   leave as it goes, which is the desktop reveal on a different trigger.
-   Anywhere else this is skipped and the caption just stays open. */
-@media(hover:none){
-  .pgf-ov{transform:translateY(0)}
-  .pgf-a{opacity:1}
-}
-@supports (animation-timeline:view()){
-  @media(hover:none){
-    .pgf-i{view-timeline:--tile block}
-    .pgf-ov{animation:pgf-cap linear both;animation-timeline:--tile;
-      animation-range:cover 0% cover 100%}
-    .pgf-a{animation:pgf-arrow linear both;animation-timeline:--tile;
-      animation-range:cover 0% cover 100%}
-  }
-}
-@keyframes pgf-cap{
-  0%,100%{transform:translateY(101%)}
-  22%,78%{transform:translateY(0)}
-}
-@keyframes pgf-arrow{
-  0%,100%{opacity:0}
-  22%,78%{opacity:1}
-}
+@media(hover:none){.pgf-ov{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){
   .pgf-i img,.pgf-ov,.pgf-a{transition:none}
   .pgf-i:hover img,.pgf-i:focus-visible img{transform:none}
-  .pgf-ov,.pgf-a{animation:none}
 }
 .empty{margin:18px var(--pad) 0;text-align:center;font-size:12px;padding:60px 0;
   border:1px dashed var(--line)}
@@ -144,10 +117,6 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   .idcell-name{width:auto;border-bottom:0}
   .idcell+.idcell-links{border-left:1px solid var(--line);margin-left:auto}
   .pgf-grid{grid-template-columns:repeat(3,1fr)}
-  .pgf-ov{padding:9px 10px}
-  .pgf-t{-webkit-line-clamp:3;font-size:10.5px;line-height:1.3}
-  .pgf-s{margin-top:4px;font-size:9.5px}
-  .pgf-a{top:8px;right:8px;width:20px;height:20px;font-size:11px}
   .push{margin-left:auto}
 }
 @media(min-width:940px){
@@ -170,8 +139,10 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .prose>*{max-width:68ch}
 .prose p{margin:0 0 1.2em}
 .prose p+p{margin-top:0}
-.prose .lede{max-width:26ch;
-  font:600 clamp(23px,4.2vw,40px)/1.12 var(--disp);letter-spacing:-.035em;
+.prose .intro{max-width:60ch;font-size:1.17em;line-height:1.6;
+  margin:0 0 1.35em}
+.prose .lede{max-width:34ch;
+  font:600 clamp(21px,3.4vw,33px)/1.16 var(--disp);letter-spacing:-.032em;
   margin:0 0 1.1em}
 .prose h2{font:600 clamp(18px,2.3vw,24px)/1.2 var(--disp);
   letter-spacing:-.03em;margin:2.2em 0 .7em}
@@ -187,37 +158,84 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 .prose figcaption{margin-top:8px;font:500 10.5px/1.4 var(--mono);
   letter-spacing:.11em;text-transform:uppercase;opacity:.62}
 
-/* ---- hairline cells (areas of expertise etc.) ---- */
+/* ---- hairline cells (areas of expertise, credit lists) ----
+   The rules are drawn by a 1px shadow on every cell rather than by letting a
+   black container show through a 1px gap: a part-filled last row would
+   otherwise leave a black slab where the missing cells are. */
 .cells{display:grid;grid-template-columns:1fr;gap:1px;max-width:none;
-  background:var(--line);border:1px solid var(--line);margin:0 0 1.6em}
-.cells div{background:var(--bg);padding:16px var(--pad);
+  background:var(--bg);padding:1px;margin:0 0 1.6em}
+.cells div{background:var(--bg);box-shadow:0 0 0 1px var(--line);
+  padding:16px var(--pad);
   font:500 11.5px/1.35 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.cells a{color:inherit;text-decoration:none;border:0;
+  border-bottom:1px solid transparent}
+.cells a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 @media(min-width:620px){.cells{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.cells{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- lead image: full-bleed inside the wrap, no figure margins ---- */
+.lead{margin:0 var(--pad);max-width:none;border:1px solid var(--line);
+  border-top:0}
+.lead img{display:block;width:100%;height:auto}
+
+/* ---- gallery: hairline mosaic, same language as the grid ---- */
+.gal{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal figure{margin:0;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
+.gal img{display:block;width:100%;height:auto;border:0}
+.gal figcaption{padding:0 12px 12px}
+@media(min-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.gal--3{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- index cards (the projects page) ---- */
+.cards{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;
+  max-width:none;background:var(--bg);padding:1px;margin:0 0 1.8em}
+.card{position:relative;display:block;background:var(--bg);
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit;border:0}
+.card:hover{border:0}
+.card-img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;
+  background:var(--panel);transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.card:hover .card-img{transform:scale(1.03)}
+.card-wrap{overflow:hidden}
+.card-txt{padding:13px 14px 15px}
+.card-t{display:block;font:500 11.5px/1.35 var(--mono);letter-spacing:.09em;
+  text-transform:uppercase}
+.card-m{display:block;margin-top:5px;font:400 10px/1.3 var(--mono);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+@media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- back link ---- */
+.back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
+  letter-spacing:.14em}
+.back a{text-decoration:none;border-bottom:1px solid transparent}
+.back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 </style>
 </head>
 <body>
 <div class="ticker"><div class="ticker-run"><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span></div></div>
 <header class="idbar">
-  <div class="idcell idcell-name"><a href="https://withgreenwood.com/" style="text-decoration:none"><span class="wordmark">Stephen Greenwood</span></a></div>
+  <div class="idcell idcell-name"><a href="/" style="text-decoration:none"><span class="wordmark">Stephen Greenwood</span></a></div>
   <div class="idcell idcell-links"><ul class="links"><li><a href="https://instagram.com/withgreenwood">Instagram</a></li><li><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a></li><li><a href="mailto:stephen@withgreenwood.com">Email</a></li></ul></div>
 </header>
 <div class="wrap">
+  
   <div class="rule">
     <div class="rule-in"><span>About</span><span class="rule-meta"><span>Archive</span></span></div>
   </div>
-  <nav class="pagenav"><a href="" aria-current="page">About</a><a href="story/">Story</a></nav>
+  <nav class="pagenav"><a href="" aria-current="page">About</a><a href="story/">Story</a><a href="resume/">Resume</a><a href="work/">Projects</a></nav>
+  
   <article class="prose">
-    <p class="lede">I create forward-thinking marketing strategies and experiences that amplify music and culture.</p>
-    <p>I create forward-thinking marketing strategies and experiences that amplify music and culture for leading tech brands, music platforms, and groundbreaking festivals.</p>
-    <p>I&#x27;ve spent over 20 years at the forefront of culture as a DJ, sneakerhead, and dot connector. Combine that with over ten years of working with the most well-known brands in the world. I bring a creative director&#x27;s vision, a music supervisor&#x27;s ear, and a producer&#x27;s type-A structure to every project.</p>
+    <p class="lede">I create forward-thinking marketing strategies and experiences that amplify music and culture for leading tech brands, music platforms, and groundbreaking festivals.</p>
+    <p>I’ve spent over 20 years at the forefront of culture as a DJ, sneakerhead, and dot connector. Combine that with over ten years of working with the most well-known brands in the world. I bring a creative director’s vision, a music supervisor’s ear, and a producer’s type-A structure to every project.</p>
+    <figure><img src="images/about-portrait.jpg" alt="Stephen Greenwood on the beach with his dog" loading="lazy" decoding="async"></figure>
     <h2>Areas of Expertise</h2>
     <div class="cells"><div>Music &amp; Culture Marketing</div><div>Experiential Marketing</div><div>Artist &amp; Label Relationships</div><div>Project Management</div><div>Digital Marketing and Social Media</div><div>Talent Buying and Curation</div></div>
   </article>
 </div>
 <footer>
   <div class="foot-in">
-    <a href="https://instagram.com/withgreenwood">Instagram</a><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a><a href="mailto:stephen@withgreenwood.com">Email</a><a href="https://withgreenwood.com/">Work</a>
+    <a href="https://instagram.com/withgreenwood">Instagram</a><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a><a href="mailto:stephen@withgreenwood.com">Email</a><a href="/">Work</a>
     <span class="push">© 2026 Stephen Greenwood</span>
   </div>
 </footer>

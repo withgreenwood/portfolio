@@ -1,6 +1,6 @@
 {
   "name": "Stephen Greenwood",
-  "tagline": "Brand Marketing and Experience",
+  "tagline": "Brand Marketing & Experience",
   "bio": "",
   "email": "stephen@withgreenwood.com",
   "links": [
@@ -20,6 +20,10 @@
       "icon": "email"
     }
   ],
+  "archive": {
+    "label": "Archive",
+    "url": "/archive/"
+  },
   "layout": {
     "columns": 4,
     "columnsMid": 3,

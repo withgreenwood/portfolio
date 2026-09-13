@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Build the archive pages (site/archive/...) from content/pages.json.
 
-These are the prose pages that used to live on the Squarespace site, rebuilt
-in the same "full flip" treatment as the grid. They are served at
-archive.withgreenwood.com; the Worker maps that hostname onto /archive/*.
+These are the prose and case-study pages that used to live on the Squarespace
+site, rebuilt in the same "full flip" treatment as the grid. They are served
+from the same Worker as the grid, at /archive/*.
+
+Page slugs may nest: a slug of "work/trillectro" builds
+site/archive/work/trillectro/index.html and links back up two levels. Only
+pages with "nav": true appear in the page nav.
 
 Run directly (`python3 archive.py`) or let build.py call it after the grid.
 """
@@ -34,8 +38,10 @@ PROSE_CSS = """
 .prose>*{max-width:68ch}
 .prose p{margin:0 0 1.2em}
 .prose p+p{margin-top:0}
-.prose .lede{max-width:26ch;
-  font:600 clamp(23px,4.2vw,40px)/1.12 var(--disp);letter-spacing:-.035em;
+.prose .intro{max-width:60ch;font-size:1.17em;line-height:1.6;
+  margin:0 0 1.35em}
+.prose .lede{max-width:34ch;
+  font:600 clamp(21px,3.4vw,33px)/1.16 var(--disp);letter-spacing:-.032em;
   margin:0 0 1.1em}
 .prose h2{font:600 clamp(18px,2.3vw,24px)/1.2 var(--disp);
   letter-spacing:-.03em;margin:2.2em 0 .7em}
@@ -51,19 +57,73 @@ PROSE_CSS = """
 .prose figcaption{margin-top:8px;font:500 10.5px/1.4 var(--mono);
   letter-spacing:.11em;text-transform:uppercase;opacity:.62}
 
-/* ---- hairline cells (areas of expertise etc.) ---- */
+/* ---- hairline cells (areas of expertise, credit lists) ----
+   The rules are drawn by a 1px shadow on every cell rather than by letting a
+   black container show through a 1px gap: a part-filled last row would
+   otherwise leave a black slab where the missing cells are. */
 .cells{display:grid;grid-template-columns:1fr;gap:1px;max-width:none;
-  background:var(--line);border:1px solid var(--line);margin:0 0 1.6em}
-.cells div{background:var(--bg);padding:16px var(--pad);
+  background:var(--bg);padding:1px;margin:0 0 1.6em}
+.cells div{background:var(--bg);box-shadow:0 0 0 1px var(--line);
+  padding:16px var(--pad);
   font:500 11.5px/1.35 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.cells a{color:inherit;text-decoration:none;border:0;
+  border-bottom:1px solid transparent}
+.cells a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 @media(min-width:620px){.cells{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.cells{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- lead image: full-bleed inside the wrap, no figure margins ---- */
+.lead{margin:0 var(--pad);max-width:none;border:1px solid var(--line);
+  border-top:0}
+.lead img{display:block;width:100%;height:auto}
+
+/* ---- gallery: hairline mosaic, same language as the grid ---- */
+.gal{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal figure{margin:0;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
+.gal img{display:block;width:100%;height:auto;border:0}
+.gal figcaption{padding:0 12px 12px}
+@media(min-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.gal--3{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- index cards (the projects page) ---- */
+.cards{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;
+  max-width:none;background:var(--bg);padding:1px;margin:0 0 1.8em}
+.card{position:relative;display:block;background:var(--bg);
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit;border:0}
+.card:hover{border:0}
+.card-img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;
+  background:var(--panel);transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.card:hover .card-img{transform:scale(1.03)}
+.card-wrap{overflow:hidden}
+.card-txt{padding:13px 14px 15px}
+.card-t{display:block;font:500 11.5px/1.35 var(--mono);letter-spacing:.09em;
+  text-transform:uppercase}
+.card-m{display:block;margin-top:5px;font:400 10px/1.3 var(--mono);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+@media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- back link ---- */
+.back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
+  letter-spacing:.14em}
+.back a{text-decoration:none;border-bottom:1px solid transparent}
+.back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 """
 
 
-def rel(depth):
-    """Link prefix back to the archive root from a page `depth` levels down."""
-    return "../" * depth
+def rel(slug):
+    """Link prefix back to the archive root from a page at `slug`."""
+    if not slug:
+        return ""
+    return "../" * (slug.strip("/").count("/") + 1)
+
+
+def img_src(src, pfx):
+    src = str(src or "")
+    if src.lower().startswith(("http://", "https://")):
+        return src
+    return pfx + "images/" + src
 
 
 def block_html(b, pfx):
@@ -75,6 +135,8 @@ def block_html(b, pfx):
         return "<p>%s</p>" % esc(b.get("text"))
     if t == "lede":
         return '<p class="lede">%s</p>' % esc(b.get("text"))
+    if t == "intro":
+        return '<p class="intro">%s</p>' % esc(b.get("text"))
     if t == "h2":
         return "<h2>%s</h2>" % esc(b.get("text"))
     if t == "quote":
@@ -83,24 +145,60 @@ def block_html(b, pfx):
         lis = "".join("<li>%s</li>" % esc(i) for i in b.get("items", []))
         return "<ul>%s</ul>" % lis
     if t == "cells":
-        ds = "".join("<div>%s</div>" % esc(i) for i in b.get("items", []))
-        return '<div class="cells">%s</div>' % ds
+        ds = []
+        for i in b.get("items", []):
+            if isinstance(i, dict):
+                label = esc(i.get("label"))
+                url = i.get("url")
+                inner = ('<a href="%s" rel="noopener">%s</a>' % (esc(url), label)
+                         if url else label)
+            else:
+                inner = esc(i)
+            ds.append("<div>%s</div>" % inner)
+        return '<div class="cells">%s</div>' % "".join(ds)
     if t == "image":
-        src = str(b.get("src", ""))
-        if not src.lower().startswith(("http://", "https://")):
-            src = pfx + "images/" + src
         cap = b.get("caption")
         fig = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
-            esc(src), esc(b.get("alt") or cap or ""))
+            esc(img_src(b.get("src"), pfx)), esc(b.get("alt") or cap or ""))
         if cap:
             fig += "<figcaption>%s</figcaption>" % esc(cap)
         return "<figure>%s</figure>" % fig
+    if t == "gallery":
+        figs = []
+        for i in b.get("items", []):
+            if isinstance(i, str):
+                i = {"src": i}
+            cap = i.get("caption")
+            f = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
+                esc(img_src(i.get("src"), pfx)), esc(i.get("alt") or cap or ""))
+            if cap:
+                f += "<figcaption>%s</figcaption>" % esc(cap)
+            figs.append("<figure>%s</figure>" % f)
+        cols = int(b.get("cols", 3))
+        cls = "gal gal--3" if cols >= 3 else "gal"
+        return '<div class="%s">%s</div>' % (cls, "".join(figs))
+    if t == "cards":
+        cs = []
+        for i in b.get("items", []):
+            meta = ('<span class="card-m">%s</span>' % esc(i.get("meta"))
+                    if i.get("meta") else "")
+            cs.append(
+                '<a class="card" href="%s">'
+                '<span class="card-wrap">'
+                '<img class="card-img" src="%s" alt="%s" loading="lazy" decoding="async">'
+                '</span>'
+                '<span class="card-txt"><span class="card-t">%s</span>%s</span>'
+                '</a>' % (
+                    esc(pfx + str(i.get("href", "")).lstrip("/")),
+                    esc(img_src(i.get("image"), pfx)),
+                    esc(i.get("title")), esc(i.get("title")), meta))
+        return '<div class="cards">%s</div>' % "".join(cs)
     if t == "html":
         return str(b.get("html", ""))
     die("unknown block type %r in pages.json" % t)
 
 
-def chrome(profile, doc):
+def chrome(profile, doc, pfx):
     """The ticker + identity bar, shared with the grid."""
     phrases = [p for p in profile.get("ticker", []) if str(p).strip()]
     ticker = ""
@@ -115,7 +213,7 @@ def chrome(profile, doc):
     links = '<ul class="links">%s</ul>' % "".join(lis) if lis else ""
 
     name = esc(profile.get("name", "Portfolio"))
-    home = esc(doc.get("homeUrl", "https://withgreenwood.com/"))
+    home = esc(doc.get("homeUrl", "/"))
     return ticker, (
         '<header class="idbar">\n'
         '  <div class="idcell idcell-name">'
@@ -126,33 +224,58 @@ def chrome(profile, doc):
 
 
 def page_html(page, doc, profile, pages):
-    depth = 0 if not page.get("slug") else 1
-    pfx = rel(depth)
+    slug = page.get("slug", "")
+    pfx = rel(slug)
 
-    nav = "".join(
-        '<a href="%s"%s>%s</a>' % (
-            pfx + (p["slug"] + "/" if p.get("slug") else ""),
-            ' aria-current="page"' if p is page else "",
-            esc(p.get("label") or p.get("title")))
-        for p in pages)
-    nav = '<nav class="pagenav">%s</nav>' % nav if len(pages) > 1 else ""
+    navpages = [p for p in pages if p.get("nav")]
+    nav = ""
+    if len(navpages) > 1:
+        # A nested page highlights the section it belongs to.
+        section = slug.split("/")[0] if slug else ""
+        nav = "".join(
+            '<a href="%s"%s>%s</a>' % (
+                pfx + (p["slug"] + "/" if p.get("slug") else ""),
+                ' aria-current="page"' if p.get("slug", "") == section else "",
+                esc(p.get("label") or p.get("title")))
+            for p in navpages)
+        nav = '<nav class="pagenav">%s</nav>' % nav
+
+    lead = ""
+    if page.get("lead"):
+        lead = ('<div class="lead"><img src="%s" alt="%s" '
+                'decoding="async"></div>' % (
+                    esc(img_src(page["lead"], pfx)),
+                    esc(page.get("leadAlt") or page.get("title") or "")))
+
+    back = ""
+    if page.get("back"):
+        back = ('<div class="back"><a href="%s">&larr; %s</a></div>' % (
+            esc(pfx + str(page["back"]["href"]).lstrip("/")),
+            esc(page["back"]["label"])))
 
     body = "\n    ".join(block_html(b, pfx) for b in page.get("blocks", []))
 
-    ticker, idbar = chrome(profile, doc)
+    ticker, idbar = chrome(profile, doc, pfx)
 
     site_name = esc(profile.get("name", ""))
     title = esc(page.get("title") or site_name)
-    full_title = "%s — %s" % (title, site_name) if page.get("slug") else site_name
+    full_title = "%s — %s" % (title, site_name) if slug else site_name
     meta = esc(page.get("metaDescription") or doc.get("metaDescription") or "")
     base = str(doc.get("baseUrl", "")).rstrip("/")
-    url = "%s/%s" % (base, page["slug"] + "/" if page.get("slug") else "") if base else ""
+    url = "%s/%s" % (base, slug + "/" if slug else "") if base else ""
+    og_img = ""
+    if page.get("lead") or page.get("cover"):
+        src = page.get("lead") or page.get("cover")
+        if str(src).lower().startswith(("http://", "https://")):
+            og_img = str(src)
+        elif base:
+            og_img = "%s/images/%s" % (base, src)
 
     foot_links = "".join(
         '<a href="%s">%s</a>' % (esc(l.get("url")), esc(l.get("label")))
         for l in profile.get("links", []) if l.get("url"))
     foot_links += '<a href="%s">%s</a>' % (
-        esc(doc.get("homeUrl", "https://withgreenwood.com/")),
+        esc(doc.get("homeUrl", "/")),
         esc(doc.get("homeLabel", "Work")))
 
     return """<!DOCTYPE html>
@@ -166,7 +289,8 @@ def page_html(page, doc, profile, pages):
 <meta property="og:description" content="%(meta)s">
 <meta property="og:type" content="article">
 %(ogurl)s
-<meta name="twitter:card" content="summary">
+%(ogimg)s
+<meta name="twitter:card" content="%(card)s">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9642;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -177,10 +301,12 @@ def page_html(page, doc, profile, pages):
 %(ticker)s
 %(idbar)s
 <div class="wrap">
+  %(back)s
   <div class="rule">
     <div class="rule-in"><span>%(label)s</span><span class="rule-meta"><span>%(kicker)s</span></span></div>
   </div>
   %(nav)s
+  %(lead)s
   <article class="prose">
     %(body)s
   </article>
@@ -197,13 +323,17 @@ def page_html(page, doc, profile, pages):
         "full_title": full_title,
         "meta": meta,
         "ogurl": ('<meta property="og:url" content="%s">' % esc(url)) if url else "",
+        "ogimg": ('<meta property="og:image" content="%s">' % esc(og_img)) if og_img else "",
+        "card": "summary_large_image" if og_img else "summary",
         "fonts": FONTS,
         "css": stylesheet(profile.get("layout", {})) + PROSE_CSS,
         "ticker": ticker,
         "idbar": idbar,
+        "back": back,
         "label": esc(page.get("title") or ""),
-        "kicker": esc(doc.get("kicker", "Archive")),
+        "kicker": esc(page.get("kicker") or doc.get("kicker", "Archive")),
         "nav": nav,
+        "lead": lead,
         "body": body,
         "foot": foot_links,
         "copy": esc(profile.get("footer", "")),
@@ -228,8 +358,36 @@ def build_archive(profile=None, quiet=False):
     OUT.mkdir(parents=True)
 
     imgsrc = CONTENT / "archive-images"
+    have = set()
     if imgsrc.exists():
         shutil.copytree(imgsrc, OUT / "images")
+        have = {f.name for f in (OUT / "images").iterdir() if f.is_file()}
+
+    # Fail loudly on a typo'd filename rather than shipping a broken <img>.
+    def check(src_name, where):
+        s = str(src_name or "")
+        if s and not s.lower().startswith(("http://", "https://")) and s not in have:
+            missing.append("%s (%s)" % (s, where))
+
+    missing = []
+    for p in pages:
+        where = "/" + p.get("slug", "")
+        check(p.get("lead"), where)
+        check(p.get("cover"), where)
+        for b in p.get("blocks", []):
+            if not isinstance(b, dict):
+                continue
+            if b.get("type") == "image":
+                check(b.get("src"), where)
+            elif b.get("type") == "gallery":
+                for i in b.get("items", []):
+                    check(i if isinstance(i, str) else i.get("src"), where)
+            elif b.get("type") == "cards":
+                for i in b.get("items", []):
+                    check(i.get("image"), where)
+    if missing:
+        die("archive images not found in content/archive-images: %s"
+            % ", ".join(missing))
 
     for p in pages:
         slug = p.get("slug", "")
@@ -237,9 +395,18 @@ def build_archive(profile=None, quiet=False):
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(page_html(p, doc, profile, pages))
 
+    # Old Squarespace paths -> their new homes. Cloudflare's static-asset
+    # Worker reads site/_redirects; the file has to sit at the assets root,
+    # not inside site/archive/.
+    reds = doc.get("redirects") or {}
+    if reds:
+        lines = ["# generated by archive.py — old Squarespace URLs"]
+        lines += ["%s %s 301" % (k, v) for k, v in sorted(reds.items())]
+        (SITE / "_redirects").write_text("\n".join(lines) + "\n")
+
     if not quiet:
-        print("built site/archive/  (%d page%s)"
-              % (len(pages), "" if len(pages) == 1 else "s"))
+        print("built site/archive/  (%d page%s, %d images, %d redirects)"
+              % (len(pages), "" if len(pages) == 1 else "s", len(have), len(reds)))
 
 
 if __name__ == "__main__":

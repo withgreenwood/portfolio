@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YouTube Latin American Creator Summit — Stephen Greenwood</title>
+<meta name="description" content="YouTube amplified community building amongst Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between You">
+<meta property="og:title" content="YouTube Latin American Creator Summit — Stephen Greenwood">
+<meta property="og:description" content="YouTube amplified community building amongst Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between You">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://withgreenwood.com/archive/work/youtube-latin-american-creator-summit/">
+<meta property="og:image" content="https://withgreenwood.com/archive/images/youtube-latin-american-creator-summit-01.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9642;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+:root{
+  --ink:#000; --bg:#fff; --accent:#ff5232; --panel:#dedede; --line:#000;
+  --max:1180px; --gap:1px; --radius:0px; --pad:15px;
+  --disp:"Helvetica Neue","Inter Tight",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:500 14px/1.5 var(--mono);text-transform:uppercase;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- ticker ---- */
+.ticker{background:var(--accent);border-bottom:1px solid var(--line);
+  overflow:hidden;white-space:nowrap}
+.ticker-run{display:inline-block;padding:6px 0;
+  font:500 11px/1.2 var(--mono);letter-spacing:.14em;
+  animation:ticker 34s linear infinite}
+.ticker-run span{padding:0 20px}
+.ticker-run .dot{padding:0;opacity:.55}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-run{animation:none}}
+
+/* ---- identity bar ---- */
+.idbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;
+  align-items:stretch;border-bottom:1px solid var(--line);background:var(--bg)}
+.idcell{display:flex;align-items:center;padding:0 var(--pad);min-height:52px}
+.idcell+.idcell{border-left:1px solid var(--line)}
+.idcell-name{width:100%;border-bottom:1px solid var(--line)}
+.idcell+.idcell-links{border-left:0}
+.wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
+  letter-spacing:-.045em;white-space:nowrap}
+.links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
+  padding-bottom:2px;border-bottom:1px solid transparent;
+  transition:color .15s,border-color .15s}
+.links a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- section rule ---- */
+.wrap{max-width:var(--max);margin:0 auto}
+.rule{padding:clamp(26px,4vw,44px) var(--pad) 0}
+.rule-in{display:flex;flex-wrap:wrap;justify-content:space-between;
+  align-items:baseline;gap:6px 16px;
+  padding-bottom:10px;border-bottom:1px solid var(--line);
+  font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+.rule-meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin-left:auto}
+
+/* ---- grid ---- */
+/* The hairlines are a 1px shadow on each tile, not a black container showing
+   through the gap -- a part-filled last row would leave a black slab. */
+.pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:var(--gap);background:var(--bg);
+  margin:18px var(--pad) 0;padding:1px}
+.pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
+  overflow:hidden;border-radius:var(--radius);background:var(--panel);
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
+.pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
+.pgf-ov{position:absolute;left:0;right:0;bottom:0;background:var(--ink);
+  color:var(--bg);padding:9px 10px;transform:translateY(101%);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{transform:translateY(0)}
+.pgf-t{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.05em}
+.pgf-s{display:block;margin-top:4px;font:400 9.5px/1.3 var(--mono);
+  letter-spacing:.1em;color:var(--accent)}
+.pgf-a{position:absolute;top:8px;right:8px;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;background:var(--bg);
+  border:1px solid var(--line);font:500 11px/1 var(--mono);opacity:0;
+  transition:opacity .22s}
+.pgf-i:hover .pgf-a,.pgf-i:focus-visible .pgf-a{opacity:1}
+.pgf-i:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+@media(hover:none){.pgf-ov{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+  .pgf-i img,.pgf-ov,.pgf-a{transition:none}
+  .pgf-i:hover img,.pgf-i:focus-visible img{transform:none}
+}
+.empty{margin:18px var(--pad) 0;text-align:center;font-size:12px;padding:60px 0;
+  border:1px dashed var(--line)}
+
+/* ---- footer ---- */
+footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
+  background:var(--ink);color:var(--bg)}
+.foot-in{max-width:var(--max);margin:0 auto;display:flex;flex-wrap:wrap;
+  gap:20px 38px;align-items:baseline;padding-block:28px 32px;
+  padding-left:var(--pad);padding-right:var(--pad);
+  font:500 11px/1.6 var(--mono);letter-spacing:.13em}
+.foot-in a{text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px}
+.foot-in a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.push{margin-left:0}
+
+/* ---- wider ---- */
+@media(min-width:620px){
+  :root{--pad:24px}
+  .idcell{min-height:62px}
+  .idcell-name{width:auto;border-bottom:0}
+  .idcell+.idcell-links{border-left:1px solid var(--line);margin-left:auto}
+  .pgf-grid{grid-template-columns:repeat(3,1fr)}
+  .push{margin-left:auto}
+}
+@media(min-width:940px){
+  .pgf-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ---- page nav ---- */
+.pagenav{display:flex;flex-wrap:wrap;gap:0;
+  border-bottom:1px solid var(--line);margin:0 var(--pad)}
+.pagenav a{flex:1 1 auto;text-align:center;padding:11px 14px;
+  font:500 11px/1 var(--mono);letter-spacing:.14em;text-decoration:none;
+  border-left:1px solid var(--line);transition:background .15s,color .15s}
+.pagenav a:first-child{border-left:0}
+.pagenav a:hover{background:var(--ink);color:var(--bg)}
+.pagenav a[aria-current="page"]{background:var(--accent)}
+
+/* ---- prose ---- */
+.prose{padding:clamp(26px,4vw,46px) var(--pad) 0;text-transform:none;
+  font:400 16px/1.72 var(--disp);letter-spacing:0}
+.prose>*{max-width:68ch}
+.prose p{margin:0 0 1.2em}
+.prose p+p{margin-top:0}
+.prose .intro{max-width:60ch;font-size:1.17em;line-height:1.6;
+  margin:0 0 1.35em}
+.prose .lede{max-width:34ch;
+  font:600 clamp(21px,3.4vw,33px)/1.16 var(--disp);letter-spacing:-.032em;
+  margin:0 0 1.1em}
+.prose h2{font:600 clamp(18px,2.3vw,24px)/1.2 var(--disp);
+  letter-spacing:-.03em;margin:2.2em 0 .7em}
+.prose h2:first-child{margin-top:0}
+.prose a{color:var(--accent);text-decoration:none;
+  border-bottom:1px solid var(--accent)}
+.prose ul{margin:0 0 1.2em;padding-left:1.1em}
+.prose li{margin:0 0 .35em}
+.prose blockquote{margin:1.6em 0;padding-left:18px;
+  border-left:2px solid var(--accent);font-size:1.06em}
+.prose figure{margin:1.8em 0;max-width:100%}
+.prose figure img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.prose figcaption{margin-top:8px;font:500 10.5px/1.4 var(--mono);
+  letter-spacing:.11em;text-transform:uppercase;opacity:.62}
+
+/* ---- hairline cells (areas of expertise, credit lists) ----
+   The rules are drawn by a 1px shadow on every cell rather than by letting a
+   black container show through a 1px gap: a part-filled last row would
+   otherwise leave a black slab where the missing cells are. */
+.cells{display:grid;grid-template-columns:1fr;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.6em}
+.cells div{background:var(--bg);box-shadow:0 0 0 1px var(--line);
+  padding:16px var(--pad);
+  font:500 11.5px/1.35 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.cells a{color:inherit;text-decoration:none;border:0;
+  border-bottom:1px solid transparent}
+.cells a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+@media(min-width:620px){.cells{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.cells{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- lead image: full-bleed inside the wrap, no figure margins ---- */
+.lead{margin:0 var(--pad);max-width:none;border:1px solid var(--line);
+  border-top:0}
+.lead img{display:block;width:100%;height:auto}
+
+/* ---- gallery: hairline mosaic, same language as the grid ---- */
+.gal{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal figure{margin:0;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
+.gal img{display:block;width:100%;height:auto;border:0}
+.gal figcaption{padding:0 12px 12px}
+@media(min-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.gal--3{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- index cards (the projects page) ---- */
+.cards{display:grid;grid-template-columns:repeat(1,1fr);gap:1px;
+  max-width:none;background:var(--bg);padding:1px;margin:0 0 1.8em}
+.card{position:relative;display:block;background:var(--bg);
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit;border:0}
+.card:hover{border:0}
+.card-img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;
+  background:var(--panel);transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.card:hover .card-img{transform:scale(1.03)}
+.card-wrap{overflow:hidden}
+.card-txt{padding:13px 14px 15px}
+.card-t{display:block;font:500 11.5px/1.35 var(--mono);letter-spacing:.09em;
+  text-transform:uppercase}
+.card-m{display:block;margin-top:5px;font:400 10px/1.3 var(--mono);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+@media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- back link ---- */
+.back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
+  letter-spacing:.14em}
+.back a{text-decoration:none;border-bottom:1px solid transparent}
+.back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="ticker"><div class="ticker-run"><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span></div></div>
+<header class="idbar">
+  <div class="idcell idcell-name"><a href="/" style="text-decoration:none"><span class="wordmark">Stephen Greenwood</span></a></div>
+  <div class="idcell idcell-links"><ul class="links"><li><a href="https://instagram.com/withgreenwood">Instagram</a></li><li><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a></li><li><a href="mailto:stephen@withgreenwood.com">Email</a></li></ul></div>
+</header>
+<div class="wrap">
+  <div class="back"><a href="../../work/">&larr; All projects</a></div>
+  <div class="rule">
+    <div class="rule-in"><span>YouTube Latin American Creator Summit</span><span class="rule-meta"><span>YouTube · MAS</span></span></div>
+  </div>
+  <nav class="pagenav"><a href="../../">About</a><a href="../../story/">Story</a><a href="../../resume/">Resume</a><a href="../../work/" aria-current="page">Projects</a></nav>
+  <div class="lead"><img src="../../images/youtube-latin-american-creator-summit-01.jpg" alt="YouTube Latin American Creator Summit" decoding="async"></div>
+  <article class="prose">
+    <p class="intro">YouTube amplified community building amongst Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between YouTube executives and Creators about the vision for the platform moving forward and the state of content creation as a whole. The main stage also hosted fun activities balancing out heavier discussions as well as special guest appearances from Pitbull and Hannah Beachler.</p>
+    <p>Intentional themes and design channeled the vibrancy of Latin American culture allowing the Creators to feel seen. Each creator was greeted with a custom gift and collateral in their native language. This event was designed and produced by MAS Event + Design.</p>
+    <h2>Project Contributions</h2>
+    <ul><li>Guided YouTube’s efforts to recognize the Latin American creator community</li><li>Created and executed culturally relevant event programming for the 3-day experience covering design, themes, music, food, and gifting</li><li>Developed visual branding and collateral in English, Spanish, and Portuguese</li><li>Coordinated translation services for Spanish, Portuguese, and English language speakers and guests to experience the event in their native language</li><li>Managed overall project planning, budget, and logistics</li></ul>
+    <h2>Gallery</h2>
+    <div class="gal gal--3"><figure><img src="../../images/youtube-latin-american-creator-summit-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-11.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-14.jpg" alt="" loading="lazy" decoding="async"></figure><figure><img src="../../images/youtube-latin-american-creator-summit-15.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+  </article>
+</div>
+<footer>
+  <div class="foot-in">
+    <a href="https://instagram.com/withgreenwood">Instagram</a><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a><a href="mailto:stephen@withgreenwood.com">Email</a><a href="/">Work</a>
+    <span class="push">© 2026 Stephen Greenwood</span>
+  </div>
+</footer>
+</body>
+</html>
