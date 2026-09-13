@@ -370,6 +370,14 @@ def build_archive(profile=None, quiet=False):
     pages = doc.get("pages", [])
     if not pages:
         die("pages.json has no pages")
+
+    # A page marked "hidden" keeps its copy and its images in the repo but is
+    # not built, not linked and not redirected to -- the way to shelve one
+    # without losing it. Drop the flag to bring it back.
+    shelved = [p for p in pages if p.get("hidden")]
+    pages = [p for p in pages if not p.get("hidden")]
+    if not pages:
+        die("every page in pages.json is hidden")
     if profile is None:
         profile = load("profile.json")
 
@@ -425,8 +433,13 @@ def build_archive(profile=None, quiet=False):
         (SITE / "_redirects").write_text("\n".join(lines) + "\n")
 
     if not quiet:
-        print("built site/archive/  (%d page%s, %d images, %d redirects)"
-              % (len(pages), "" if len(pages) == 1 else "s", len(have), len(reds)))
+        note = ""
+        if shelved:
+            note = ", %d shelved: %s" % (
+                len(shelved), ", ".join(p.get("slug", "?") for p in shelved))
+        print("built site/archive/  (%d page%s, %d images, %d redirects%s)"
+              % (len(pages), "" if len(pages) == 1 else "s", len(have),
+                 len(reds), note))
 
 
 if __name__ == "__main__":

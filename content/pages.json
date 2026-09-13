@@ -7,7 +7,7 @@
     "/home": "/archive/work/",
     "/story": "/archive/story/",
     "/resume": "/archive/resume/",
-    "/home/pharrell-williams-son-of-a-pharoah": "/archive/work/joopiter-son-of-a-pharaoh/",
+    "/home/pharrell-williams-son-of-a-pharoah": "/archive/work/",
     "/home/ytfashion1": "/archive/work/youtube-fashion-beauty-launch/",
     "/home/google-pixel-3-grammy-activation": "/archive/work/google-pixel-3-grammy-activation/",
     "/home/trillectro": "/archive/work/trillectro/",
@@ -208,12 +208,6 @@
           "type": "cards",
           "items": [
             {
-              "title": "Pharrell Williams: Son of a Pharoah",
-              "meta": "JOOPITER",
-              "href": "work/joopiter-son-of-a-pharaoh/",
-              "image": "joopiter-son-of-a-pharaoh-01.jpg"
-            },
-            {
               "title": "YouTube Fashion & Beauty Launch",
               "meta": "YouTube · MAS",
               "href": "work/youtube-fashion-beauty-launch/",
@@ -306,7 +300,8 @@
             "joopiter-son-of-a-pharaoh-03.jpg"
           ]
         }
-      ]
+      ],
+      "hidden": true
     },
     {
       "slug": "work/youtube-fashion-beauty-launch",

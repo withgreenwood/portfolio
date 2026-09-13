@@ -50,6 +50,12 @@ def gallery(slug, cols=3):
 # A page whose first image makes a poor 4:3 crop can name a different one.
 COVER = {"google-mixtape": 3}
 
+# Shelved case studies. The copy and the images stay in the repo and in
+# pages.json; the page is just not built, not listed on the Projects index,
+# and its old Squarespace URL falls back to that index. Take a slug out of
+# this set to bring the page back.
+HIDDEN = {"joopiter-son-of-a-pharaoh"}
+
 
 def lead(slug):
     return "%s-%02d.jpg" % (slug, COVER.get(slug, 1))
@@ -68,7 +74,7 @@ def case(slug, title, meta, paras, work_label, work_items, extra=None):
         blocks.append({"type": "list", "items": items})
     blocks.append({"type": "h2", "text": "Gallery"})
     blocks.append(gallery(slug))
-    return {
+    page = {
         "slug": "work/" + slug,
         "title": title,
         "kicker": meta,
@@ -77,6 +83,9 @@ def case(slug, title, meta, paras, work_label, work_items, extra=None):
         "metaDescription": paras[0][:180],
         "blocks": blocks,
     }
+    if slug in HIDDEN:
+        page["hidden"] = True
+    return page
 
 
 CASES = [
@@ -279,7 +288,7 @@ WORK = {
              "meta": c["kicker"],
              "href": c["slug"] + "/",
              "image": c["lead"]}
-            for c in CASES]},
+            for c in CASES if not c.get("hidden")]},
     ],
 }
 
@@ -288,7 +297,9 @@ REDIRECTS = {
     "/home": "/archive/work/",
     "/story": "/archive/story/",
     "/resume": "/archive/resume/",
-    "/home/pharrell-williams-son-of-a-pharoah": "/archive/work/joopiter-son-of-a-pharaoh/",
+    # joopiter-son-of-a-pharaoh is shelved (see HIDDEN), so its old URL goes
+    # to the index rather than a page that is not built.
+    "/home/pharrell-williams-son-of-a-pharoah": "/archive/work/",
     "/home/ytfashion1": "/archive/work/youtube-fashion-beauty-launch/",
     "/home/google-pixel-3-grammy-activation": "/archive/work/google-pixel-3-grammy-activation/",
     "/home/trillectro": "/archive/work/trillectro/",
