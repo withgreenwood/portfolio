@@ -106,8 +106,6 @@ PROSE_CSS = """
 .card:hover .card-ov,.card:focus-visible .card-ov{transform:translateY(0)}
 .card-t{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.05em;
   text-transform:uppercase}
-.card-m{display:block;margin-top:4px;font:400 9.5px/1.3 var(--mono);
-  letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 .card-a{position:absolute;top:8px;right:8px;width:20px;height:20px;
   display:flex;align-items:center;justify-content:center;background:var(--bg);
   border:1px solid var(--line);color:var(--ink);font:500 11px/1 var(--mono);
@@ -198,8 +196,8 @@ def block_html(b, pfx):
     if t == "cards":
         cs = []
         for i in b.get("items", []):
-            meta = ('<span class="card-m">%s</span>' % esc(i.get("meta"))
-                    if i.get("meta") else "")
+            # Title only in the overlay -- the client sits on the case study
+            # itself, as its kicker, and a second line here was noise.
             # The badge is an arrow, not the grid's diagonal: these go to
             # another page on this site, not off it.
             cs.append(
@@ -207,11 +205,11 @@ def block_html(b, pfx):
                 '<img class="card-img" src="%s" alt="%s" width="1200" height="900" '
                 'loading="lazy" decoding="async">'
                 '<span class="card-a" aria-hidden="true">&#8594;</span>'
-                '<span class="card-ov"><span class="card-t">%s</span>%s</span>'
+                '<span class="card-ov"><span class="card-t">%s</span></span>'
                 '</a>' % (
                     esc(pfx + str(i.get("href", "")).lstrip("/")),
                     esc(img_src(i.get("image"), pfx)),
-                    esc(i.get("title")), esc(i.get("title")), meta))
+                    esc(i.get("title")), esc(i.get("title"))))
         return '<div class="cards">%s</div>' % "".join(cs)
     if t == "html":
         return str(b.get("html", ""))

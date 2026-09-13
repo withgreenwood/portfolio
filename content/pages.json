@@ -202,62 +202,53 @@
       "blocks": [
         {
           "type": "p",
-          "text": "Longer-form case studies from the JOOPITER, YouTube, Google and Trillectro years — the work that came before the Apple chapter on the front page."
+          "text": "Longer-form case studies from the YouTube, Google and Trillectro years — the work that came before the Apple and JOOPITER chapters."
         },
         {
           "type": "cards",
           "items": [
             {
               "title": "YouTube Fashion & Beauty Launch",
-              "meta": "YouTube · MAS",
               "href": "work/youtube-fashion-beauty-launch/",
               "image": "youtube-fashion-beauty-launch-01.jpg"
             },
             {
               "title": "Google Pixel 3 x Childish Gambino Activation",
-              "meta": "Google · MAS",
               "href": "work/google-pixel-3-grammy-activation/",
               "image": "google-pixel-3-grammy-activation-01.jpg"
             },
             {
               "title": "Trillectro Music Festival",
-              "meta": "Trillectro",
               "href": "work/trillectro/",
               "image": "trillectro-01.jpg"
             },
             {
               "title": "YouTube Music @ Rolling Stone Relaunch",
-              "meta": "YouTube Music · MAS",
               "href": "work/youtube-music-rolling-stone-relaunch/",
               "image": "youtube-music-rolling-stone-relaunch-01.jpg"
             },
             {
               "title": "YouTube Music x Megan Thee Stallion",
-              "meta": "YouTube Music · MAS",
               "href": "work/youtube-music-megan-thee-stallion/",
               "image": "youtube-music-megan-thee-stallion-01.jpg"
             },
             {
               "title": "YouTube Grammy Party NYC",
-              "meta": "YouTube · MAS",
               "href": "work/youtube-grammy-party-nyc/",
               "image": "youtube-grammy-party-nyc-01.jpg"
             },
             {
               "title": "YouTube Latin American Creator Summit",
-              "meta": "YouTube · MAS",
               "href": "work/youtube-latin-american-creator-summit/",
               "image": "youtube-latin-american-creator-summit-01.jpg"
             },
             {
               "title": "#YouTubeBlack Creator Summit",
-              "meta": "YouTube · MAS",
               "href": "work/youtube-black-creator-summit/",
               "image": "youtube-black-creator-summit-01.jpg"
             },
             {
               "title": "Google Mixtape",
-              "meta": "Google · MAS",
               "href": "work/google-mixtape/",
               "image": "google-mixtape-03.jpg"
             }

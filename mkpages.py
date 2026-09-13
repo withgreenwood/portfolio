@@ -282,10 +282,9 @@ WORK = {
     "metaDescription": "Case studies from the JOOPITER, YouTube, Google and Trillectro years.",
     "blocks": [
         {"type": "p",
-         "text": "Longer-form case studies from the JOOPITER, YouTube, Google and Trillectro years — the work that came before the Apple chapter on the front page."},
+         "text": "Longer-form case studies from the YouTube, Google and Trillectro years — the work that came before the Apple and JOOPITER chapters."},
         {"type": "cards", "items": [
             {"title": c["title"],
-             "meta": c["kicker"],
              "href": c["slug"] + "/",
              "image": c["lead"]}
             for c in CASES if not c.get("hidden")]},
