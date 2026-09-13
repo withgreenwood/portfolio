@@ -182,26 +182,25 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
    a fixed column grid leaves every short image sitting in a pocket of white --
    which, in a layout made of flush hairlines, reads as broken.
 
-   Instead each figure carries its own aspect ratio in --r (written by
-   archive.py from the JPEG header) and flexes in proportion to it. Within any
-   one line, widths are proportional to ratios, so every image on that line
-   lands on the same height and the line fills the width exactly. Nothing is
-   cropped and no row is ragged. The ::after with an enormous flex-grow eats
-   the slack on the final line so a short last row keeps its natural size
-   instead of being stretched across the page.
+   archive.py packs them into rows at build time and gives each figure a
+   percentage width proportional to its aspect ratio. Every row therefore
+   spans the full width exactly, the last one included, and every image in a
+   row lands on the same height. Nothing is cropped and no white shows.
+   Because the widths are percentages, the rows rescale with the container.
 
-   --gh is the base row height; the real height per line is whatever filling
-   the width requires, so this is a floor rather than a fixed value. */
-.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
-.gal::after{content:"";flex-grow:999999}
+   Under 620px the rows unwrap: one image per line, full width. Three
+   landscape shots sharing a phone screen are 80px tall and worth nothing. */
+.gal{display:flex;flex-direction:column;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
-  box-shadow:0 0 0 1px var(--line);
-  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+  box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
 .gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{--gh:165px}}
-@media(min-width:940px){.gal{--gh:215px}}
+@media(max-width:619px){
+  .gal-row{flex-direction:column;gap:1px}
+  .gal figure{flex-basis:auto !important;width:100%}
+}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -264,7 +263,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Project Contributions</h2>
     <ul><li>Maximized Youtube Music’s visibility during Rolling Stone partnership</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><figure style="--r:1.7773"><img src="../../images/youtube-music-rolling-stone-relaunch-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667"><img src="../../images/youtube-music-rolling-stone-relaunch-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-music-rolling-stone-relaunch-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333"><img src="../../images/youtube-music-rolling-stone-relaunch-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.75"><img src="../../images/youtube-music-rolling-stone-relaunch-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667"><img src="../../images/youtube-music-rolling-stone-relaunch-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-11.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006"><img src="../../images/youtube-music-rolling-stone-relaunch-13.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.7773;flex-basis:calc((100% - 2px) * 0.45057)"><img src="../../images/youtube-music-rolling-stone-relaunch-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667;flex-basis:calc((100% - 2px) * 0.16902)"><img src="../../images/youtube-music-rolling-stone-relaunch-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006;flex-basis:calc((100% - 2px) * 0.38042)"><img src="../../images/youtube-music-rolling-stone-relaunch-04.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.5006;flex-basis:calc((100% - 2px) * 0.34625)"><img src="../../images/youtube-music-rolling-stone-relaunch-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.34611)"><img src="../../images/youtube-music-rolling-stone-relaunch-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333;flex-basis:calc((100% - 2px) * 0.30764)"><img src="../../images/youtube-music-rolling-stone-relaunch-07.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:0.75;flex-basis:calc((100% - 3px) * 0.16976)"><img src="../../images/youtube-music-rolling-stone-relaunch-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006;flex-basis:calc((100% - 3px) * 0.33966)"><img src="../../images/youtube-music-rolling-stone-relaunch-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667;flex-basis:calc((100% - 3px) * 0.15091)"><img src="../../images/youtube-music-rolling-stone-relaunch-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006;flex-basis:calc((100% - 3px) * 0.33966)"><img src="../../images/youtube-music-rolling-stone-relaunch-11.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.5006;flex-basis:calc((100% - 1px) * 0.50000)"><img src="../../images/youtube-music-rolling-stone-relaunch-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5006;flex-basis:calc((100% - 1px) * 0.50000)"><img src="../../images/youtube-music-rolling-stone-relaunch-13.jpg" alt="" loading="lazy" decoding="async"></figure></div></div>
   </article>
 </div>
 <footer>

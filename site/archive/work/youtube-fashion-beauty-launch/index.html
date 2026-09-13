@@ -182,26 +182,25 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
    a fixed column grid leaves every short image sitting in a pocket of white --
    which, in a layout made of flush hairlines, reads as broken.
 
-   Instead each figure carries its own aspect ratio in --r (written by
-   archive.py from the JPEG header) and flexes in proportion to it. Within any
-   one line, widths are proportional to ratios, so every image on that line
-   lands on the same height and the line fills the width exactly. Nothing is
-   cropped and no row is ragged. The ::after with an enormous flex-grow eats
-   the slack on the final line so a short last row keeps its natural size
-   instead of being stretched across the page.
+   archive.py packs them into rows at build time and gives each figure a
+   percentage width proportional to its aspect ratio. Every row therefore
+   spans the full width exactly, the last one included, and every image in a
+   row lands on the same height. Nothing is cropped and no white shows.
+   Because the widths are percentages, the rows rescale with the container.
 
-   --gh is the base row height; the real height per line is whatever filling
-   the width requires, so this is a floor rather than a fixed value. */
-.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
-.gal::after{content:"";flex-grow:999999}
+   Under 620px the rows unwrap: one image per line, full width. Three
+   landscape shots sharing a phone screen are 80px tall and worth nothing. */
+.gal{display:flex;flex-direction:column;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
-  box-shadow:0 0 0 1px var(--line);
-  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+  box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
 .gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{--gh:165px}}
-@media(min-width:940px){.gal{--gh:215px}}
+@media(max-width:619px){
+  .gal-row{flex-direction:column;gap:1px}
+  .gal figure{flex-basis:auto !important;width:100%}
+}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -262,7 +261,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Project Contributions</h2>
     <ul><li>Partnered with CAA to secure and produce a performance by Future</li><li>Managed the creative development and fabrication of the custom stage and art installations</li><li>Collaborated with Cha Cha Matcha to develop a co-branded pop-up bar</li><li>Developed and produced brand visual identity</li><li>Sourced and produced gifting moment</li><li>Owned day-to-day client relations</li><li>Oversaw event production, logistics, and security planning</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><figure style="--r:1.1947"><img src="../../images/youtube-fashion-beauty-launch-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-fashion-beauty-launch-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3321"><img src="../../images/youtube-fashion-beauty-launch-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.25"><img src="../../images/youtube-fashion-beauty-launch-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.1939"><img src="../../images/youtube-fashion-beauty-launch-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.9302"><img src="../../images/youtube-fashion-beauty-launch-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.1938"><img src="../../images/youtube-fashion-beauty-launch-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.503"><img src="../../images/youtube-fashion-beauty-launch-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.9307"><img src="../../images/youtube-fashion-beauty-launch-10.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.1947;flex-basis:calc((100% - 2px) * 0.29669)"><img src="../../images/youtube-fashion-beauty-launch-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.37250)"><img src="../../images/youtube-fashion-beauty-launch-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3321;flex-basis:calc((100% - 2px) * 0.33081)"><img src="../../images/youtube-fashion-beauty-launch-04.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.25;flex-basis:calc((100% - 5px) * 0.17853)"><img src="../../images/youtube-fashion-beauty-launch-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.1939;flex-basis:calc((100% - 5px) * 0.17052)"><img src="../../images/youtube-fashion-beauty-launch-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.9302;flex-basis:calc((100% - 5px) * 0.13286)"><img src="../../images/youtube-fashion-beauty-launch-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.1938;flex-basis:calc((100% - 5px) * 0.17050)"><img src="../../images/youtube-fashion-beauty-launch-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.503;flex-basis:calc((100% - 5px) * 0.21467)"><img src="../../images/youtube-fashion-beauty-launch-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.9307;flex-basis:calc((100% - 5px) * 0.13293)"><img src="../../images/youtube-fashion-beauty-launch-10.jpg" alt="" loading="lazy" decoding="async"></figure></div></div>
   </article>
 </div>
 <footer>

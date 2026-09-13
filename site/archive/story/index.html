@@ -182,26 +182,25 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
    a fixed column grid leaves every short image sitting in a pocket of white --
    which, in a layout made of flush hairlines, reads as broken.
 
-   Instead each figure carries its own aspect ratio in --r (written by
-   archive.py from the JPEG header) and flexes in proportion to it. Within any
-   one line, widths are proportional to ratios, so every image on that line
-   lands on the same height and the line fills the width exactly. Nothing is
-   cropped and no row is ragged. The ::after with an enormous flex-grow eats
-   the slack on the final line so a short last row keeps its natural size
-   instead of being stretched across the page.
+   archive.py packs them into rows at build time and gives each figure a
+   percentage width proportional to its aspect ratio. Every row therefore
+   spans the full width exactly, the last one included, and every image in a
+   row lands on the same height. Nothing is cropped and no white shows.
+   Because the widths are percentages, the rows rescale with the container.
 
-   --gh is the base row height; the real height per line is whatever filling
-   the width requires, so this is a floor rather than a fixed value. */
-.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
-.gal::after{content:"";flex-grow:999999}
+   Under 620px the rows unwrap: one image per line, full width. Three
+   landscape shots sharing a phone screen are 80px tall and worth nothing. */
+.gal{display:flex;flex-direction:column;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
-  box-shadow:0 0 0 1px var(--line);
-  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+  box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
 .gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{--gh:165px}}
-@media(min-width:940px){.gal{--gh:215px}}
+@media(max-width:619px){
+  .gal-row{flex-direction:column;gap:1px}
+  .gal figure{flex-basis:auto !important;width:100%}
+}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -264,7 +263,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <p>In the middle of the Trillectro run, I moved to NYC, diving into both creative and career opportunities. I tapped into an incredible network of amazing DJs and creatives and was able to extend Trillectro’s reach by partnering with established culture brands like Everyday People. I built on my experience as a DJ and promoter, eventually co-creating Skin Valley, a high-energy monthly party series at Brooklyn’s cultural hub, Kinfolk. I built an audience by coding a Twilio-based SMS chatbot allowing for targeted conversations pointing thousands of party-goers to the next event. Combining a unique brand, intrigue from viral party footage, and the strength of the chatbot, Skin Valley became the venue’s most successful party series.</p>
     <p>I also transitioned professionally, finding success working in the agency space. I leveraged my marketing expertise and production experience to create experiences with top brands like YouTube Music, Google, and Samsung. I developed marketing strategies that seamlessly tied tech, music, and culture together. I utilized my network and relationships to identify, secure, and collaborate with talent. By building trust with clients, I was fortunate to produce several events across multiple years, such as YouTube Creators Summits, elevating the experience in each iteration. As work travels brought me to the west coast more frequently, I was inspired to start a new chapter by relocating to Los Angeles.</p>
     <h2>Along the way</h2>
-    <div class="gal"><figure style="--r:1.3333"><img src="../images/story-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.334"><img src="../images/story-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333"><img src="../images/story-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333"><img src="../images/story-05.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.3333;flex-basis:calc((100% - 3px) * 0.24997)"><img src="../images/story-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.334;flex-basis:calc((100% - 3px) * 0.25010)"><img src="../images/story-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333;flex-basis:calc((100% - 3px) * 0.24997)"><img src="../images/story-04.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3333;flex-basis:calc((100% - 3px) * 0.24997)"><img src="../images/story-05.jpg" alt="" loading="lazy" decoding="async"></figure></div></div>
   </article>
 </div>
 <footer>

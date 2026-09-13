@@ -182,26 +182,25 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
    a fixed column grid leaves every short image sitting in a pocket of white --
    which, in a layout made of flush hairlines, reads as broken.
 
-   Instead each figure carries its own aspect ratio in --r (written by
-   archive.py from the JPEG header) and flexes in proportion to it. Within any
-   one line, widths are proportional to ratios, so every image on that line
-   lands on the same height and the line fills the width exactly. Nothing is
-   cropped and no row is ragged. The ::after with an enormous flex-grow eats
-   the slack on the final line so a short last row keeps its natural size
-   instead of being stretched across the page.
+   archive.py packs them into rows at build time and gives each figure a
+   percentage width proportional to its aspect ratio. Every row therefore
+   spans the full width exactly, the last one included, and every image in a
+   row lands on the same height. Nothing is cropped and no white shows.
+   Because the widths are percentages, the rows rescale with the container.
 
-   --gh is the base row height; the real height per line is whatever filling
-   the width requires, so this is a floor rather than a fixed value. */
-.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
-.gal::after{content:"";flex-grow:999999}
+   Under 620px the rows unwrap: one image per line, full width. Three
+   landscape shots sharing a phone screen are 80px tall and worth nothing. */
+.gal{display:flex;flex-direction:column;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
-  box-shadow:0 0 0 1px var(--line);
-  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+  box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
 .gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{--gh:165px}}
-@media(min-width:940px){.gal{--gh:215px}}
+@media(max-width:619px){
+  .gal-row{flex-direction:column;gap:1px}
+  .gal figure{flex-basis:auto !important;width:100%}
+}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -262,7 +261,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Project Contributions</h2>
     <ul><li>Team Lead</li><li>Brand Management</li><li>Client Relations</li><li>On-site Activation Lead</li><li>Talent Management</li><li>Creative Ideation</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><figure style="--r:1.5121"><img src="../../images/youtube-grammy-party-nyc-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5015"><img src="../../images/youtube-grammy-party-nyc-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-grammy-party-nyc-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4985"><img src="../../images/youtube-grammy-party-nyc-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4993"><img src="../../images/youtube-grammy-party-nyc-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4985"><img src="../../images/youtube-grammy-party-nyc-08.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4993"><img src="../../images/youtube-grammy-party-nyc-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.667"><img src="../../images/youtube-grammy-party-nyc-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4993"><img src="../../images/youtube-grammy-party-nyc-11.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-grammy-party-nyc-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4545"><img src="../../images/youtube-grammy-party-nyc-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-grammy-party-nyc-14.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5"><img src="../../images/youtube-grammy-party-nyc-15.jpg" alt="" loading="lazy" decoding="async"></figure></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.5121;flex-basis:calc((100% - 2px) * 0.33501)"><img src="../../images/youtube-grammy-party-nyc-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33266)"><img src="../../images/youtube-grammy-party-nyc-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33233)"><img src="../../images/youtube-grammy-party-nyc-05.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.4985;flex-basis:calc((100% - 2px) * 0.33327)"><img src="../../images/youtube-grammy-party-nyc-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4993;flex-basis:calc((100% - 2px) * 0.33345)"><img src="../../images/youtube-grammy-party-nyc-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4985;flex-basis:calc((100% - 2px) * 0.33327)"><img src="../../images/youtube-grammy-party-nyc-08.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.4993;flex-basis:calc((100% - 2px) * 0.40902)"><img src="../../images/youtube-grammy-party-nyc-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.667;flex-basis:calc((100% - 2px) * 0.18196)"><img src="../../images/youtube-grammy-party-nyc-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4993;flex-basis:calc((100% - 2px) * 0.40902)"><img src="../../images/youtube-grammy-party-nyc-11.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.25191)"><img src="../../images/youtube-grammy-party-nyc-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4545;flex-basis:calc((100% - 3px) * 0.24427)"><img src="../../images/youtube-grammy-party-nyc-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.25191)"><img src="../../images/youtube-grammy-party-nyc-14.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.25191)"><img src="../../images/youtube-grammy-party-nyc-15.jpg" alt="" loading="lazy" decoding="async"></figure></div></div>
   </article>
 </div>
 <footer>

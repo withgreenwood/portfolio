@@ -82,26 +82,25 @@ PROSE_CSS = """
    a fixed column grid leaves every short image sitting in a pocket of white --
    which, in a layout made of flush hairlines, reads as broken.
 
-   Instead each figure carries its own aspect ratio in --r (written by
-   archive.py from the JPEG header) and flexes in proportion to it. Within any
-   one line, widths are proportional to ratios, so every image on that line
-   lands on the same height and the line fills the width exactly. Nothing is
-   cropped and no row is ragged. The ::after with an enormous flex-grow eats
-   the slack on the final line so a short last row keeps its natural size
-   instead of being stretched across the page.
+   archive.py packs them into rows at build time and gives each figure a
+   percentage width proportional to its aspect ratio. Every row therefore
+   spans the full width exactly, the last one included, and every image in a
+   row lands on the same height. Nothing is cropped and no white shows.
+   Because the widths are percentages, the rows rescale with the container.
 
-   --gh is the base row height; the real height per line is whatever filling
-   the width requires, so this is a floor rather than a fixed value. */
-.gal{display:flex;flex-wrap:wrap;gap:1px;max-width:none;
-  background:var(--bg);padding:1px;margin:0 0 1.8em;--gh:120px}
-.gal::after{content:"";flex-grow:999999}
+   Under 620px the rows unwrap: one image per line, full width. Three
+   landscape shots sharing a phone screen are 80px tall and worth nothing. */
+.gal{display:flex;flex-direction:column;gap:1px;max-width:none;
+  background:var(--bg);padding:1px;margin:0 0 1.8em}
+.gal-row{display:flex;gap:1px;min-width:0}
 .gal figure{margin:0;min-width:0;background:var(--bg);
-  box-shadow:0 0 0 1px var(--line);
-  flex-grow:var(--r);flex-shrink:1;flex-basis:calc(var(--r) * var(--gh))}
+  box-shadow:0 0 0 1px var(--line);flex-grow:0;flex-shrink:1}
 .gal img{display:block;width:100%;height:auto;border:0;aspect-ratio:var(--r)}
 .gal figcaption{padding:0 12px 12px}
-@media(min-width:620px){.gal{--gh:165px}}
-@media(min-width:940px){.gal{--gh:215px}}
+@media(max-width:619px){
+  .gal-row{flex-direction:column;gap:1px}
+  .gal figure{flex-basis:auto !important;width:100%}
+}
 
 /* ---- index cards (the projects page) ----
    Same treatment as the grid tiles in build.py -- image fills the cell, slow
@@ -196,6 +195,32 @@ def img_src(src, pfx):
     return pfx + "images/" + src
 
 
+# Justified-row packing. TARGET is the sum of aspect ratios a row aims for:
+# at a 1180px content width that lands rows around 250px tall. A row closes
+# when the next image would overshoot, or at MAXN images. A thin final row is
+# folded back into the one before it rather than left as an orphan -- without
+# that, five of the ten galleries would end on a single image stretched to the
+# full width and three times the height of everything above it.
+GAL_TARGET = 4.6
+GAL_MAXN = 5
+
+
+def gallery_rows(ratios, target=GAL_TARGET, maxn=GAL_MAXN):
+    rows, cur, total = [], [], 0.0
+    for r in ratios:
+        if cur and (total + r > target or len(cur) >= maxn):
+            rows.append(cur)
+            cur, total = [r], r
+        else:
+            cur.append(r)
+            total += r
+    if cur:
+        rows.append(cur)
+    if len(rows) > 1 and sum(rows[-1]) < target * 0.6:
+        rows[-2].extend(rows.pop())
+    return rows
+
+
 def block_html(b, pfx):
     if isinstance(b, str):
         b = {"type": "p", "text": b}
@@ -235,19 +260,33 @@ def block_html(b, pfx):
         return "<figure>%s</figure>" % fig
     if t == "gallery":
         # "cols" is still accepted in pages.json but no longer does anything:
-        # justified rows decide how many images a line holds by their shapes.
-        figs = []
-        for i in b.get("items", []):
-            if isinstance(i, str):
-                i = {"src": i}
-            cap = i.get("caption")
-            r = ratio(i.get("src"))
-            f = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
-                esc(img_src(i.get("src"), pfx)), esc(i.get("alt") or cap or ""))
-            if cap:
-                f += "<figcaption>%s</figcaption>" % esc(cap)
-            figs.append('<figure style="--r:%g">%s</figure>' % (r, f))
-        return '<div class="gal">%s</div>' % "".join(figs)
+        # the images' own shapes decide how many share a row.
+        items = [{"src": i} if isinstance(i, str) else i
+                 for i in b.get("items", [])]
+        if not items:
+            return ""
+        ratios = [ratio(i.get("src")) for i in items]
+
+        out, n = [], 0
+        for row in gallery_rows(ratios):
+            total = sum(row)
+            cells = []
+            for r in row:
+                i = items[n]
+                n += 1
+                cap = i.get("caption")
+                f = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
+                    esc(img_src(i.get("src"), pfx)),
+                    esc(i.get("alt") or cap or ""))
+                if cap:
+                    f += "<figcaption>%s</figcaption>" % esc(cap)
+                # The row's 1px gaps come out of the 100% before it is split,
+                # so the widths still add up to the full width exactly.
+                cells.append(
+                    '<figure style="--r:%g;flex-basis:calc((100%% - %dpx) * %.5f)">'
+                    '%s</figure>' % (r, len(row) - 1, r / total, f))
+            out.append('<div class="gal-row">%s</div>' % "".join(cells))
+        return '<div class="gal">%s</div>' % "".join(out)
     if t == "cards":
         cs = []
         for i in b.get("items", []):
