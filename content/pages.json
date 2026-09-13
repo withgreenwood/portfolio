@@ -33,7 +33,7 @@
         },
         {
           "type": "p",
-          "text": "I’ve spent over 20 years at the forefront of culture as a DJ, sneakerhead, and dot connector. Combine that with over ten years of working with the most well-known brands in the world. I bring a creative director’s vision, a music supervisor’s ear, and a producer’s type-A structure to every project."
+          "text": "I’ve spent over 20 years at the forefront of culture as a DJ, sneakerhead, and dot connector. Combine that with over 10 years of working with the most well-known brands in the world. I bring a creative director’s vision, a music supervisor’s ear, and a producer’s type-A structure to every project."
         },
         {
           "type": "image",
@@ -71,11 +71,11 @@
         },
         {
           "type": "p",
-          "text": "After college, I followed a career opportunity to DC and fell in love with the city's cultural diversity. I continued to connect people through music, routinely DJing sweaty parties that started in my living room and spilled out onto the block. I made friends with a few influential people in the music scene, and we linked up to throw parties with more intention. We graduated into real venues and tapped brands to secure partnerships. My career journey brought me to the GEICO mobile app team, aligning with my long-time passion for consumer tech. Taking inspiration from my new tech-forward environment, I began utilizing email marketing to build More than Friends, a popular R&B party series. I funneled RSVPs into a sizable email list pushing attendee and revenue growth for each party."
+          "text": "After college, I followed a career opportunity to DC and fell in love with the city’s cultural diversity. I continued to connect people through music, routinely DJing sweaty parties that started in my living room and spilled out onto the block. I made friends with a few influential people in the music scene, and we linked up to throw parties with more intention. We graduated into real venues and tapped brands to secure partnerships. My career journey brought me to the GEICO mobile app team, aligning with my long-time passion for consumer tech. Taking inspiration from my new tech-forward environment, I began utilizing email marketing to build More than Friends, a popular R&B party series. I funneled RSVPs into a sizable email list pushing attendee and revenue growth for each party."
         },
         {
           "type": "p",
-          "text": "The friends I threw parties with created a groundbreaking independent Hip-Hop and Electronic music festival, Trillectro, and I became a core member of their small team. We became known for curating lineups focused on emerging talent with huge potential, hosting early performances from Travis Scott, Goldlink, and more. In six years with Trillectro, I essentially learned all the aspects of a music festival. I carried out festival production in premier venues like Merriweather Post Pavilion, worked with marquee artists (Kid Cudi, Chance the Rapper, SZA), and built relationships with managers and agents. I used growth hacking strategies across social media, email campaigns, and media partners like Genius and Hypebeast to grow the festival’s audience and ultimately attendees year over year. I partnered with major brands for custom activations and unique integrated solutions. The festival received recognition from prominent music outlets like Billboard, Complex, and The Fader."
+          "text": "The friends I threw parties with created a groundbreaking independent Hip-Hop and Electronic music festival, Trillectro, and I became a core member of their small team. We became known for curating lineups focused on emerging talent with huge potential, hosting early performances from Travis Scott, GoldLink, and more. In six years with Trillectro, I essentially learned all the aspects of a music festival. I carried out festival production in premier venues like Merriweather Post Pavilion, worked with marquee artists (Kid Cudi, Chance the Rapper, SZA), and built relationships with managers and agents. I used growth hacking strategies across social media, email campaigns, and media partners like Genius and Hypebeast to grow the festival’s audience and ultimately attendees year over year. I partnered with major brands for custom activations and unique integrated solutions. The festival received recognition from prominent music outlets like Billboard, Complex, and The Fader."
         },
         {
           "type": "p",
@@ -83,7 +83,7 @@
         },
         {
           "type": "p",
-          "text": "I also transitioned professionally, finding success working in the agency space. I leveraged my marketing expertise and production experience to create experiences with top brands like YouTube Music, Google, and Samsung. I developed marketing strategies that seamlessly tied tech, music, and culture together. I utilized my network and relationships to identify, secure, and collaborate with talent. By building trust with clients, I was fortunate to produce several events across multiple years, such as YouTube Creators Summits, elevating the experience in each iteration. As work travels brought me to the west coast more frequently, I was inspired to start a new chapter by relocating to Los Angeles."
+          "text": "I also transitioned professionally, finding success working in the agency space. I leveraged my marketing expertise and production experience to create experiences with top brands like YouTube Music, Google, and Samsung. I developed marketing strategies that seamlessly tied tech, music, and culture together. I utilized my network and relationships to identify, secure, and collaborate with talent. By building trust with clients, I was fortunate to produce several events across multiple years, such as YouTube Creators Summits, elevating the experience in each iteration. As work travels brought me to the West Coast more frequently, I was inspired to start a new chapter by relocating to Los Angeles."
         },
         {
           "type": "h2",
@@ -162,15 +162,15 @@
             "YouTube TV",
             "AOL",
             "Absolut",
-            "Pepsi Co. & Mountain Dew",
+            "PepsiCo & Mountain Dew",
             "Monster Energy",
-            "Jack Daniels",
+            "Jack Daniel’s",
             "Hypebeast"
           ]
         },
         {
           "type": "h2",
-          "text": "Contacts at labels and music platforms"
+          "text": "Contacts at Labels and Music Platforms"
         },
         {
           "type": "cells",
@@ -187,7 +187,7 @@
             "LVRN",
             "YouTube Music",
             "Spotify",
-            "Soundcloud",
+            "SoundCloud",
             "Audius"
           ]
         }
@@ -198,7 +198,7 @@
       "title": "Projects",
       "label": "Projects",
       "nav": true,
-      "metaDescription": "Case studies from the JOOPITER, YouTube, Google and Trillectro years.",
+      "metaDescription": "Case studies from the YouTube, Google and Trillectro years.",
       "blocks": [
         {
           "type": "p",
@@ -213,7 +213,7 @@
               "image": "youtube-fashion-beauty-launch-01.jpg"
             },
             {
-              "title": "Google Pixel 3 x Childish Gambino Activation",
+              "title": "Google Pixel 3 × Childish Gambino Activation",
               "href": "work/google-pixel-3-grammy-activation/",
               "image": "google-pixel-3-grammy-activation-01.jpg"
             },
@@ -228,7 +228,7 @@
               "image": "youtube-music-rolling-stone-relaunch-01.jpg"
             },
             {
-              "title": "YouTube Music x Megan Thee Stallion",
+              "title": "YouTube Music × Megan Thee Stallion",
               "href": "work/youtube-music-megan-thee-stallion/",
               "image": "youtube-music-megan-thee-stallion-01.jpg"
             },
@@ -258,7 +258,7 @@
     },
     {
       "slug": "work/joopiter-son-of-a-pharaoh",
-      "title": "Pharrell Williams: Son of a Pharoah",
+      "title": "Pharrell Williams: Son of a Pharaoh",
       "kicker": "JOOPITER",
       "lead": "joopiter-son-of-a-pharaoh-01.jpg",
       "back": {
@@ -307,7 +307,7 @@
       "blocks": [
         {
           "type": "intro",
-          "text": "To introduce the newly minted YouTube Fashion & Beauty vertical to New York Fashion Week, YouTube held a star-studded launch party hosted by Derek Blasberg. The occasion called for an elegant meets edgy aesthetic with a plush lounge, art installations, social moments, and custom fabricated stage anchoring a headline performance by Future. The guest list included A-listers Serena Williams, Gigi & Bella Hadid, Diplo, Alexander Wang, and many more. This event was designed and produced by MAS Event + Design."
+          "text": "To introduce the newly minted YouTube Fashion & Beauty vertical to New York Fashion Week, YouTube held a star-studded launch party hosted by Derek Blasberg. The occasion called for an elegant-meets-edgy aesthetic with a plush lounge, art installations, social moments, and custom-fabricated stage anchoring a headline performance by Future. The guest list included A-listers Serena Williams, Gigi & Bella Hadid, Diplo, Alexander Wang, and many more. This event was designed and produced by MAS Event + Design."
         },
         {
           "type": "h2",
@@ -348,7 +348,7 @@
     },
     {
       "slug": "work/google-pixel-3-grammy-activation",
-      "title": "Google Pixel 3 x Childish Gambino Activation",
+      "title": "Google Pixel 3 × Childish Gambino Activation",
       "kicker": "Google · MAS",
       "lead": "google-pixel-3-grammy-activation-01.jpg",
       "back": {
@@ -383,7 +383,7 @@
         {
           "type": "list",
           "items": [
-            "AdWeek finalist for Best Use of Celebrity in an Experiential Activation",
+            "Adweek finalist for Best Use of Celebrity in an Experiential Activation",
             "Event Marketers Experience Design and Technology Award"
           ]
         },
@@ -414,11 +414,11 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "Trillectro is recognized as the DMV's first hip-hop and electronic music festival. The name Trillectro, a portmanteau of “trill” (meaning “authentic” in hip-hop circles) and “elect",
+      "metaDescription": "Trillectro is recognized as the DMV’s first hip-hop and electronic music festival. The name Trillectro, a portmanteau of “trill” (meaning “authentic” in hip-hop circles) and “elect",
       "blocks": [
         {
           "type": "intro",
-          "text": "Trillectro is recognized as the DMV's first hip-hop and electronic music festival. The name Trillectro, a portmanteau of “trill” (meaning “authentic” in hip-hop circles) and “electro” (short for “electronic”), embodies the festival's credo of bridging the gap between music genres."
+          "text": "Trillectro is recognized as the DMV’s first hip-hop and electronic music festival. The name Trillectro, a portmanteau of “trill” (meaning “authentic” in hip-hop circles) and “electro” (short for “electronic”), embodies the festival’s credo of bridging the gap between music genres."
         },
         {
           "type": "p",
@@ -476,19 +476,19 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "For this project, I managed and produced Youtube Music’s partnership elements for Rolling Stone’s relaunch event featuring a live performance from Shawn Mendes.",
+      "metaDescription": "For this project, I managed and produced YouTube Music’s partnership elements for Rolling Stone’s relaunch event featuring a live performance from Shawn Mendes.",
       "blocks": [
         {
           "type": "intro",
-          "text": "For this project, I managed and produced Youtube Music’s partnership elements for Rolling Stone’s relaunch event featuring a live performance from Shawn Mendes."
+          "text": "For this project, I managed and produced YouTube Music’s partnership elements for Rolling Stone’s relaunch event featuring a live performance from Shawn Mendes."
         },
         {
           "type": "p",
-          "text": "Leading comms across two brand teams and multiple agency partners on co-branded concepts. I also led the collaboration between the MAS creative team and multiple vendors to develop and activate two interactive product demos for the DSP."
+          "text": "I led comms across two brand teams and multiple agency partners on co-branded concepts. I also led the collaboration between the MAS creative team and multiple vendors to develop and activate two interactive product demos for the DSP."
         },
         {
           "type": "p",
-          "text": "The result was a seamless guest experience with key brand and product touchpoints for 500 VIP attendees including c-suite execs, elite media, and top influencers. This event was designed and produced by MAS Event + Design."
+          "text": "The result was a seamless guest experience with key brand and product touchpoints for 500 VIP attendees including C-suite execs, elite media, and top influencers. This event was designed and produced by MAS Event + Design."
         },
         {
           "type": "h2",
@@ -497,7 +497,7 @@
         {
           "type": "list",
           "items": [
-            "Maximized Youtube Music’s visibility during Rolling Stone partnership"
+            "Maximized YouTube Music’s visibility during Rolling Stone partnership"
           ]
         },
         {
@@ -526,18 +526,18 @@
     },
     {
       "slug": "work/youtube-music-megan-thee-stallion",
-      "title": "YouTube Music x Megan Thee Stallion",
+      "title": "YouTube Music × Megan Thee Stallion",
       "kicker": "YouTube Music · MAS",
       "lead": "youtube-music-megan-thee-stallion-01.jpg",
       "back": {
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "YouTube Music and Megan Thee Stallion hosted a Celebration of The Fearless Women in Music, a night to honor the contributions of women in front of the lens and behind the scenes. T",
+      "metaDescription": "YouTube Music and Megan Thee Stallion hosted a Celebration of the Fearless Women in Music, a night to honor the contributions of women in front of the lens and behind the scenes. T",
       "blocks": [
         {
           "type": "intro",
-          "text": "YouTube Music and Megan Thee Stallion hosted a Celebration of The Fearless Women in Music, a night to honor the contributions of women in front of the lens and behind the scenes. The celebration took place at Spring Place in Beverly Hills, which was transformed into a beautiful lounge with tasteful pops of branding. The night was soundtracked by DJ Osh Kosh and culminated in a gracious moment from Megan Thee Stallion, taking over the dancefloor to engage with attendees. This event was designed and produced by MAS Event + Design."
+          "text": "YouTube Music and Megan Thee Stallion hosted a Celebration of the Fearless Women in Music, a night to honor the contributions of women in front of the lens and behind the scenes. The celebration took place at Spring Place in Beverly Hills, which was transformed into a beautiful lounge with tasteful pops of branding. The night was soundtracked by DJ Osh Kosh and culminated in a gracious moment from Megan Thee Stallion, taking over the dancefloor to engage with attendees. This event was designed and produced by MAS Event + Design."
         },
         {
           "type": "h2",
@@ -548,7 +548,7 @@
           "items": [
             "Brand management and visual identity",
             "Overall event planning and logistics",
-            "Spacial design",
+            "Spatial design",
             "Food and beverage design",
             "Partnering with ICM for talent booking"
           ]
@@ -590,11 +590,11 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "Celebrating the Grammy’s return to New York, YouTube threw a party hosted by Lyor Cohen. The night featured performances by Nas, Grandmaster Flash, D-Nice, & Vashtie. Other notable",
+      "metaDescription": "Celebrating the Grammys’ return to New York, YouTube threw a party hosted by Lyor Cohen. The night featured performances by Nas, Grandmaster Flash, D-Nice, and Vashtie. Other notab",
       "blocks": [
         {
           "type": "intro",
-          "text": "Celebrating the Grammy’s return to New York, YouTube threw a party hosted by Lyor Cohen. The night featured performances by Nas, Grandmaster Flash, D-Nice, & Vashtie. Other notable guests included Quincy Jones, Diplo, Camila Cabello, Jared Leto, Lala, Terrence J, and more. This event was designed and produced by MAS Event + Design."
+          "text": "Celebrating the Grammys’ return to New York, YouTube threw a party hosted by Lyor Cohen. The night featured performances by Nas, Grandmaster Flash, D-Nice, and Vashtie. Other notable guests included Quincy Jones, Diplo, Camila Cabello, Jared Leto, Lala, Terrence J, and more. This event was designed and produced by MAS Event + Design."
         },
         {
           "type": "h2",
@@ -645,11 +645,11 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "YouTube amplified community building amongst Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between You",
+      "metaDescription": "YouTube amplified community building among Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between YouTu",
       "blocks": [
         {
           "type": "intro",
-          "text": "YouTube amplified community building amongst Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between YouTube executives and Creators about the vision for the platform moving forward and the state of content creation as a whole. The main stage also hosted fun activities balancing out heavier discussions as well as special guest appearances from Pitbull and Hannah Beachler."
+          "text": "YouTube amplified community building among Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between YouTube executives and Creators about the vision for the platform moving forward and the state of content creation as a whole. The main stage also hosted fun activities balancing out heavier discussions as well as special guest appearances from Pitbull and Hannah Beachler."
         },
         {
           "type": "p",
@@ -704,15 +704,15 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "YouTube hosted 100 Black Creators for the #YouTubeBlack Creator Summit in Washington D.C., a city full of rich Black history from Howard University to the legendary Ben’s Chili Bow",
+      "metaDescription": "YouTube hosted 100 Black Creators for the #YouTubeBlack Creator Summit in Washington, D.C., a city full of rich Black history from Howard University to the legendary Ben’s Chili Bo",
       "blocks": [
         {
           "type": "intro",
-          "text": "YouTube hosted 100 Black Creators for the #YouTubeBlack Creator Summit in Washington D.C., a city full of rich Black history from Howard University to the legendary Ben’s Chili Bowl. The event consisted of a week of curated, thoughtful programming. The Line Hotel provided a beautiful backdrop for YouTube to recognize and support established and emerging Black Creators."
+          "text": "YouTube hosted 100 Black Creators for the #YouTubeBlack Creator Summit in Washington, D.C., a city full of rich Black history from Howard University to the legendary Ben’s Chili Bowl. The event consisted of a week of curated, thoughtful programming. The Line Hotel provided a beautiful backdrop for YouTube to recognize and support established and emerging Black Creators."
         },
         {
           "type": "p",
-          "text": "Programming included conversations with Naomi Campbell, Janelle Monáe, Steve Pamon (Parkwood COO), Lakeith Stanfield, YouTube Execs, and Creators. Following the panels, Creators connected over decadent group meals and guided activities. Each day’s momentum culminated in vibrant parties at the Black-owned cultural hub, Diet Starts Monday, and the cutting-edge music venue, Flash. This event was designed and produced by MAS Event + Design."
+          "text": "Programming included conversations with Naomi Campbell, Janelle Monáe, Steve Pamon (Parkwood COO), LaKeith Stanfield, YouTube Execs, and Creators. Following the panels, Creators connected over decadent group meals and guided activities. Each day’s momentum culminated in vibrant parties at the Black-owned cultural hub, Diet Starts Monday, and the cutting-edge music venue, Flash. This event was designed and produced by MAS Event + Design."
         },
         {
           "type": "h2",
@@ -768,15 +768,15 @@
         "href": "work/",
         "label": "All projects"
       },
-      "metaDescription": "To provide a surprise and delight moment during Advertising Week, Google invited over 2000 guests to pull away from their screens by shipping a personalized “Mixtape” experience to",
+      "metaDescription": "To provide a surprise and delight moment during Advertising Week, Google invited over 2,000 guests to pull away from their screens by shipping a personalized “Mixtape” experience t",
       "blocks": [
         {
           "type": "intro",
-          "text": "To provide a surprise and delight moment during Advertising Week, Google invited over 2000 guests to pull away from their screens by shipping a personalized “Mixtape” experience to pair with the brand’s audio-first content developed specifically for the advertising industry’s top virtual event."
+          "text": "To provide a surprise and delight moment during Advertising Week, Google invited over 2,000 guests to pull away from their screens by shipping a personalized “Mixtape” experience to pair with the brand’s audio-first content developed specifically for the advertising industry’s top virtual event."
         },
         {
           "type": "p",
-          "text": "The Mixtape box included one of six guided activity kits, which matched guests to their interests shared during registration, for them to dive into while listening to their personalized audio content. The packaging ushered guests on a journey using playful design, thoughtful materials, and intriguing reveal moments. The hero item was a retro-style cardboard walkman with a built-in Bluetooth speaker which transformed the guests’ smartphone screens into cassette tapes."
+          "text": "The Mixtape box included one of six guided activity kits, which matched guests to their interests shared during registration, for them to dive into while listening to their personalized audio content. The packaging ushered guests on a journey using playful design, thoughtful materials, and intriguing reveal moments. The hero item was a retro-style cardboard Walkman with a built-in Bluetooth speaker which transformed the guests’ smartphone screens into cassette tapes."
         },
         {
           "type": "p",
@@ -789,10 +789,10 @@
         {
           "type": "list",
           "items": [
-            "Oversaw end-to-end project management including creative development, execution, logistics, and Covid safety prep",
+            "Oversaw end-to-end project management including creative development, execution, logistics, and COVID safety prep",
             "Ideated, sourced, and secured elements for activity kits featuring items from small and BIPOC businesses",
             "Successfully executed fulfillment of 2,231 Mixtape boxes over seven days",
-            "Achieved on-time delivery within a single day arrival window"
+            "Achieved on-time delivery within a single-day arrival window"
           ]
         },
         {
