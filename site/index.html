@@ -12,176 +12,197 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="https://withgreenwood.com/images/01-monza-in-nyc.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>◼</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
 <style>
 :root{
-  --ink:#16150f; --bg:#fcfcfb; --muted:#77756b; --line:#e6e4de;
-  --max:975px; --gap:4px; --radius:0px; --pad:20px;
-}
-@media (prefers-color-scheme:dark){
-  :root{--ink:#efedE6; --bg:#121210; --muted:#96938a; --line:#2c2b27}
+  --ink:#000; --bg:#fff; --accent:#ff5232; --panel:#dedede; --line:#000;
+  --max:1180px; --gap:1px; --radius:0px; --pad:15px;
+  --disp:"Helvetica Neue","Inter Tight",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);
-  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  font:500 14px/1.5 var(--mono);text-transform:uppercase;
   -webkit-font-smoothing:antialiased}
-.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
-header{padding:36px 0 0}
-h1{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0}
-.tagline{color:var(--muted);font-size:13px;letter-spacing:.13em;
-  text-transform:uppercase;margin:7px 0 0}
-.bio{max-width:52ch;margin:26px 0 0;color:var(--ink);opacity:.85;font-size:15.5px}
-.links{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 0;padding:0;list-style:none;
-  align-items:center}
-.links a{color:var(--ink);font-size:13px;letter-spacing:.05em;text-decoration:none;
-  border-bottom:1px solid var(--line);padding-bottom:2px;transition:border-color .2s}
-.links a:hover{border-bottom-color:currentColor}
-.links a.ic{border:0;padding:0;display:inline-flex;width:21px;height:21px;
-  opacity:.75;transition:opacity .2s}
-.links a.ic:hover{opacity:1;border:0}
-.links a.ic svg{width:100%;height:100%;display:block;fill:currentColor}
-.links a.ic svg *{fill:currentColor}
-.links a.ic:has(img){width:auto;height:18px}
-.links a.ic img{height:100%;width:auto;display:block}
-.links a.ic img.d{display:none}
-@media(prefers-color-scheme:dark){
-  .links a.ic img.l{display:none} .links a.ic img.d{display:block}
-}
-main{padding:34px 0 0}
-footer{padding:64px 0 56px;color:var(--muted);font-size:12.5px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-.pgf{position:relative}
-.pgf-r{position:absolute;width:1px;height:1px;opacity:0;margin:0}
-.pgf-tabs{display:flex;gap:26px;justify-content:center;margin:0 0 26px;
-  flex-wrap:wrap;padding:0}
-.pgf-tab{cursor:pointer;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
-  opacity:.5;padding-bottom:5px;border-bottom:1px solid transparent;
-  transition:opacity .2s,border-color .2s;-webkit-user-select:none;user-select:none;
-  display:inline-block}
-.pgf-tab:hover{opacity:.85}
-.pgf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
-  margin:0 calc(-1 * var(--pad));padding:0}
-@media(min-width:700px){.pgf-grid{grid-template-columns:repeat(4,1fr);
-  gap:var(--gap);margin:0}}
-.pgf-i{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;
-  border-radius:var(--radius);background:rgba(128,128,128,.12);
+/* ---- ticker ---- */
+.ticker{background:var(--accent);border-bottom:1px solid var(--line);
+  overflow:hidden;white-space:nowrap}
+.ticker-run{display:inline-block;padding:6px 0;
+  font:500 11px/1.2 var(--mono);letter-spacing:.14em;
+  animation:ticker 34s linear infinite}
+.ticker-run span{padding:0 20px}
+.ticker-run .dot{padding:0;opacity:.55}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-run{animation:none}}
+
+/* ---- identity bar ---- */
+.idbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;
+  align-items:stretch;border-bottom:1px solid var(--line);background:var(--bg)}
+.idcell{display:flex;align-items:center;padding:0 var(--pad);min-height:52px}
+.idcell+.idcell{border-left:1px solid var(--line)}
+.idcell-name{width:100%;border-bottom:1px solid var(--line)}
+.idcell-role{display:none}
+.idcell-gap{display:none}
+.idcell-links{border-left:0}
+.wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
+  letter-spacing:-.045em;white-space:nowrap}
+.role{font:500 11px/1.4 var(--mono);letter-spacing:.13em;white-space:nowrap}
+.links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
+  padding-bottom:2px;border-bottom:1px solid transparent;
+  transition:color .15s,border-color .15s}
+.links a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- section rule ---- */
+.wrap{max-width:var(--max);margin:0 auto}
+.rule{padding:clamp(26px,4vw,44px) var(--pad) 0}
+.rule-in{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  padding-bottom:10px;border-bottom:1px solid var(--line);
+  font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+
+/* ---- grid ---- */
+.pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:var(--gap);background:var(--line);border:1px solid var(--line);
+  margin:18px var(--pad) 0;padding:0}
+.pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
+  overflow:hidden;border-radius:var(--radius);background:var(--panel);
   text-decoration:none;color:inherit}
 .pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
-  transition:transform .55s cubic-bezier(.2,.7,.3,1)}
-.pgf-i:hover img{transform:scale(1.045)}
-.pgf-ov{position:absolute;inset:0;display:flex;flex-direction:column;
-  justify-content:flex-end;padding:14px;opacity:0;transition:opacity .28s;
-  background:linear-gradient(to top,rgba(0,0,0,.74),rgba(0,0,0,.2) 52%,rgba(0,0,0,0))}
-.pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{opacity:1}
-.pgf-t{color:#fff;font-size:12.5px;line-height:1.35;font-weight:500;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pgf-s{color:rgba(255,255,255,.72);font-size:10.5px;letter-spacing:.05em;
-  text-transform:uppercase;margin-top:5px}
-.pgf-b{position:absolute;top:9px;right:9px;width:19px;height:19px;border-radius:50%;
-  background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
-.pgf-b svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round}
-.pgf-i:focus-visible{outline:2px solid currentColor;outline-offset:2px}
-@media(hover:none){.pgf-i[data-t="wr"] .pgf-ov{opacity:1}}
+  transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
+.pgf-ov{position:absolute;left:0;right:0;bottom:0;background:var(--ink);
+  color:var(--bg);padding:9px 10px;transform:translateY(101%);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{transform:translateY(0)}
+.pgf-t{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.05em}
+.pgf-s{display:block;margin-top:4px;font:400 9.5px/1.3 var(--mono);
+  letter-spacing:.1em;color:var(--accent)}
+.pgf-a{position:absolute;top:8px;right:8px;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;background:var(--bg);
+  border:1px solid var(--line);font:500 11px/1 var(--mono);opacity:0;
+  transition:opacity .22s}
+.pgf-i:hover .pgf-a,.pgf-i:focus-visible .pgf-a{opacity:1}
+.pgf-i:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+@media(hover:none){.pgf-ov{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){
-  .pgf-i img{transition:none} .pgf-i:hover img{transform:none}
+  .pgf-i img,.pgf-ov,.pgf-a{transition:none}
+  .pgf-i:hover img,.pgf-i:focus-visible img{transform:none}
 }
-#pgf-all:checked~.pgf-tabs [for="pgf-all"],
-#pgf-ig:checked~.pgf-tabs [for="pgf-ig"],
-#pgf-wr:checked~.pgf-tabs [for="pgf-wr"]{opacity:1;border-bottom-color:currentColor}
-#pgf-ig:checked~.pgf-grid .pgf-i[data-t="wr"]{display:none}
-#pgf-wr:checked~.pgf-grid .pgf-i[data-t="ig"]{display:none}
-#pgf-all:focus-visible~.pgf-tabs [for="pgf-all"],
-#pgf-ig:focus-visible~.pgf-tabs [for="pgf-ig"],
-#pgf-wr:focus-visible~.pgf-tabs [for="pgf-wr"]{outline:2px solid currentColor;
-  outline-offset:3px}
-.empty{text-align:center;color:var(--muted);font-size:14px;padding:60px 0;
-  border:1px dashed var(--line);border-radius:8px}
+.empty{margin:18px var(--pad) 0;text-align:center;font-size:12px;padding:60px 0;
+  border:1px dashed var(--line)}
 
-/* Full-bleed 3-up tiles are ~130px wide, far smaller than the desktop grid.
-   Overlay type has to shrink with them or a headline swamps the image, so
-   drop a step in size, clamp to two lines, and hide the source line. */
-@media(max-width:699px){
-  .pgf-i{border-radius:0}
-  .pgf-ov{padding:7px}
-  .pgf-t{font-size:10.5px;line-height:1.25;-webkit-line-clamp:2}
-  .pgf-s{display:none}
-  .pgf-b{top:5px;right:5px;width:15px;height:15px}
-  .pgf-b svg{width:8px;height:8px}
+/* ---- footer ---- */
+footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
+  background:var(--ink);color:var(--bg)}
+.foot-in{max-width:var(--max);margin:0 auto;display:flex;flex-wrap:wrap;
+  gap:20px 38px;align-items:baseline;padding-block:28px 32px;
+  padding-left:var(--pad);padding-right:var(--pad);
+  font:500 11px/1.6 var(--mono);letter-spacing:.13em}
+.foot-in a{text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px}
+.foot-in a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.push{margin-left:0}
+
+/* ---- wider ---- */
+@media(min-width:620px){
+  :root{--pad:24px}
+  .idcell{min-height:62px}
+  .idcell-name{width:auto;border-bottom:0}
+  .idcell-gap{display:flex;flex:1;min-width:0}
+  .idcell-links{border-left:1px solid var(--line)}
+  .pgf-grid{grid-template-columns:repeat(3,1fr)}
+  .push{margin-left:auto}
+}
+@media(min-width:940px){
+  .pgf-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(min-width:1000px){
+  .idcell-role{display:flex}
 }
 </style>
 </head>
 <body>
+<div class="ticker"><div class="ticker-run"><span>Brand Marketing and Experience</span><span class="dot">&bull;</span><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span><span>Brand Marketing and Experience</span><span class="dot">&bull;</span><span>Apple Music</span><span class="dot">&bull;</span><span>Apple TV</span><span class="dot">&bull;</span><span>Beats</span><span class="dot">&bull;</span><span>JOOPITER</span><span class="dot">&bull;</span></div></div>
+<header class="idbar">
+  <div class="idcell idcell-name"><span class="wordmark">Stephen Greenwood</span></div>
+  <div class="idcell idcell-role"><span class="role">Brand Marketing and Experience</span></div>
+  <div class="idcell idcell-gap"></div>
+  <div class="idcell idcell-links"><ul class="links"><li><a href="https://instagram.com/withgreenwood">Instagram</a></li><li><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a></li><li><a href="mailto:stephen@withgreenwood.com">Email</a></li></ul></div>
+</header>
 <div class="wrap">
-  <header>
-    <h1>Stephen Greenwood</h1>
-    <p class="tagline">Brand Marketing and Experience</p>
-    
-    <ul class="links"><li><a class="ic" href="https://instagram.com/withgreenwood" aria-label="Instagram"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M295.42,6c-53.2,2.51-89.53,11-121.29,23.48-32.87,12.81-60.73,30-88.45,57.82S40.89,143,28.17,175.92c-12.31,31.83-20.65,68.19-23,121.42S2.3,367.68,2.56,503.46,3.42,656.26,6,709.6c2.54,53.19,11,89.51,23.48,121.28,12.83,32.87,30,60.72,57.83,88.45S143,964.09,176,976.83c31.8,12.29,68.17,20.67,121.39,23s70.35,2.87,206.09,2.61,152.83-.86,206.16-3.39S799.1,988,830.88,975.58c32.87-12.86,60.74-30,88.45-57.84S964.1,862,976.81,829.06c12.32-31.8,20.69-68.17,23-121.35,2.33-53.37,2.88-70.41,2.62-206.17s-.87-152.78-3.4-206.1-11-89.53-23.47-121.32c-12.85-32.87-30-60.7-57.82-88.45S862,40.87,829.07,28.19c-31.82-12.31-68.17-20.7-121.39-23S637.33,2.3,501.54,2.56,348.75,3.4,295.42,6m5.84,903.88c-48.75-2.12-75.22-10.22-92.86-17-23.36-9-40-19.88-57.58-37.29s-28.38-34.11-37.5-57.42c-6.85-17.64-15.1-44.08-17.38-92.83-2.48-52.69-3-68.51-3.29-202s.22-149.29,2.53-202c2.08-48.71,10.23-75.21,17-92.84,9-23.39,19.84-40,37.29-57.57s34.1-28.39,57.43-37.51c17.62-6.88,44.06-15.06,92.79-17.38,52.73-2.5,68.53-3,202-3.29s149.31.21,202.06,2.53c48.71,2.12,75.22,10.19,92.83,17,23.37,9,40,19.81,57.57,37.29s28.4,34.07,37.52,57.45c6.89,17.57,15.07,44,17.37,92.76,2.51,52.73,3.08,68.54,3.32,202s-.23,149.31-2.54,202c-2.13,48.75-10.21,75.23-17,92.89-9,23.35-19.85,40-37.31,57.56s-34.09,28.38-57.43,37.5c-17.6,6.87-44.07,15.07-92.76,17.39-52.73,2.48-68.53,3-202.05,3.29s-149.27-.25-202-2.53m407.6-674.61a60,60,0,1,0,59.88-60.1,60,60,0,0,0-59.88,60.1M245.77,503c.28,141.8,115.44,256.49,257.21,256.22S759.52,643.8,759.25,502,643.79,245.48,502,245.76,245.5,361.22,245.77,503m90.06-.18a166.67,166.67,0,1,1,167,166.34,166.65,166.65,0,0,1-167-166.34" transform="translate(-2.5 -2.5)"/></svg></a></li><li><a class="ic" href="https://www.linkedin.com/in/stephen-greenwood-/" aria-label="LinkedIn"><img class="l" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAABACAYAAABMQLqaAAAE7ElEQVR42u2cz4scRRTHP93bs8FsNhF/RaLG30Iu/kIEUdCD5CoBBf8AIXgQPQmReBARNPEgiCc1evK68exBETx5UgTBaEwiaFx3V/PDRbMz3R76PfO2tqa7amdWp3u6oOmht7p73qdffd+rV72TAAlQAM8DB4HbgBna2QbAGeAYcATIjf3rWiqdiinbFoBZsT9xoTwnndaEZNth5MAl+XxIGGQulO8ExmCKvETtPSFAEustKbBH9inT0xKx9zrgSldTpglEFZx1LdvEhQpDNvGJVNNbLJSBhGsLIm+b12WRHqL5y0lgFdgNXGvgtAbMxYAQppHpPeAeie8AVwFPAt8YVW9KWC6A8yK2uDJQB0UNPVgBdh74rEFgRoLSl/270rfnZICJHEMuviQ3zJsMpU4DUsn+3pDP1mBMJtwDFoEP5OKDJutJFRSdLP0gwppXGKt9P/W5YpugqDdcMEbXRafzbYeihu0BttUYq5nhTU7u0jooqiE3Ag87eYoPSg481QZPCYk+OfClAdKTz6nsNfrsb9Bse2x5yoIka762H1hpSDiuhZIIlLnAOc8Z4H3gCxHgW4ADwNNGbJswdPR7XgDukHTi37JkKBQLpu5GNB1KFnGRVMDkJqu1M+QkILzX1TZ8+U/ulCnc0kU67ocRCkVvOuN4Sxp5fkyJIo2oCNZ58ZZA+VtKBUmN4Ts9fVTQippz5403qoFfS5b8FfCLTCnmgOuBfcBDwIPSvxhnOlAVfdZk/45Ent3A1c52jexvBZaNuqvCL1OuJdm+7rk3AD+Zcz6XiBbiJfcCH3oiy5aFZIVyJODLbQd+80BZChDyFDgt/V/2eHNmhu6MOWYNOSC2hKQFI82SMVqiZYLE2VToZivOn3X6uuf2KKvqLwKvOtrVl21gtr4pa6Ry/oKAGTgz+bGm+b5idd222fN3AW8BR8UD8ojyQy4ePQt8ImWOmVHmX/93TVVB/g68Ymoxm3nKa2LP68BZR3wbBcUaZHUgcbRjJrB0kYqufGRCdWOhuLlQ4WjHwBgdkql+PIp92QRBsVnzFZKD3C7f8ZSE6T9NSWOYvhSS16xIGhE9/ZgkKGrsE8CbMiex7STwjCRzw8AogHPA95LY5bHZ7qQMH40WjwLHBYgdPn1JAI9L0atqKOnx0xHzromEok/4qBFeK7QZ5arCTuDZGig6VM42NSTbYbMPeEAM7g3xpgJ4PDCy/NF0KAD3U71mpNnvXpk21AnoapOhaNsb2G9ehlFIOaHxUHZFRMzeOMsEkwylFxGpsv9iPE9SRjsxIte1DkoHpYPSQemgdFA6KJPWsg7BOgcpgKKD4plAdlAue8l9lLXhH7OIk7IhEPX1iKxmmGb4/18v24S+6fV8tdqY66WULw/cBdxNuaB2cyiUVS7XSoe1Zfz1UF1PHtb65h6hbaniu+jxixHX20G5IDcHnMsCSAI8BhymejlyG/6F9O3Aa8BfFfcYUBatq55wYv5+mHIJI/U8CL3eIwEeo298nqJ83XURSGJe72pTs6933Qn8KkNnB7ASOnxywhassxqXrvPKUF0Z5/UU0CXxviRGaEdJ9MYd5bIt8hyAostoN8KZ+jS/8MlCCvwcoRltg7FIuWiWuFDeNklQMSVA9JXUYyLaG17w6X4AwrOSoAdeAL6VtDenvT/8cAJ4yejpBiD/AP38jiDu7rhzAAAAAElFTkSuQmCC"><img class="d" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAABACAYAAABMQLqaAAAFgUlEQVR42u2cTYgcRRTHf6+7Z2MS4/oFComJhkhQEY2KIB5U8ODFS+LnRQ9BPWrISVERFCRRcvMgIRFPghAh4MGLiAEPggf1omCM5hBMNJsvkyXZmem/h36dLTs7MzWzuzDTMwVNs91VNV2/ffXq1b+q2ySZmUnSDuBl4DYgpZ6pDRwF9gO7vd1mZgozmaQE+AR4gfFKB4DnHZRCMAnwqgNpARoDGAKawDZgh5nl1Z5hkg57lykhjUPK/fwbcBeQVy1lrZ+TMeo65u29CZgufUsIxRjvdEX7swH7pIIKawe1Xyhtd0pWuWZ16n5ZnxZSeukjwCxwM3Bj4LxqASaJhJG7NewF7gHuMLO7gc3AM8AvXldej0Fbuqjuqe3nl7rUMS3pUCX/MKfcz6cl3eBtsFhLaXuej81sr6QpSUlZgSST1DCzs24xp9yiVNfuI78/B+zy6UDLzC4HOmYmM2s6mOPApw6lXWco5lHfnw6jk8/I3Xq+6TT21wkKwNlqxLdgBFRYz791h1I2bJ2kRtUZVfP6vXWVuUXtoJRD7HrgYbeEtLOhmICn624pYRfaJSk1s5akhqTUR6HUnWxT0hPAkw4yrTOU1Bv5IPC5pOvMrGlmbXe87QDIZ3WwktIXXARWRM55jgL7gO+A88CtwFbg2cqINQpCkwFngE1mNhPKkrFQQjC9fohRh5L1UUniYPJAh8kjdZmYCNc6KGR5RaaoShdLrgnFQrHAx6R9TigH8TPl9CJWEexlxcsC5ZJLBdaj4dcskEfAuR7WEpYNG/iTR8k/A39RCM6rXbK4E3jIB4G0Yj3LCqXlefYBbwENv1ZtkLxRPwDXVx5wBnjAHXN1slj+vRr4nkIzTYFvgfeAr6trMgvM0LcArzG/RLN439ZDOmj6eXdEPask/RNMzcvp+QlJV/Uo25B0zPO/UbmX+ZEGR3nNgnzbJF2o/PZA0kFs90m9UNbFUqa6lJ+SdKmLpTSAaWCnme2RlHqY3DazVg+gCZCa2QFJF4AvI53/opQ3mF9Bk8sFl4/wXr/lg+vTwB4HklGsw0TJDx5ENiVNmdlXwAdB0MlyQlmeyHHeX5wE3nFrbPfyIx1S063mfeDvivMdHSgBnGYpXpUyRcV3pJHSRWJm54IpR3tkoYSOzieeKv2JH22HlfSuRgYcXEz7smGBUjbazNqSVnkMstGf8Q/gkJnNep6OCqDX86OH8NcOMkRnQ2QpiZnlkra6s9xYyXJY0nYzO9QJTLDf5LSk34H7B4GSDAmQ1IE8RrFvZKP7g1ZwbAIOSlobdJNubTo6qAqYDI+hKAE+LEcSHz2y4Jjz7vBKLxXQz8dHckgOuw3FPpEtQTC3kOAl4PHIkeXMyEIJnuE+uq8ZlRHqBkkrI1YYZkcZSpk2ROZb45PPGA1o5KFMR+ZrBPMsW07TZYi6UYxgZcPwIGOVJlAmUCZQJlAmUCZQJlAmUIY1ZRME8wYiSYAmUMq5Q7CkMoFSCFwpcC+wEjiS9WFaGZAVFvZ/yG523erKvHyZt3qvX/9W1pdIyhdRX7lPeLNDaQDrY6HM+vJltyXMmQUaDIXCfrpLuZb/u2JFIQEnuyynlvWd7wPyKgqlbiVwLosgCfCopDfpvhy5gmL3QDWtkfSu/0c6/UYbeKTHiGhBl39b0hnPqwHrKwGX29ZuoVhZVD/bu2rlR5jf3nW7mZ2UNAVcbWanYrtPTtxSQdbNpCOsMtavLGV95VrRHHBKkkU72kUGeks9yi1pfaEIbmaaRLQVOHRwVIyhf7miWxzrw2fUCUQOnADOVr93kAAfMf9ywri81l9uSd3v4f0Vr/WnFF+JGLcPQHwBPEeHD0DkZvYisBP41YMs1dRCmhRvur0OPGVmzSoQgP8AiAv1A4nt1x0AAAAASUVORK5CYII="></a></li><li><a class="ic" href="mailto:stephen@withgreenwood.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 5h17.6c.66 0 1.2.54 1.2 1.2v.42l-10 6.06-10-6.06V6.2C2 5.54 2.54 5 3.2 5Zm-1.2 3.96V17.8c0 .66.54 1.2 1.2 1.2h17.6c.66 0 1.2-.54 1.2-1.2V8.96l-9.48 5.74a1.4 1.4 0 0 1-1.04 0L2 8.96Z"/></svg></a></li></ul>
-  </header>
-  <main>
-    <div class="pgf">
-    <div class="pgf-grid">
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/race.service/reel/Dc4SG3QTp1l/" target="_blank" rel="noopener noreferrer"><img src="images/01-monza-in-nyc.jpg" alt="Monza in NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Monza in NYC</span><span class="pgf-s">race.service</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/Dc2Dpd2mUKP/" target="_blank" rel="noopener noreferrer"><img src="images/02-monza-in-nyc-l-industrie-little-italy.jpg" alt="Monza in NYC — L’Industrie Little Italy" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Monza in NYC — L’Industrie Little Italy</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/lindustriebk/p/DcyZMfQEfY4/" target="_blank" rel="noopener noreferrer"><img src="images/03-engineered-in-italy-folded-in-nyc.jpg" alt="Engineered in Italy. Folded in NYC." width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Engineered in Italy. Folded in NYC.</span><span class="pgf-s">L’Industrie</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/race.service/reel/Dcvt-UKRJID/" target="_blank" rel="noopener noreferrer"><img src="images/04-monza-is-coming-to-nyc.jpg" alt="Monza Is Coming to NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Monza Is Coming to NYC</span><span class="pgf-s">race.service</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/lindustriebk/p/DctRposERJk/" target="_blank" rel="noopener noreferrer"><img src="images/05-53-laps-one-slice.jpg" alt="53 Laps. One Slice." width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">53 Laps. One Slice.</span><span class="pgf-s">L’Industrie</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gq/p/DaLWtTQEtiR/" target="_blank" rel="noopener noreferrer"><img src="images/06-inside-the-jay-z30-pop-up.jpg" alt="Inside the JAŸ-Z30 Pop-Up" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Inside the JAŸ-Z30 Pop-Up</span><span class="pgf-s">GQ</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/reel/DaDUNmjBdo2/" target="_blank" rel="noopener noreferrer"><img src="images/07-reasonable-doubt-at-30.jpg" alt="Reasonable Doubt at 30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Reasonable Doubt at 30</span><span class="pgf-s">Apple Music</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DaBWwc5AazS/" target="_blank" rel="noopener noreferrer"><img src="images/08-jay-z30-pop-up-brooklyn.jpg" alt="JAŸ-Z30 Pop-Up, Brooklyn" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">JAŸ-Z30 Pop-Up, Brooklyn</span><span class="pgf-s">Apple Music × Roc Nation</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/hypetrak/reel/DaBLb28OVfJ/" target="_blank" rel="noopener noreferrer"><img src="images/09-30-years-of-reasonable-doubt-dumbo.jpg" alt="30 Years of Reasonable Doubt, DUMBO" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">30 Years of Reasonable Doubt, DUMBO</span><span class="pgf-s">HYPETRAK</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DaBEWT0OhKe/" target="_blank" rel="noopener noreferrer"><img src="images/10-opening-night-at-jay-z30.jpg" alt="Opening Night at JAŸ-Z30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Opening Night at JAŸ-Z30</span><span class="pgf-s">Complex</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DaBCQgnR0wB/" target="_blank" rel="noopener noreferrer"><img src="images/11-hov-in-the-house.jpg" alt="Hov in the House" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Hov in the House</span><span class="pgf-s">Complex</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DZ_G_hyRd5A/" target="_blank" rel="noopener noreferrer"><img src="images/12-reasonable-doubt-turns-30.jpg" alt="Reasonable Doubt Turns 30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Reasonable Doubt Turns 30</span><span class="pgf-s">Complex</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/we.are.ona/p/DYkS1XEDMzq/" target="_blank" rel="noopener noreferrer"><img src="images/13-apple-tv-beats-dinner-miami-gp.jpg" alt="Apple TV × Beats Dinner, Miami GP" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Apple TV × Beats Dinner, Miami GP</span><span class="pgf-s">WE ARE ONA</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/omaweii/reel/DX7XQ1GPW-f/" target="_blank" rel="noopener noreferrer"><img src="images/14-after-the-beats-apple-tv-dinner.jpg" alt="After the Beats × Apple TV Dinner" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">After the Beats × Apple TV Dinner</span><span class="pgf-s">Wei Chen</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DX4WdmYlZ4q/" target="_blank" rel="noopener noreferrer"><img src="images/15-cadillac-f1-livery-reveal-apple-aventura.jpg" alt="Cadillac F1 Livery Reveal, Apple Aventura" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Cadillac F1 Livery Reveal, Apple Aventura</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DX2Q73CGYMh/" target="_blank" rel="noopener noreferrer"><img src="images/16-susie-wolff-at-today-at-apple.jpg" alt="Susie Wolff at Today at Apple" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Susie Wolff at Today at Apple</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DXxdn7XAVr0/" target="_blank" rel="noopener noreferrer"><img src="images/17-lily-muni-he-at-the-miami-gp.jpg" alt="Lily Muni He at the Miami GP" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Lily Muni He at the Miami GP</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/reel/DVtHXm7AD5Y/" target="_blank" rel="noopener noreferrer"><img src="images/18-pit-stops-at-apple-park.jpg" alt="Pit Stops at Apple Park" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pit Stops at Apple Park</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/hypedrive/p/DVjPUzxkon0/" target="_blank" rel="noopener noreferrer"><img src="images/19-the-f1-care-package.jpg" alt="The F1 Care Package" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">The F1 Care Package</span><span class="pgf-s">Hypedrive</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/jaden.coyer/reel/DVhMNurD_vy/" target="_blank" rel="noopener noreferrer"><img src="images/20-unboxing-the-f1-care-package.jpg" alt="Unboxing the F1 Care Package" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Unboxing the F1 Care Package</span><span class="pgf-s">Jaden Coyer</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/reel/DVhF7zcEtI0/" target="_blank" rel="noopener noreferrer"><img src="images/21-the-f1-takeover-starts-now.jpg" alt="The F1 Takeover Starts Now" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">The F1 Takeover Starts Now</span><span class="pgf-s">Apple TV</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/mickmicknyc/reel/DVR8JKujwR-/" target="_blank" rel="noopener noreferrer"><img src="images/22-return-to-the-grid-today-at-apple-soho.jpg" alt="Return to the Grid, Today at Apple SoHo" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Return to the Grid, Today at Apple SoHo</span><span class="pgf-s">Today at Apple</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/reel/DSBc2hYAK0V/" target="_blank" rel="noopener noreferrer"><img src="images/23-the-replay-gallery-miami-art-week.jpg" alt="The Replay Gallery, Miami Art Week" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">The Replay Gallery, Miami Art Week</span><span class="pgf-s">Highsnobiety</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/p/DSAwbHogVPr/" target="_blank" rel="noopener noreferrer"><img src="images/24-inside-the-replay-gallery.jpg" alt="Inside The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Inside The Replay Gallery</span><span class="pgf-s">Highsnobiety</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobietymusic/reel/DR7scO5D9hx/" target="_blank" rel="noopener noreferrer"><img src="images/25-behind-the-curtain-the-replay-gallery.jpg" alt="Behind the Curtain, The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Behind the Curtain, The Replay Gallery</span><span class="pgf-s">Highsnobiety Music</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gabrielomoses/reel/DR5cI3ijIQJ/" target="_blank" rel="noopener noreferrer"><img src="images/26-miami-it-s-time.jpg" alt="Miami, It’s Time" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Miami, It’s Time</span><span class="pgf-s">Gabriel Moses</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/reel/DR55g-4gBOI/" target="_blank" rel="noopener noreferrer"><img src="images/27-landing-in-the-305.jpg" alt="Landing in the 305" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Landing in the 305</span><span class="pgf-s">Highsnobiety</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/p/DR4irfaiPzm/" target="_blank" rel="noopener noreferrer"><img src="images/28-apple-music-highsnobiety-superblue-miami.jpg" alt="Apple Music × Highsnobiety, Superblue Miami" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Apple Music × Highsnobiety, Superblue Miami</span><span class="pgf-s">Highsnobiety</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DRzc2TGEYCn/" target="_blank" rel="noopener noreferrer"><img src="images/29-the-replay-gallery.jpg" alt="The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">The Replay Gallery</span><span class="pgf-s">Apple Music</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/reel/DPPnG42kkzV/" target="_blank" rel="noopener noreferrer"><img src="images/30-doja-cat-club-vie.jpg" alt="Doja Cat — Club Vie" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Doja Cat — Club Vie</span><span class="pgf-s">Apple Music</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DO1gOMXEmrG/" target="_blank" rel="noopener noreferrer"><img src="images/31-club-vie-on-the-list.jpg" alt="Club Vie — On the List" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Club Vie — On the List</span><span class="pgf-s">Apple Music</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/C6eVpZcL9PY/" target="_blank" rel="noopener noreferrer"><img src="images/32-joyride-preview-nyc.jpg" alt="Joyride Preview, NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Joyride Preview, NYC</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzhYHf8S01v/" target="_blank" rel="noopener noreferrer"><img src="images/33-from-me-to-you-preview-60-white-street.jpg" alt="From Me To You Preview, 60 White Street" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">From Me To You Preview, 60 White Street</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Czg2V7FRJgJ/" target="_blank" rel="noopener noreferrer"><img src="images/34-from-me-to-you.jpg" alt="From Me To You" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">From Me To You</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cze9hoxP4zE/" target="_blank" rel="noopener noreferrer"><img src="images/35-pharrell-and-nigo-open-from-me-to-you.jpg" alt="Pharrell and NIGO Open From Me To You" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pharrell and NIGO Open From Me To You</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzZMCi4xiPL/" target="_blank" rel="noopener noreferrer"><img src="images/36-from-me-to-you-the-capsule.jpg" alt="From Me To You — The Capsule" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">From Me To You — The Capsule</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzEM9zdrGv1/" target="_blank" rel="noopener noreferrer"><img src="images/37-from-me-to-you-the-nigo-archive.jpg" alt="From Me To You, the NIGO Archive" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">From Me To You, the NIGO Archive</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CxoDdfyPmxr/" target="_blank" rel="noopener noreferrer"><img src="images/38-chasing-grails.jpg" alt="Chasing Grails" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Chasing Grails</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CvImIaXSMJF/" target="_blank" rel="noopener noreferrer"><img src="images/39-ernie-barnes-at-joopiter.jpg" alt="Ernie Barnes at JOOPITER" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Ernie Barnes at JOOPITER</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/venuswilliams/p/CvFiI24rLQV/" target="_blank" rel="noopener noreferrer"><img src="images/40-holding-court-with-venus-williams.jpg" alt="Holding Court with Venus Williams" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Holding Court with Venus Williams</span><span class="pgf-s">Venus Williams</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CuIYMaCRGAA/" target="_blank" rel="noopener noreferrer"><img src="images/41-phriends-kaytramine.jpg" alt="Phriends — KAYTRAMINÉ" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Phriends — KAYTRAMINÉ</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Ct6NakgIW4U/" target="_blank" rel="noopener noreferrer"><img src="images/42-pedro-winter-s-record-collection.jpg" alt="Pedro Winter&#x27;s Record Collection" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pedro Winter&#x27;s Record Collection</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Ct4i89toPDz/" target="_blank" rel="noopener noreferrer"><img src="images/43-phriends-first-8-av-matignon-paris.jpg" alt="Phriends First — 8 Av. Matignon, Paris" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Phriends First — 8 Av. Matignon, Paris</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gq/p/Ctt-qp1O2J0/" target="_blank" rel="noopener noreferrer"><img src="images/44-pharrell-opens-paris-fashion-week.jpg" alt="Pharrell Opens Paris Fashion Week" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pharrell Opens Paris Fashion Week</span><span class="pgf-s">GQ</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CttIKMsIsjq/" target="_blank" rel="noopener noreferrer"><img src="images/45-phriends-phirst.jpg" alt="Phriends Phirst" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Phriends Phirst</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CtjpL9crd1Y/" target="_blank" rel="noopener noreferrer"><img src="images/46-just-phriends-the-full-curation.jpg" alt="Just Phriends — The Full Curation" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Just Phriends — The Full Curation</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cs6QxJgNxVU/" target="_blank" rel="noopener noreferrer"><img src="images/47-just-phriends-with-sarah-andelman.jpg" alt="Just Phriends, with Sarah Andelman" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Just Phriends, with Sarah Andelman</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CqVy8VSjIHT/" target="_blank" rel="noopener noreferrer"><img src="images/48-a-week-in-hong-kong.jpg" alt="A Week in Hong Kong" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">A Week in Hong Kong</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CqJbrFhL_VT/" target="_blank" rel="noopener noreferrer"><img src="images/49-behind-the-scenes-the-upper-house.jpg" alt="Behind the Scenes, The Upper House" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Behind the Scenes, The Upper House</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CpqIKYyLNWQ/" target="_blank" rel="noopener noreferrer"><img src="images/50-lorraine-schwartz-a-journey-through-gems.jpg" alt="Lorraine Schwartz, “A Journey Through Gems”" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Lorraine Schwartz, “A Journey Through Gems”</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cpajm2XL45-/" target="_blank" rel="noopener noreferrer"><img src="images/51-pharrell-tatler-hong-kong.jpg" alt="Pharrell × Tatler Hong Kong" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pharrell × Tatler Hong Kong</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CkN3WojjpaV/" target="_blank" rel="noopener noreferrer"><img src="images/52-son-of-a-pharaoh-auction-closes.jpg" alt="“Son of a Pharaoh” Auction Closes" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” Auction Closes</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/jacobandco/reel/CkJOHS6NhXb/" target="_blank" rel="noopener noreferrer"><img src="images/53-jacob-arabo-on-pharrell.jpg" alt="Jacob Arabo on Pharrell" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Jacob Arabo on Pharrell</span><span class="pgf-s">Jacob &amp; Co</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cj0_H-qv4TG/" target="_blank" rel="noopener noreferrer"><img src="images/54-pharrell-and-phriends-at-the-preview.jpg" alt="Pharrell and Phriends at the Preview" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">Pharrell and Phriends at the Preview</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cjvp0FtrDdJ/" target="_blank" rel="noopener noreferrer"><img src="images/55-son-of-a-pharaoh-preview-477-broadway.jpg" alt="“Son of a Pharaoh” Preview, 477 Broadway" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” Preview, 477 Broadway</span><span class="pgf-s">JOOPITER</span></span></a>
-      <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CjTYWRcuUhd/" target="_blank" rel="noopener noreferrer"><img src="images/56-son-of-a-pharaoh-lot-3.jpg" alt="“Son of a Pharaoh” — Lot 3" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” — Lot 3</span><span class="pgf-s">JOOPITER</span></span></a>
-    </div>
-    </div>
+  <div class="rule">
+    <div class="rule-in"><span>Selected Work</span><span>56 Projects</span></div>
+  </div>
+  <main class="pgf-grid">
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/race.service/reel/Dc4SG3QTp1l/" target="_blank" rel="noopener noreferrer"><img src="images/01-monza-in-nyc.jpg" alt="Monza in NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Monza in NYC</span><span class="pgf-s">race.service</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/Dc2Dpd2mUKP/" target="_blank" rel="noopener noreferrer"><img src="images/02-monza-in-nyc-l-industrie-little-italy.jpg" alt="Monza in NYC — L’Industrie Little Italy" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Monza in NYC — L’Industrie Little Italy</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/lindustriebk/p/DcyZMfQEfY4/" target="_blank" rel="noopener noreferrer"><img src="images/03-engineered-in-italy-folded-in-nyc.jpg" alt="Engineered in Italy. Folded in NYC." width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Engineered in Italy. Folded in NYC.</span><span class="pgf-s">L’Industrie</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/race.service/reel/Dcvt-UKRJID/" target="_blank" rel="noopener noreferrer"><img src="images/04-monza-is-coming-to-nyc.jpg" alt="Monza Is Coming to NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Monza Is Coming to NYC</span><span class="pgf-s">race.service</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/lindustriebk/p/DctRposERJk/" target="_blank" rel="noopener noreferrer"><img src="images/05-53-laps-one-slice.jpg" alt="53 Laps. One Slice." width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">53 Laps. One Slice.</span><span class="pgf-s">L’Industrie</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gq/p/DaLWtTQEtiR/" target="_blank" rel="noopener noreferrer"><img src="images/06-inside-the-jay-z30-pop-up.jpg" alt="Inside the JAŸ-Z30 Pop-Up" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Inside the JAŸ-Z30 Pop-Up</span><span class="pgf-s">GQ</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/reel/DaDUNmjBdo2/" target="_blank" rel="noopener noreferrer"><img src="images/07-reasonable-doubt-at-30.jpg" alt="Reasonable Doubt at 30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Reasonable Doubt at 30</span><span class="pgf-s">Apple Music</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DaBWwc5AazS/" target="_blank" rel="noopener noreferrer"><img src="images/08-jay-z30-pop-up-brooklyn.jpg" alt="JAŸ-Z30 Pop-Up, Brooklyn" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">JAŸ-Z30 Pop-Up, Brooklyn</span><span class="pgf-s">Apple Music × Roc Nation</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/hypetrak/reel/DaBLb28OVfJ/" target="_blank" rel="noopener noreferrer"><img src="images/09-30-years-of-reasonable-doubt-dumbo.jpg" alt="30 Years of Reasonable Doubt, DUMBO" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">30 Years of Reasonable Doubt, DUMBO</span><span class="pgf-s">HYPETRAK</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DaBEWT0OhKe/" target="_blank" rel="noopener noreferrer"><img src="images/10-opening-night-at-jay-z30.jpg" alt="Opening Night at JAŸ-Z30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Opening Night at JAŸ-Z30</span><span class="pgf-s">Complex</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DaBCQgnR0wB/" target="_blank" rel="noopener noreferrer"><img src="images/11-hov-in-the-house.jpg" alt="Hov in the House" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Hov in the House</span><span class="pgf-s">Complex</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/complexmusic/reel/DZ_G_hyRd5A/" target="_blank" rel="noopener noreferrer"><img src="images/12-reasonable-doubt-turns-30.jpg" alt="Reasonable Doubt Turns 30" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Reasonable Doubt Turns 30</span><span class="pgf-s">Complex</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/we.are.ona/p/DYkS1XEDMzq/" target="_blank" rel="noopener noreferrer"><img src="images/13-apple-tv-beats-dinner-miami-gp.jpg" alt="Apple TV × Beats Dinner, Miami GP" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Apple TV × Beats Dinner, Miami GP</span><span class="pgf-s">WE ARE ONA</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/omaweii/reel/DX7XQ1GPW-f/" target="_blank" rel="noopener noreferrer"><img src="images/14-after-the-beats-apple-tv-dinner.jpg" alt="After the Beats × Apple TV Dinner" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">After the Beats × Apple TV Dinner</span><span class="pgf-s">Wei Chen</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DX4WdmYlZ4q/" target="_blank" rel="noopener noreferrer"><img src="images/15-cadillac-f1-livery-reveal-apple-aventura.jpg" alt="Cadillac F1 Livery Reveal, Apple Aventura" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Cadillac F1 Livery Reveal, Apple Aventura</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DX2Q73CGYMh/" target="_blank" rel="noopener noreferrer"><img src="images/16-susie-wolff-at-today-at-apple.jpg" alt="Susie Wolff at Today at Apple" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Susie Wolff at Today at Apple</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/p/DXxdn7XAVr0/" target="_blank" rel="noopener noreferrer"><img src="images/17-lily-muni-he-at-the-miami-gp.jpg" alt="Lily Muni He at the Miami GP" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Lily Muni He at the Miami GP</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/reel/DVtHXm7AD5Y/" target="_blank" rel="noopener noreferrer"><img src="images/18-pit-stops-at-apple-park.jpg" alt="Pit Stops at Apple Park" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pit Stops at Apple Park</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/hypedrive/p/DVjPUzxkon0/" target="_blank" rel="noopener noreferrer"><img src="images/19-the-f1-care-package.jpg" alt="The F1 Care Package" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">The F1 Care Package</span><span class="pgf-s">Hypedrive</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/jaden.coyer/reel/DVhMNurD_vy/" target="_blank" rel="noopener noreferrer"><img src="images/20-unboxing-the-f1-care-package.jpg" alt="Unboxing the F1 Care Package" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Unboxing the F1 Care Package</span><span class="pgf-s">Jaden Coyer</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/appletv/reel/DVhF7zcEtI0/" target="_blank" rel="noopener noreferrer"><img src="images/21-the-f1-takeover-starts-now.jpg" alt="The F1 Takeover Starts Now" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">The F1 Takeover Starts Now</span><span class="pgf-s">Apple TV</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/mickmicknyc/reel/DVR8JKujwR-/" target="_blank" rel="noopener noreferrer"><img src="images/22-return-to-the-grid-today-at-apple-soho.jpg" alt="Return to the Grid, Today at Apple SoHo" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Return to the Grid, Today at Apple SoHo</span><span class="pgf-s">Today at Apple</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/reel/DSBc2hYAK0V/" target="_blank" rel="noopener noreferrer"><img src="images/23-the-replay-gallery-miami-art-week.jpg" alt="The Replay Gallery, Miami Art Week" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">The Replay Gallery, Miami Art Week</span><span class="pgf-s">Highsnobiety</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/p/DSAwbHogVPr/" target="_blank" rel="noopener noreferrer"><img src="images/24-inside-the-replay-gallery.jpg" alt="Inside The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Inside The Replay Gallery</span><span class="pgf-s">Highsnobiety</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobietymusic/reel/DR7scO5D9hx/" target="_blank" rel="noopener noreferrer"><img src="images/25-behind-the-curtain-the-replay-gallery.jpg" alt="Behind the Curtain, The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Behind the Curtain, The Replay Gallery</span><span class="pgf-s">Highsnobiety Music</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gabrielomoses/reel/DR5cI3ijIQJ/" target="_blank" rel="noopener noreferrer"><img src="images/26-miami-it-s-time.jpg" alt="Miami, It’s Time" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Miami, It’s Time</span><span class="pgf-s">Gabriel Moses</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/reel/DR55g-4gBOI/" target="_blank" rel="noopener noreferrer"><img src="images/27-landing-in-the-305.jpg" alt="Landing in the 305" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Landing in the 305</span><span class="pgf-s">Highsnobiety</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/highsnobiety/p/DR4irfaiPzm/" target="_blank" rel="noopener noreferrer"><img src="images/28-apple-music-highsnobiety-superblue-miami.jpg" alt="Apple Music × Highsnobiety, Superblue Miami" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Apple Music × Highsnobiety, Superblue Miami</span><span class="pgf-s">Highsnobiety</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DRzc2TGEYCn/" target="_blank" rel="noopener noreferrer"><img src="images/29-the-replay-gallery.jpg" alt="The Replay Gallery" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">The Replay Gallery</span><span class="pgf-s">Apple Music</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/reel/DPPnG42kkzV/" target="_blank" rel="noopener noreferrer"><img src="images/30-doja-cat-club-vie.jpg" alt="Doja Cat — Club Vie" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Doja Cat — Club Vie</span><span class="pgf-s">Apple Music</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/applemusic/p/DO1gOMXEmrG/" target="_blank" rel="noopener noreferrer"><img src="images/31-club-vie-on-the-list.jpg" alt="Club Vie — On the List" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Club Vie — On the List</span><span class="pgf-s">Apple Music</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/C6eVpZcL9PY/" target="_blank" rel="noopener noreferrer"><img src="images/32-joyride-preview-nyc.jpg" alt="Joyride Preview, NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Joyride Preview, NYC</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzhYHf8S01v/" target="_blank" rel="noopener noreferrer"><img src="images/33-from-me-to-you-preview-60-white-street.jpg" alt="From Me To You Preview, 60 White Street" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">From Me To You Preview, 60 White Street</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Czg2V7FRJgJ/" target="_blank" rel="noopener noreferrer"><img src="images/34-from-me-to-you.jpg" alt="From Me To You" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">From Me To You</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cze9hoxP4zE/" target="_blank" rel="noopener noreferrer"><img src="images/35-pharrell-and-nigo-open-from-me-to-you.jpg" alt="Pharrell and NIGO Open From Me To You" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pharrell and NIGO Open From Me To You</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzZMCi4xiPL/" target="_blank" rel="noopener noreferrer"><img src="images/36-from-me-to-you-the-capsule.jpg" alt="From Me To You — The Capsule" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">From Me To You — The Capsule</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CzEM9zdrGv1/" target="_blank" rel="noopener noreferrer"><img src="images/37-from-me-to-you-the-nigo-archive.jpg" alt="From Me To You, the NIGO Archive" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">From Me To You, the NIGO Archive</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CxoDdfyPmxr/" target="_blank" rel="noopener noreferrer"><img src="images/38-chasing-grails.jpg" alt="Chasing Grails" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Chasing Grails</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CvImIaXSMJF/" target="_blank" rel="noopener noreferrer"><img src="images/39-ernie-barnes-at-joopiter.jpg" alt="Ernie Barnes at JOOPITER" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Ernie Barnes at JOOPITER</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/venuswilliams/p/CvFiI24rLQV/" target="_blank" rel="noopener noreferrer"><img src="images/40-holding-court-with-venus-williams.jpg" alt="Holding Court with Venus Williams" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Holding Court with Venus Williams</span><span class="pgf-s">Venus Williams</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CuIYMaCRGAA/" target="_blank" rel="noopener noreferrer"><img src="images/41-phriends-kaytramine.jpg" alt="Phriends — KAYTRAMINÉ" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Phriends — KAYTRAMINÉ</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Ct6NakgIW4U/" target="_blank" rel="noopener noreferrer"><img src="images/42-pedro-winter-s-record-collection.jpg" alt="Pedro Winter&#x27;s Record Collection" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pedro Winter&#x27;s Record Collection</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/Ct4i89toPDz/" target="_blank" rel="noopener noreferrer"><img src="images/43-phriends-first-8-av-matignon-paris.jpg" alt="Phriends First — 8 Av. Matignon, Paris" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Phriends First — 8 Av. Matignon, Paris</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/gq/p/Ctt-qp1O2J0/" target="_blank" rel="noopener noreferrer"><img src="images/44-pharrell-opens-paris-fashion-week.jpg" alt="Pharrell Opens Paris Fashion Week" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pharrell Opens Paris Fashion Week</span><span class="pgf-s">GQ</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CttIKMsIsjq/" target="_blank" rel="noopener noreferrer"><img src="images/45-phriends-phirst.jpg" alt="Phriends Phirst" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Phriends Phirst</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CtjpL9crd1Y/" target="_blank" rel="noopener noreferrer"><img src="images/46-just-phriends-the-full-curation.jpg" alt="Just Phriends — The Full Curation" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Just Phriends — The Full Curation</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cs6QxJgNxVU/" target="_blank" rel="noopener noreferrer"><img src="images/47-just-phriends-with-sarah-andelman.jpg" alt="Just Phriends, with Sarah Andelman" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Just Phriends, with Sarah Andelman</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CqVy8VSjIHT/" target="_blank" rel="noopener noreferrer"><img src="images/48-a-week-in-hong-kong.jpg" alt="A Week in Hong Kong" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">A Week in Hong Kong</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CqJbrFhL_VT/" target="_blank" rel="noopener noreferrer"><img src="images/49-behind-the-scenes-the-upper-house.jpg" alt="Behind the Scenes, The Upper House" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Behind the Scenes, The Upper House</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CpqIKYyLNWQ/" target="_blank" rel="noopener noreferrer"><img src="images/50-lorraine-schwartz-a-journey-through-gems.jpg" alt="Lorraine Schwartz, “A Journey Through Gems”" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Lorraine Schwartz, “A Journey Through Gems”</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cpajm2XL45-/" target="_blank" rel="noopener noreferrer"><img src="images/51-pharrell-tatler-hong-kong.jpg" alt="Pharrell × Tatler Hong Kong" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pharrell × Tatler Hong Kong</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/reel/CkN3WojjpaV/" target="_blank" rel="noopener noreferrer"><img src="images/52-son-of-a-pharaoh-auction-closes.jpg" alt="“Son of a Pharaoh” Auction Closes" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” Auction Closes</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/jacobandco/reel/CkJOHS6NhXb/" target="_blank" rel="noopener noreferrer"><img src="images/53-jacob-arabo-on-pharrell.jpg" alt="Jacob Arabo on Pharrell" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Jacob Arabo on Pharrell</span><span class="pgf-s">Jacob &amp; Co</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cj0_H-qv4TG/" target="_blank" rel="noopener noreferrer"><img src="images/54-pharrell-and-phriends-at-the-preview.jpg" alt="Pharrell and Phriends at the Preview" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Pharrell and Phriends at the Preview</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/Cjvp0FtrDdJ/" target="_blank" rel="noopener noreferrer"><img src="images/55-son-of-a-pharaoh-preview-477-broadway.jpg" alt="“Son of a Pharaoh” Preview, 477 Broadway" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” Preview, 477 Broadway</span><span class="pgf-s">JOOPITER</span></span></a>
+    <a class="pgf-i" data-t="ig" href="https://www.instagram.com/joopiterofficial/p/CjTYWRcuUhd/" target="_blank" rel="noopener noreferrer"><img src="images/56-son-of-a-pharaoh-lot-3.jpg" alt="“Son of a Pharaoh” — Lot 3" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">“Son of a Pharaoh” — Lot 3</span><span class="pgf-s">JOOPITER</span></span></a>
   </main>
-  <footer>© 2026 Stephen Greenwood</footer>
 </div>
+<footer>
+  <div class="foot-in">
+    <a href="https://instagram.com/withgreenwood">Instagram</a><a href="https://www.linkedin.com/in/stephen-greenwood-/">LinkedIn</a><a href="mailto:stephen@withgreenwood.com">Email</a>
+    <span class="push">© 2026 Stephen Greenwood</span>
+  </div>
+</footer>
 </body>
 </html>
