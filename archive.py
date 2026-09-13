@@ -199,13 +199,13 @@ def block_html(b, pfx):
 
 
 def chrome(profile, doc, pfx):
-    """The ticker + identity bar, shared with the grid."""
-    phrases = [p for p in profile.get("ticker", []) if str(p).strip()]
+    """The identity bar. No ticker — that belongs to the grid.
+
+    The archive pages are for reading, and a looping marquee of current
+    clients sits wrong above ten-year-old work. The ticker CSS stays in the
+    shared stylesheet; nothing here emits the markup.
+    """
     ticker = ""
-    if phrases:
-        run = "".join('<span>%s</span><span class="dot">&bull;</span>' % esc(p)
-                      for p in phrases)
-        ticker = '<div class="ticker"><div class="ticker-run">%s%s</div></div>' % (run, run)
 
     # Same plain-label treatment as the grid's identity bar.
     lis = ['<li><a href="%s">%s</a></li>' % (esc(l.get("url")), esc(l.get("label")))
