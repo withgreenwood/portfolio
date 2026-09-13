@@ -89,9 +89,11 @@ a{color:inherit}
 /* ---- section rule ---- */
 .wrap{max-width:var(--max);margin:0 auto}
 .rule{padding:clamp(26px,4vw,44px) var(--pad) 0}
-.rule-in{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+.rule-in{display:flex;flex-wrap:wrap;justify-content:space-between;
+  align-items:baseline;gap:6px 16px;
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+.rule-meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin-left:auto}
 
 /* ---- grid ---- */
 .pgf-grid{display:grid;grid-template-columns:repeat(__COLSM__,1fr);
@@ -284,7 +286,7 @@ def build():
 </header>
 <div class="wrap">
   <div class="rule">
-    <div class="rule-in"><span>{work_label}</span><span>{count}</span></div>
+    <div class="rule-in"><span>{esc(tagline)}</span><span class="rule-meta"><span>{work_label}</span><span>{count}</span></span></div>
   </div>
   {grid}
 </div>

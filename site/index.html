@@ -61,9 +61,11 @@ a{color:inherit}
 /* ---- section rule ---- */
 .wrap{max-width:var(--max);margin:0 auto}
 .rule{padding:clamp(26px,4vw,44px) var(--pad) 0}
-.rule-in{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+.rule-in{display:flex;flex-wrap:wrap;justify-content:space-between;
+  align-items:baseline;gap:6px 16px;
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+.rule-meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin-left:auto}
 
 /* ---- grid ---- */
 .pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
@@ -134,7 +136,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 </header>
 <div class="wrap">
   <div class="rule">
-    <div class="rule-in"><span>Selected Work</span><span>56 Projects</span></div>
+    <div class="rule-in"><span>Brand Marketing and Experience</span><span class="rule-meta"><span>Selected Work</span><span>56 Projects</span></span></div>
   </div>
   <main class="pgf-grid">
     <a class="pgf-i" data-t="ig" href="https://www.instagram.com/race.service/reel/Dc4SG3QTp1l/" target="_blank" rel="noopener noreferrer"><img src="images/01-monza-in-nyc.jpg" alt="Monza in NYC" width="1080" height="1350" loading="lazy" decoding="async"><span class="pgf-a" aria-hidden="true">&#8599;</span><span class="pgf-ov"><span class="pgf-t">Monza in NYC</span><span class="pgf-s">race.service</span></span></a>
