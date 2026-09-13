@@ -76,7 +76,7 @@ a{color:inherit}
 .idcell+.idcell{border-left:1px solid var(--line)}
 .idcell-name{width:100%;border-bottom:1px solid var(--line)}
 .idcell-role{display:none}
-.idcell-links{border-left:0}
+.idcell+.idcell-links{border-left:0}
 .wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
   letter-spacing:-.045em;white-space:nowrap}
 .role{font:500 11px/1.4 var(--mono);letter-spacing:.13em;white-space:nowrap}
@@ -143,7 +143,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   :root{--pad:__PAD__px}
   .idcell{min-height:62px}
   .idcell-name{width:auto;border-bottom:0}
-  .idcell-links{border-left:1px solid var(--line);margin-left:auto}
+  .idcell-links{margin-left:auto}
   .pgf-grid{grid-template-columns:repeat(__COLSMID__,1fr)}
   .push{margin-left:auto}
 }
