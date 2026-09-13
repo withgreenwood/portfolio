@@ -19,7 +19,7 @@
     "/home/google-mixtape": "/archive/work/google-mixtape/",
     "/cart": "/"
   },
-  "metaDescription": "Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.",
+  "metaDescription": "Stephen Greenwood, brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.",
   "pages": [
     {
       "slug": "",
@@ -63,7 +63,7 @@
       "label": "Story",
       "nav": true,
       "lead": "story-01.jpg",
-      "metaDescription": "From rural North Carolina to DC, New York and Los Angeles — DJing, Trillectro, Skin Valley, and the agency years.",
+      "metaDescription": "From rural North Carolina to DC, New York and Los Angeles. DJing, Trillectro, Skin Valley, the agency years, JOOPITER and Apple.",
       "blocks": [
         {
           "type": "p",
@@ -110,7 +110,7 @@
       "title": "Resume",
       "label": "Resume",
       "nav": true,
-      "metaDescription": "Agencies, brand partners, and label and platform contacts — Stephen Greenwood.",
+      "metaDescription": "Brand and agency experience, clients and brand partners, and label and platform contacts. Stephen Greenwood.",
       "blocks": [
         {
           "type": "h2",
@@ -215,7 +215,7 @@
       "blocks": [
         {
           "type": "p",
-          "text": "Longer-form case studies from the YouTube, Google and Trillectro years — the work that came before the Apple and JOOPITER chapters."
+          "text": "Longer-form case studies from the YouTube, Google and Trillectro years. The work that came before the Apple and JOOPITER chapters."
         },
         {
           "type": "cards",

@@ -244,7 +244,7 @@ STORY = {
     "label": "Story",
     "nav": True,
     "lead": lead("story"),
-    "metaDescription": "From rural North Carolina to DC, New York and Los Angeles — DJing, Trillectro, Skin Valley, and the agency years.",
+    "metaDescription": "From rural North Carolina to DC, New York and Los Angeles. DJing, Trillectro, Skin Valley, the agency years, JOOPITER and Apple.",
     "blocks": [
         {"type": "p", "text": "As a kid in rural North Carolina, my love for Hip-Hop and sneakers stood out like a sore thumb. In college I worked out that throwing parties was the fastest way to meet everyone on campus, so I bought DJ gear and went legit, and ended up putting on some of UNCW’s largest parties and concerts. After graduating I followed a job to DC and fell in love with the city’s cultural diversity. I kept DJing sweaty parties that started in my living room and spilled out onto the block. I joined the GEICO mobile app team, which fed a long-time passion for consumer tech, and used what I learned there to build More than Friends, an R&B party series I grew by funneling RSVPs into an email list that got bigger every month."},
         {"type": "p", "text": "The friends I threw parties with started Trillectro, a groundbreaking independent Hip-Hop and Electronic music festival, and I became a core member of their small team. We got known for lineups built around emerging talent, with early performances from Travis Scott and GoldLink, and over six years we grew it to Merriweather Post Pavilion and marquee artists like Kid Cudi, Chance the Rapper and SZA. My part was the audience. I pushed growth across social, email and media partners like Genius and Hypebeast, year over year, and the festival ended up covered by Billboard, Complex and The Fader."},
@@ -262,7 +262,7 @@ RESUME = {
     "title": "Resume",
     "label": "Resume",
     "nav": True,
-    "metaDescription": "Agencies, brand partners, and label and platform contacts — Stephen Greenwood.",
+    "metaDescription": "Brand and agency experience, clients and brand partners, and label and platform contacts. Stephen Greenwood.",
     "blocks": [
         # Split brand-side from agency-side. Trillectro and GEICO sit with the
         # brands: a festival he helped run and an in-house app team, neither an
@@ -304,7 +304,7 @@ WORK = {
     "metaDescription": "Case studies from the YouTube, Google and Trillectro years.",
     "blocks": [
         {"type": "p",
-         "text": "Longer-form case studies from the YouTube, Google and Trillectro years — the work that came before the Apple and JOOPITER chapters."},
+         "text": "Longer-form case studies from the YouTube, Google and Trillectro years. The work that came before the Apple and JOOPITER chapters."},
         {"type": "cards", "items": [
             {"title": c["title"],
              "href": c["slug"] + "/",
@@ -339,7 +339,7 @@ doc = {
     "homeLabel": "Work",
     "kicker": "Archive",
     "redirects": REDIRECTS,
-    "metaDescription": "Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.",
+    "metaDescription": "Stephen Greenwood, brand marketing and experience across music, sport and culture. Background, areas of expertise, project case studies, and the long story.",
     "pages": [ABOUT, STORY, RESUME, WORK] + CASES,
 }
 
