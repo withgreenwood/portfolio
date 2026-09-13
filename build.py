@@ -258,22 +258,21 @@ def build():
         half = one * reps
         ticker = f'<div class="ticker"><div class="ticker-run">{half}{half}</div></div>'
 
-    # The archive (the old Squarespace pages) sits alongside the profile links
-    # in both the identity bar and the footer, so the deeper work is one click
-    # from the grid without adding a nav to a page that is meant to be a grid.
-    nav_links = list(profile.get("links", []))
+    # The identity bar stays the three profile links. The archive (the old
+    # Squarespace pages) is a footer link only -- it is the deeper cut, not a
+    # peer of Instagram and LinkedIn, and the bar is meant to stay spare.
+    prof_links = [l for l in profile.get("links", []) if l.get("url")]
     arch = profile.get("archive")
-    if arch and arch.get("url"):
-        nav_links.append(arch)
+    foot_only = prof_links + ([arch] if arch and arch.get("url") else [])
 
     links = "".join(
         f'<li><a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a></li>'
-        for l in nav_links if l.get("url"))
+        for l in prof_links)
     links_html = f'<ul class="links">{links}</ul>' if links else ""
 
     foot_links = "".join(
         f'<a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a>'
-        for l in nav_links if l.get("url"))
+        for l in foot_only)
 
     name = esc(profile.get("name", "Portfolio"))
     tagline = profile.get("tagline")
