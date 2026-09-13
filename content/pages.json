@@ -1,0 +1,68 @@
+{
+  "baseUrl": "https://archive.withgreenwood.com",
+  "homeUrl": "https://withgreenwood.com/",
+  "homeLabel": "Work",
+  "kicker": "Archive",
+  "metaDescription": "Stephen Greenwood — brand marketing and experience across music, sport and culture. Background, areas of expertise, and the long story.",
+  "pages": [
+    {
+      "slug": "",
+      "title": "About",
+      "label": "About",
+      "blocks": [
+        {
+          "type": "lede",
+          "text": "I create forward-thinking marketing strategies and experiences that amplify music and culture."
+        },
+        {
+          "type": "p",
+          "text": "I create forward-thinking marketing strategies and experiences that amplify music and culture for leading tech brands, music platforms, and groundbreaking festivals."
+        },
+        {
+          "type": "p",
+          "text": "I've spent over 20 years at the forefront of culture as a DJ, sneakerhead, and dot connector. Combine that with over ten years of working with the most well-known brands in the world. I bring a creative director's vision, a music supervisor's ear, and a producer's type-A structure to every project."
+        },
+        { "type": "h2", "text": "Areas of Expertise" },
+        {
+          "type": "cells",
+          "items": [
+            "Music & Culture Marketing",
+            "Experiential Marketing",
+            "Artist & Label Relationships",
+            "Project Management",
+            "Digital Marketing and Social Media",
+            "Talent Buying and Curation"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "story",
+      "title": "Story",
+      "label": "Story",
+      "metaDescription": "From rural North Carolina to DC, New York and Los Angeles — DJing, Trillectro, Skin Valley, and the agency years.",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "As a kid in rural North Carolina, my love for Hip-Hop and sneakers stood out like a sore thumb. I spent my High School years searching for the next underground artist to blow and plotting to cop rare sneaker releases. In College, I quickly realized I could connect with like-minded people all over campus by throwing parties. After a year of iTunes DJing and getting some heat for large crowds in the dorm, I went legit. I bought DJ gear and got involved in several student groups on campus. I put on some of UNCW's largest parties and concerts, gaining foundational experience for my career. I developed and marketed multicultural programming, leveraged early forms of social media and influencer marketing, booked venues and talent, managed concert production, tracked budgets, and DJ'd... a lot."
+        },
+        {
+          "type": "p",
+          "text": "After college, I followed a career opportunity to DC and fell in love with the city's cultural diversity. I continued to connect people through music, routinely DJing sweaty parties that started in my living room and spilled out onto the block. I made friends with a few influential people in the music scene, and we linked up to throw parties with more intention. We graduated into real venues and tapped brands to secure partnerships. My career journey brought me to the GEICO mobile app team, aligning with my long-time passion for consumer tech. Taking inspiration from my new tech-forward environment, I began utilizing email marketing to build More than Friends, a popular R&B party series. I funneled RSVPs into a sizable email list pushing attendee and revenue growth for each party."
+        },
+        {
+          "type": "p",
+          "text": "The friends I threw parties with created a groundbreaking independent Hip-Hop and Electronic music festival, Trillectro, and I became a core member of their small team. We became known for curating lineups focused on emerging talent with huge potential, hosting early performances from Travis Scott, Goldlink, and more. In six years with Trillectro, I essentially learned all the aspects of a music festival. I carried out festival production in premier venues like Merriweather Post Pavilion, worked with marquee artists (Kid Cudi, Chance the Rapper, SZA), and built relationships with managers and agents. I used growth hacking strategies across social media, email campaigns, and media partners like Genius and Hypebeast to grow the festival's audience and ultimately attendees year over year. I partnered with major brands for custom activations and unique integrated solutions. The festival received recognition from prominent music outlets like Billboard, Complex, and The Fader."
+        },
+        {
+          "type": "p",
+          "text": "In the middle of the Trillectro run, I moved to NYC, diving into both creative and career opportunities. I tapped into an incredible network of amazing DJs and creatives and was able to extend Trillectro's reach by partnering with established culture brands like Everyday People. I built on my experience as a DJ and promoter, eventually co-creating Skin Valley, a high-energy monthly party series at Brooklyn's cultural hub, Kinfolk. I built an audience by coding a Twilio-based SMS chatbot allowing for targeted conversations pointing thousands of party-goers to the next event. Combining a unique brand, intrigue from viral party footage, and the strength of the chatbot, Skin Valley became the venue's most successful party series."
+        },
+        {
+          "type": "p",
+          "text": "I also transitioned professionally, finding success working in the agency space. I leveraged my marketing expertise and production experience to create experiences with top brands like YouTube Music, Google, and Samsung. I developed marketing strategies that seamlessly tied tech, music, and culture together. I utilized my network and relationships to identify, secure, and collaborate with talent. By building trust with clients, I was fortunate to produce several events across multiple years, such as YouTube Creators Summits, elevating the experience in each iteration. As work travels brought me to the west coast more frequently, I was inspired to start a new chapter by relocating to Los Angeles."
+        }
+      ]
+    }
+  ]
+}

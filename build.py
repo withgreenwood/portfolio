@@ -9,6 +9,7 @@ Usage:  python3 build.py
 """
 import html
 import json
+import math
 import shutil
 import sys
 from pathlib import Path
@@ -16,6 +17,12 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 CONTENT = ROOT / "content"
 SITE = ROOT / "site"
+
+# Ticker geometry. MIN_PX is how wide one half of the run must be before it
+# can loop without a gap — 5200 clears a 5K display at 100% scaling.
+TICKER_MIN_PX = 5200
+TICKER_SPAN_PAD = 20
+TICKER_SPEED = 13.3   # px/sec, matching the original 34s at two copies
 
 FONTS = ("https://fonts.googleapis.com/css2"
          "?family=IBM+Plex+Mono:wght@400;500;600"
@@ -63,7 +70,7 @@ a{color:inherit}
   overflow:hidden;white-space:nowrap}
 .ticker-run{display:inline-block;padding:6px 0;
   font:500 11px/1.2 var(--mono);letter-spacing:.14em;
-  animation:ticker 34s linear infinite}
+  animation:ticker __TICKDUR__s linear infinite}
 .ticker-run span{padding:0 20px}
 .ticker-run .dot{padding:0;opacity:.55}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -151,7 +158,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 """
 
 
-def stylesheet(lay):
+def stylesheet(lay, tick_dur=34):
     maxw = lay.get("maxWidth", 1180)
     maxw = "100%" if maxw in ("100%", "full") else "%dpx" % int(maxw)
     subs = {
@@ -164,6 +171,7 @@ def stylesheet(lay):
         "__COLS__": str(int(lay.get("columns", 4))),
         "__COLSMID__": str(int(lay.get("columnsMid", 3))),
         "__COLSM__": str(int(lay.get("columnsMobile", 2))),
+        "__TICKDUR__": "%g" % tick_dur,
     }
     css = CSS
     for k, v in subs.items():
@@ -226,12 +234,28 @@ def build():
                 '<code>content/items.json</code> and run <code>python3 build.py</code>.</div>')
 
     # ---- ticker: the phrase list is duplicated so the -50% keyframe loops seamlessly
+    # The run is two identical halves and the keyframe shifts it by -50%, so the
+    # loop is only seamless while one half is at least as wide as the viewport.
+    # Two copies of a short phrase list is ~900px, which runs dry on a wide
+    # display. The face is monospace, so a half's width is predictable: measure
+    # it, repeat until it clears TICKER_MIN_PX, and scale the duration by the
+    # same factor so the speed on screen never changes.
     phrases = [p for p in profile.get("ticker", []) if str(p).strip()]
     ticker = ""
+    tick_dur = 34
     if phrases:
-        run = "".join(f'<span>{esc(p)}</span><span class="dot">&bull;</span>'
+        one = "".join(f'<span>{esc(p)}</span><span class="dot">&bull;</span>'
                       for p in phrases)
-        ticker = (f'<div class="ticker"><div class="ticker-run">{run}{run}</div></div>')
+        # 11px IBM Plex Mono advances 0.6em, plus .14em letter-spacing, plus the
+        # 20px padding on each side of a phrase span; the bullet spans have none.
+        per_char = 11 * (0.6 + 0.14)
+        half_px = sum(len(str(p)) * per_char + 2 * TICKER_SPAN_PAD + per_char
+                      for p in phrases)
+        reps = max(2, math.ceil(TICKER_MIN_PX / half_px))
+        half_px *= reps
+        tick_dur = round(half_px / float(lay.get("tickerSpeed", TICKER_SPEED)), 1)
+        half = one * reps
+        ticker = f'<div class="ticker"><div class="ticker-run">{half}{half}</div></div>'
 
     links = "".join(
         f'<li><a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a></li>'
@@ -270,7 +294,7 @@ def build():
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
-<style>{stylesheet(lay)}</style>
+<style>{stylesheet(lay, tick_dur)}</style>
 </head>
 <body>
 {ticker}
@@ -301,3 +325,7 @@ def build():
 
 if __name__ == "__main__":
     build()
+    # The archive pages (the old Squarespace content) are built from the same
+    # profile.json so the chrome stays in sync. Absent pages.json, it no-ops.
+    from archive import build_archive
+    build_archive(quiet=True)
