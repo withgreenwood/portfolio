@@ -239,6 +239,39 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 @media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
 
+/* ---- lightbox ----
+   Every lead and gallery image opens full screen, with arrows, keys and
+   swipe to move through the set. This is the one piece of the archive that
+   needs JavaScript; without it the images still sit on the page as before,
+   the buttons just do nothing. */
+.zoom{display:block;width:100%;padding:0;border:0;background:none;
+  color:inherit;font:inherit;cursor:zoom-in}
+.zoom:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+/* The side padding is a gutter for the arrows: on a phone they would
+   otherwise sit on top of the photograph. */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.94);
+  display:flex;align-items:center;justify-content:center;padding:56px 46px}
+.lb[hidden]{display:none}
+.lb-stage{display:flex;align-items:center;justify-content:center;
+  max-width:100%;max-height:100%}
+.lb-img{display:block;width:auto;height:auto;
+  max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
+  cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
+.lb-btn:hover{color:var(--accent)}
+.lb-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb-x{top:6px;right:8px;font-size:24px}
+.lb-prev{left:2px;top:50%;transform:translateY(-50%)}
+.lb-next{right:2px;top:50%;transform:translateY(-50%)}
+.lb-count{position:absolute;left:0;right:0;bottom:16px;text-align:center;
+  color:#fff;font:500 11px/1 var(--mono);letter-spacing:.14em}
+@media(min-width:620px){
+  .lb{padding:64px 68px}
+  .lb-prev{left:12px}
+  .lb-next{right:12px}
+}
+@media(prefers-reduced-motion:reduce){.lb-btn{transition:none}}
+
 /* ---- back link ---- */
 .back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
   letter-spacing:.14em}
@@ -270,5 +303,6 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <span class="push">© 2026 Stephen Greenwood</span>
   </div>
 </footer>
+
 </body>
 </html>

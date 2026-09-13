@@ -239,6 +239,39 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 @media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
 
+/* ---- lightbox ----
+   Every lead and gallery image opens full screen, with arrows, keys and
+   swipe to move through the set. This is the one piece of the archive that
+   needs JavaScript; without it the images still sit on the page as before,
+   the buttons just do nothing. */
+.zoom{display:block;width:100%;padding:0;border:0;background:none;
+  color:inherit;font:inherit;cursor:zoom-in}
+.zoom:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+/* The side padding is a gutter for the arrows: on a phone they would
+   otherwise sit on top of the photograph. */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.94);
+  display:flex;align-items:center;justify-content:center;padding:56px 46px}
+.lb[hidden]{display:none}
+.lb-stage{display:flex;align-items:center;justify-content:center;
+  max-width:100%;max-height:100%}
+.lb-img{display:block;width:auto;height:auto;
+  max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
+  cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
+.lb-btn:hover{color:var(--accent)}
+.lb-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb-x{top:6px;right:8px;font-size:24px}
+.lb-prev{left:2px;top:50%;transform:translateY(-50%)}
+.lb-next{right:2px;top:50%;transform:translateY(-50%)}
+.lb-count{position:absolute;left:0;right:0;bottom:16px;text-align:center;
+  color:#fff;font:500 11px/1 var(--mono);letter-spacing:.14em}
+@media(min-width:620px){
+  .lb{padding:64px 68px}
+  .lb-prev{left:12px}
+  .lb-next{right:12px}
+}
+@media(prefers-reduced-motion:reduce){.lb-btn{transition:none}}
+
 /* ---- back link ---- */
 .back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
   letter-spacing:.14em}
@@ -258,14 +291,14 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <div class="rule-in"><span>YouTube Latin American Creator Summit</span><span class="rule-meta"><span>YouTube · MAS</span></span></div>
   </div>
   <nav class="pagenav"><a href="../../">About</a><a href="../../story/">Story</a><a href="../../resume/">Resume</a><a href="../../work/" aria-current="page">Projects</a></nav>
-  <div class="lead"><img src="../../images/youtube-latin-american-creator-summit-01.jpg" alt="YouTube Latin American Creator Summit" decoding="async"></div>
+  <div class="lead"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-01.jpg" alt="YouTube Latin American Creator Summit" decoding="async"></button></div>
   <article class="prose">
     <p class="intro">YouTube amplified community building among Latin American Creators with a 3-day summit in Los Angeles. The summit created spaces for candid and personal conversations between YouTube executives and Creators about the vision for the platform moving forward and the state of content creation as a whole. The main stage also hosted fun activities balancing out heavier discussions as well as special guest appearances from Pitbull and Hannah Beachler.</p>
     <p>Intentional themes and design channeled the vibrancy of Latin American culture allowing the Creators to feel seen. Each creator was greeted with a custom gift and collateral in their native language. This event was designed and produced by MAS Event + Design.</p>
     <h2>Project Contributions</h2>
     <ul><li>Guided YouTube’s efforts to recognize the Latin American creator community</li><li>Created and executed culturally relevant event programming for the 3-day experience covering design, themes, music, food, and gifting</li><li>Developed visual branding and collateral in English, Spanish, and Portuguese</li><li>Coordinated translation services for Spanish, Portuguese, and English language speakers and guests to experience the event in their native language</li><li>Managed overall project planning, budget, and logistics</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><img src="../../images/youtube-latin-american-creator-summit-02.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.6667;flex-basis:calc((100% - 2px) * 0.18183)"><img src="../../images/youtube-latin-american-creator-summit-03.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><img src="../../images/youtube-latin-american-creator-summit-04.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.32967)"><img src="../../images/youtube-latin-american-creator-summit-05.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.32967)"><img src="../../images/youtube-latin-american-creator-summit-06.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.75;flex-basis:calc((100% - 3px) * 0.16484)"><img src="../../images/youtube-latin-american-creator-summit-07.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.8;flex-basis:calc((100% - 3px) * 0.17582)"><img src="../../images/youtube-latin-american-creator-summit-08.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:0.6667;flex-basis:calc((100% - 2px) * 0.18183)"><img src="../../images/youtube-latin-american-creator-summit-09.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><img src="../../images/youtube-latin-american-creator-summit-10.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><img src="../../images/youtube-latin-american-creator-summit-11.jpg" alt="" loading="lazy" decoding="async"></figure></div><div class="gal-row"><figure style="--r:0.9653;flex-basis:calc((100% - 3px) * 0.20220)"><img src="../../images/youtube-latin-american-creator-summit-12.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:0.9827;flex-basis:calc((100% - 3px) * 0.20585)"><img src="../../images/youtube-latin-american-creator-summit-13.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.3274;flex-basis:calc((100% - 3px) * 0.27805)"><img src="../../images/youtube-latin-american-creator-summit-14.jpg" alt="" loading="lazy" decoding="async"></figure><figure style="--r:1.4985;flex-basis:calc((100% - 3px) * 0.31389)"><img src="../../images/youtube-latin-american-creator-summit-15.jpg" alt="" loading="lazy" decoding="async"></figure></div></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-02.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.6667;flex-basis:calc((100% - 2px) * 0.18183)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-03.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-04.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.32967)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-05.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 3px) * 0.32967)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-06.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.75;flex-basis:calc((100% - 3px) * 0.16484)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-07.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.8;flex-basis:calc((100% - 3px) * 0.17582)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-08.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:0.6667;flex-basis:calc((100% - 2px) * 0.18183)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-09.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-10.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-11.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:0.9653;flex-basis:calc((100% - 3px) * 0.20220)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-12.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:0.9827;flex-basis:calc((100% - 3px) * 0.20585)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-13.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.3274;flex-basis:calc((100% - 3px) * 0.27805)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-14.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.4985;flex-basis:calc((100% - 3px) * 0.31389)"><button type="button" class="zoom"><img src="../../images/youtube-latin-american-creator-summit-15.jpg" alt="" loading="lazy" decoding="async"></button></figure></div></div>
   </article>
 </div>
 <footer>
@@ -274,5 +307,87 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <span class="push">© 2026 Stephen Greenwood</span>
   </div>
 </footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-stage"><img class="lb-img" alt=""></div>
+  <button type="button" class="lb-btn lb-x" data-act="close" aria-label="Close">&times;</button>
+  <button type="button" class="lb-btn lb-prev" data-act="prev" aria-label="Previous image">&larr;</button>
+  <button type="button" class="lb-btn lb-next" data-act="next" aria-label="Next image">&rarr;</button>
+  <div class="lb-count"><span class="lb-i">1</span> / <span class="lb-t">1</span></div>
+</div>
+<script>
+(function(){
+  var imgs = [].slice.call(document.querySelectorAll(".zoom img"));
+  if (!imgs.length) return;
+  var lb = document.getElementById("lb"),
+      big = lb.querySelector(".lb-img"),
+      stage = lb.querySelector(".lb-stage"),
+      cur = lb.querySelector(".lb-i"),
+      i = 0, opener = null;
+  lb.querySelector(".lb-t").textContent = imgs.length;
+
+  function show(n){
+    i = (n + imgs.length) % imgs.length;
+    big.src = imgs[i].currentSrc || imgs[i].src;
+    big.alt = imgs[i].alt || "";
+    cur.textContent = i + 1;
+    [1, -1].forEach(function(d){            // warm the neighbours
+      var a = new Image();
+      a.src = imgs[(i + d + imgs.length) % imgs.length].src;
+    });
+  }
+  function open(n, from){
+    opener = from;
+    show(n);
+    lb.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    lb.querySelector(".lb-next").focus();
+  }
+  function close(){
+    lb.hidden = true;
+    document.documentElement.style.overflow = "";
+    big.removeAttribute("src");
+    if (opener) opener.focus();
+  }
+
+  imgs.forEach(function(im, n){
+    im.parentNode.addEventListener("click", function(e){
+      e.preventDefault();
+      open(n, im.parentNode);
+    });
+  });
+  lb.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-act]") : null;
+    if (b) {
+      var a = b.getAttribute("data-act");
+      if (a === "prev") show(i - 1);
+      else if (a === "next") show(i + 1);
+      else close();
+      return;
+    }
+    if (e.target === lb || e.target === stage) close();   // click the ground
+  });
+  document.addEventListener("keydown", function(e){
+    if (lb.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowRight") show(i + 1);
+    else if (e.key === "ArrowLeft") show(i - 1);
+    else if (e.key === "Tab") {                            // keep focus inside
+      var f = lb.querySelectorAll(".lb-btn"), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+    }
+  });
+  var x0 = null;
+  lb.addEventListener("touchstart", function(e){ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  lb.addEventListener("touchend", function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
+  }, {passive:true});
+})();
+</script>
+
 </body>
 </html>

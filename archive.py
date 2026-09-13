@@ -5,7 +5,7 @@ These are the prose and case-study pages that used to live on the Squarespace
 site, rebuilt in the same "full flip" treatment as the grid. They are served
 from the same Worker as the grid, at /archive/*.
 
-Page slugs may nest: a slug of "work/trillectro" builds
+Images open in a lightbox, the one part of the archive that uses JavaScript;\nwithout it the page still reads, the images just don't open.\n\nPage slugs may nest: a slug of "work/trillectro" builds
 site/archive/work/trillectro/index.html and links back up two levels. Only
 pages with "nav": true appear in the page nav.
 
@@ -139,11 +139,128 @@ PROSE_CSS = """
 @media(min-width:620px){.cards{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.cards{grid-template-columns:repeat(3,1fr)}}
 
+/* ---- lightbox ----
+   Every lead and gallery image opens full screen, with arrows, keys and
+   swipe to move through the set. This is the one piece of the archive that
+   needs JavaScript; without it the images still sit on the page as before,
+   the buttons just do nothing. */
+.zoom{display:block;width:100%;padding:0;border:0;background:none;
+  color:inherit;font:inherit;cursor:zoom-in}
+.zoom:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+/* The side padding is a gutter for the arrows: on a phone they would
+   otherwise sit on top of the photograph. */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.94);
+  display:flex;align-items:center;justify-content:center;padding:56px 46px}
+.lb[hidden]{display:none}
+.lb-stage{display:flex;align-items:center;justify-content:center;
+  max-width:100%;max-height:100%}
+.lb-img{display:block;width:auto;height:auto;
+  max-width:100%;max-height:calc(100vh - 120px);object-fit:contain}
+.lb-btn{position:absolute;background:none;border:0;padding:12px;color:#fff;
+  cursor:pointer;font:500 20px/1 var(--mono);transition:color .15s}
+.lb-btn:hover{color:var(--accent)}
+.lb-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb-x{top:6px;right:8px;font-size:24px}
+.lb-prev{left:2px;top:50%;transform:translateY(-50%)}
+.lb-next{right:2px;top:50%;transform:translateY(-50%)}
+.lb-count{position:absolute;left:0;right:0;bottom:16px;text-align:center;
+  color:#fff;font:500 11px/1 var(--mono);letter-spacing:.14em}
+@media(min-width:620px){
+  .lb{padding:64px 68px}
+  .lb-prev{left:12px}
+  .lb-next{right:12px}
+}
+@media(prefers-reduced-motion:reduce){.lb-btn{transition:none}}
+
 /* ---- back link ---- */
 .back{padding:22px var(--pad) 0;font:500 11px/1 var(--mono);
   letter-spacing:.14em}
 .back a{text-decoration:none;border-bottom:1px solid transparent}
 .back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+"""
+
+
+LIGHTBOX = """
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-stage"><img class="lb-img" alt=""></div>
+  <button type="button" class="lb-btn lb-x" data-act="close" aria-label="Close">&times;</button>
+  <button type="button" class="lb-btn lb-prev" data-act="prev" aria-label="Previous image">&larr;</button>
+  <button type="button" class="lb-btn lb-next" data-act="next" aria-label="Next image">&rarr;</button>
+  <div class="lb-count"><span class="lb-i">1</span> / <span class="lb-t">1</span></div>
+</div>
+<script>
+(function(){
+  var imgs = [].slice.call(document.querySelectorAll(".zoom img"));
+  if (!imgs.length) return;
+  var lb = document.getElementById("lb"),
+      big = lb.querySelector(".lb-img"),
+      stage = lb.querySelector(".lb-stage"),
+      cur = lb.querySelector(".lb-i"),
+      i = 0, opener = null;
+  lb.querySelector(".lb-t").textContent = imgs.length;
+
+  function show(n){
+    i = (n + imgs.length) % imgs.length;
+    big.src = imgs[i].currentSrc || imgs[i].src;
+    big.alt = imgs[i].alt || "";
+    cur.textContent = i + 1;
+    [1, -1].forEach(function(d){            // warm the neighbours
+      var a = new Image();
+      a.src = imgs[(i + d + imgs.length) % imgs.length].src;
+    });
+  }
+  function open(n, from){
+    opener = from;
+    show(n);
+    lb.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    lb.querySelector(".lb-next").focus();
+  }
+  function close(){
+    lb.hidden = true;
+    document.documentElement.style.overflow = "";
+    big.removeAttribute("src");
+    if (opener) opener.focus();
+  }
+
+  imgs.forEach(function(im, n){
+    im.parentNode.addEventListener("click", function(e){
+      e.preventDefault();
+      open(n, im.parentNode);
+    });
+  });
+  lb.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-act]") : null;
+    if (b) {
+      var a = b.getAttribute("data-act");
+      if (a === "prev") show(i - 1);
+      else if (a === "next") show(i + 1);
+      else close();
+      return;
+    }
+    if (e.target === lb || e.target === stage) close();   // click the ground
+  });
+  document.addEventListener("keydown", function(e){
+    if (lb.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowRight") show(i + 1);
+    else if (e.key === "ArrowLeft") show(i - 1);
+    else if (e.key === "Tab") {                            // keep focus inside
+      var f = lb.querySelectorAll(".lb-btn"), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+    }
+  });
+  var x0 = null;
+  lb.addEventListener("touchstart", function(e){ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  lb.addEventListener("touchend", function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
+  }, {passive:true});
+})();
+</script>
 """
 
 
@@ -278,9 +395,11 @@ def block_html(b, pfx):
                 i = items[n]
                 n += 1
                 cap = i.get("caption")
-                f = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
-                    esc(img_src(i.get("src"), pfx)),
-                    esc(i.get("alt") or cap or ""))
+                f = ('<button type="button" class="zoom">'
+                     '<img src="%s" alt="%s" loading="lazy" decoding="async">'
+                     '</button>' % (
+                         esc(img_src(i.get("src"), pfx)),
+                         esc(i.get("alt") or cap or "")))
                 if cap:
                     f += "<figcaption>%s</figcaption>" % esc(cap)
                 # The row's 1px gaps come out of the 100% before it is split,
@@ -357,8 +476,10 @@ def page_html(page, doc, profile, pages):
 
     lead = ""
     if page.get("lead"):
-        lead = ('<div class="lead"><img src="%s" alt="%s" '
-                'decoding="async"></div>' % (
+        lead = ('<div class="lead">'
+                '<button type="button" class="zoom">'
+                '<img src="%s" alt="%s" decoding="async">'
+                '</button></div>' % (
                     esc(img_src(page["lead"], pfx)),
                     esc(page.get("leadAlt") or page.get("title") or "")))
 
@@ -432,6 +553,7 @@ def page_html(page, doc, profile, pages):
     <span class="push">%(copy)s</span>
   </div>
 </footer>
+%(lightbox)s
 </body>
 </html>
 """ % {
@@ -452,6 +574,8 @@ def page_html(page, doc, profile, pages):
         "body": body,
         "foot": foot_links,
         "copy": esc(profile.get("footer", "")),
+        # Only pages that actually carry images pay for the viewer.
+        "lightbox": LIGHTBOX if ("zoom" in lead or 'class="zoom"' in body) else "",
     }
 
 
