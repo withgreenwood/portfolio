@@ -336,3 +336,6 @@ if __name__ == "__main__":
     # profile.json so the chrome stays in sync. Absent pages.json, it no-ops.
     from archive import build_archive
     build_archive(quiet=True)
+    # Single-event sub-pages, same deal: absent their content JSON they no-op.
+    from monza import build_monza
+    build_monza(quiet=True)
