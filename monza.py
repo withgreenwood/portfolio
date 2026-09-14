@@ -142,9 +142,12 @@ def build_monza(quiet=False):
         f'<li><a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a></li>'
         for l in prof_links)
     links_html = f'<ul class="links">{links}</ul>' if links else ""
+    # Same footer set as the homepage, so the archive link does not vanish
+    # on the way into a sub-page.
+    arch = profile.get("archive")
     foot_links = "".join(
         f'<a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a>'
-        for l in prof_links)
+        for l in prof_links + ([arch] if arch and arch.get("url") else []))
 
     css = stylesheet(lay, tick_dur) + EXTRA_CSS
 
