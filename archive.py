@@ -139,7 +139,7 @@ PROSE_CSS = """
   overflow:hidden;background:var(--panel);box-shadow:0 0 0 1px var(--line);
   text-decoration:none;color:inherit;border:0}
 .prose a.card:hover{border:0}
-.card-img{display:block;width:100%;height:100%;object-fit:cover;
+.card-img{display:block;width:100%;height:100%;object-fit:cover;background:var(--panel);
   transition:transform .5s cubic-bezier(.2,.7,.3,1)}
 .card:hover .card-img,.card:focus-visible .card-img{transform:scale(1.04)}
 .card-ov{position:absolute;left:0;right:0;bottom:0;background:var(--ink);
@@ -209,6 +209,24 @@ PROSE_CSS = """
 .rule-meta a{color:inherit;text-decoration:none;
   border-bottom:1px solid transparent}
 .rule-meta a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+"""
+
+
+CARD_MOTION = """
+<script>
+/* The cards page carries no lightbox, so the reduced-motion guard the
+   galleries get from that script has to travel with the cards themselves.
+   Freeze each looping tile on its poster frame if the OS asks for less
+   motion. Without JS the tiles simply keep playing, as before. */
+(function(){
+  if (!window.matchMedia ||
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  [].forEach.call(document.querySelectorAll("video.card-img"), function(v){
+    v.autoplay = false; v.loop = false;
+    try { v.pause(); v.removeAttribute("autoplay"); } catch (e) {}
+  });
+})();
+</script>
 """
 
 
@@ -508,16 +526,31 @@ def block_html(b, pfx):
             # itself, as its kicker, and a second line here was noise.
             # The badge is an arrow, not the grid's diagonal: these go to
             # another page on this site, not off it.
+            # A card can carry motion. Squarespace used animated GIFs for two
+            # of these tiles; they come over as h.264 + WebM, same as the
+            # gallery loops, with the poster carrying the still frame so the
+            # tile is never empty and never regresses to a flat image.
+            if i.get("video"):
+                media = ('<video class="card-img" poster="%s" autoplay loop muted '
+                         'playsinline preload="metadata" width="1200" height="900" '
+                         'aria-label="%s">%s</video>' % (
+                             esc(img_src(i.get("image"), pfx)),
+                             esc(i.get("title")),
+                             video_sources(i.get("video"), pfx)))
+            else:
+                media = ('<img class="card-img" src="%s" alt="%s" '
+                         'width="1200" height="900" loading="lazy" '
+                         'decoding="async">' % (
+                             esc(img_src(i.get("image"), pfx)),
+                             esc(i.get("title"))))
             cs.append(
                 '<a class="card" href="%s">'
-                '<img class="card-img" src="%s" alt="%s" width="1200" height="900" '
-                'loading="lazy" decoding="async">'
+                '%s'
                 '<span class="card-a" aria-hidden="true">&#8594;</span>'
                 '<span class="card-ov"><span class="card-t">%s</span></span>'
                 '</a>' % (
                     esc(pfx + str(i.get("href", "")).lstrip("/")),
-                    esc(img_src(i.get("image"), pfx)),
-                    esc(i.get("title")), esc(i.get("title"))))
+                    media, esc(i.get("title"))))
         return '<div class="cards">%s</div>' % "".join(cs)
     if t == "html":
         return str(b.get("html", ""))
@@ -688,7 +721,9 @@ def page_html(page, doc, profile, pages):
         "foot": foot_links,
         "copy": esc(profile.get("footer", "")),
         # Only pages that actually carry images pay for the viewer.
-        "lightbox": LIGHTBOX if ("zoom" in lead or 'class="zoom"' in body) else "",
+        "lightbox": (LIGHTBOX if ("zoom" in lead or 'class="zoom"' in body)
+                     else "") + (CARD_MOTION if '<video class="card-img"' in body
+                                 else ""),
     }
 
 
