@@ -32,8 +32,27 @@ FONTS = ("https://fonts.googleapis.com/css2"
          "&family=Inter+Tight:wght@500;600;700&display=swap")
 
 
-# Instagram post ids, for the lightbox: /p/<code>/, /reel/<code>/, /tv/<code>/.
+# Post ids, for the lightbox. Instagram: /p/<code>/, /reel/<code>/, /tv/<code>/.
+# TikTok: /video/<numeric id>/.
 IG_RE = re.compile(r"/(p|reel|tv)/([A-Za-z0-9_-]+)")
+TT_RE = re.compile(r"/video/(\d+)")
+
+
+def embed_src(url, typ):
+    """The lightbox iframe src for a tile, or "" if the url carries no post id.
+
+    Both endpoints are public -- no API key, no embed.js. Shared with monza.py
+    so the two grids build the same attributes.
+    """
+    u = str(url or "")
+    if typ == "tt":
+        m = TT_RE.search(u)
+        return "https://www.tiktok.com/embed/v2/%s" % m.group(1) if m else ""
+    if typ == "ig":
+        m = IG_RE.search(u)
+        if m:
+            return "https://www.instagram.com/%s/%s/embed/captioned/" % (m.group(1), m.group(2))
+    return ""
 
 
 
@@ -66,11 +85,11 @@ LIGHTBOX_CSS = """
 """
 
 LIGHTBOX = """
-<div class="lbx" id="lbx" hidden role="dialog" aria-modal="true" aria-label="Instagram post">
+<div class="lbx" id="lbx" hidden role="dialog" aria-modal="true" aria-label="Embedded post">
   <button class="lbx-btn lbx-close" id="lbx-close" type="button" aria-label="Close">&times;</button>
   <button class="lbx-btn lbx-prev" id="lbx-prev" type="button" aria-label="Previous post">&lsaquo;</button>
   <button class="lbx-btn lbx-next" id="lbx-next" type="button" aria-label="Next post">&rsaquo;</button>
-  <iframe class="lbx-frame" id="lbx-frame" title="Instagram post"
+  <iframe class="lbx-frame" id="lbx-frame" title="Embedded post"
     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
   <p class="lbx-meta" id="lbx-meta"></p>
   <iframe class="lbx-pre" id="lbx-pre" tabindex="-1" aria-hidden="true" title=""></iframe>
@@ -95,15 +114,23 @@ LIGHTBOX = """
       closeBtn = document.getElementById("lbx-close"),
       idx = 0, opener = null;
 
-  function src(i) {
-    return "https://www.instagram.com/" + tiles[i].getAttribute("data-embed") + "/embed/captioned/";
-  }
+  function src(i) { return tiles[i].getAttribute("data-embed"); }
+  function isTT(i) { return tiles[i].getAttribute("data-t") === "tt"; }
   function avail() { return Math.max(320, window.innerHeight - 96); }
   function size() {
-    var a = avail(),
-        w = Math.max(280, Math.min(400, window.innerWidth - 48, Math.round((a - 260) / 1.25)));
+    var a = avail(), w, hgt;
+    if (isTT(idx)) {
+      /* TikTok's embed is height-driven, not width-driven: its own box is
+         325x738 and the player does not grow with the iframe's width, so a
+         wider frame only adds empty margin. */
+      w = Math.max(280, Math.min(340, window.innerWidth - 48));
+      hgt = Math.min(a, 738);
+    } else {
+      w = Math.max(280, Math.min(400, window.innerWidth - 48, Math.round((a - 260) / 1.25)));
+      hgt = Math.min(a, Math.round(208 + w * 1.25 + 400));
+    }
     frame.style.width = w + "px";
-    frame.style.height = Math.min(a, Math.round(208 + w * 1.25 + 400)) + "px";
+    frame.style.height = hgt + "px";
   }
   function show(i) {
     idx = (i + tiles.length) % tiles.length;
@@ -163,7 +190,7 @@ LIGHTBOX = """
   window.addEventListener("resize", function () { if (!lbx.hidden) size(); });
   /* If Instagram announces its own height, honour it rather than the estimate. */
   window.addEventListener("message", function (e) {
-    if (lbx.hidden || e.origin !== "https://www.instagram.com") return;
+    if (lbx.hidden || isTT(idx) || e.origin !== "https://www.instagram.com") return;
     var d = e.data;
     try { d = typeof d === "string" ? JSON.parse(d) : d; } catch (err) { return; }
     var hgt = d && d.details && d.details.height;
@@ -396,11 +423,9 @@ def build():
                   + (f'<span class="pgf-s">{s}</span>' if s else "")
                   + "</span>")
         src = esc(it["image"]) if is_remote(it["image"]) else "images/" + esc(it["image"])
-        m = IG_RE.search(str(it.get("url") or "")) if typ == "ig" else None
-        data = ""
-        if m:
-            data = (f' data-embed="{m.group(1)}/{m.group(2)}"'
-                    f' data-title="{t}" data-source="{s}"')
+        es = embed_src(it.get("url"), typ)
+        data = (f' data-embed="{esc(es)}" data-title="{t}" data-source="{s}"'
+                if es else "")
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'

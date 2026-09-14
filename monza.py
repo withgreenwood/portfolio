@@ -17,8 +17,8 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build import CONTENT, FONTS, SITE, TICKER_MIN_PX, TICKER_SPAN_PAD, \
-    TICKER_SPEED, die, esc, load, stylesheet
+from build import CONTENT, FONTS, LIGHTBOX, LIGHTBOX_CSS, SITE, TICKER_MIN_PX, \
+    TICKER_SPAN_PAD, TICKER_SPEED, die, embed_src, esc, load, stylesheet
 
 OUT = SITE / "monza"
 
@@ -119,8 +119,11 @@ def build_monza(quiet=False):
                   + (f'<span class="pgf-t">{t}</span>' if t else "")
                   + (f'<span class="pgf-s">{s}</span>' if s else "")
                   + "</span>")
+        es = embed_src(it.get("url"), typ)
+        data = (f' data-embed="{esc(es)}" data-title="{t}" data-source="{s}"'
+                if es else "")
         tiles.append(
-            f'<a class="pgf-i" data-t="{typ}" href="{esc(it.get("url"))}" '
+            f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'
             f'<img src="images/{esc(it["image"])}" alt="{alt}" '
             f'width="720" height="900" loading="lazy" decoding="async">'
@@ -149,7 +152,8 @@ def build_monza(quiet=False):
         f'<a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a>'
         for l in prof_links + ([arch] if arch and arch.get("url") else []))
 
-    css = stylesheet(lay, tick_dur) + EXTRA_CSS
+    has_lbx = any(" data-embed=" in t for t in tiles)
+    css = stylesheet(lay, tick_dur) + EXTRA_CSS + (LIGHTBOX_CSS if has_lbx else "")
 
     page = f"""<!DOCTYPE html>
 <html lang="en">
@@ -190,6 +194,7 @@ def build_monza(quiet=False):
     <span class="push">{esc(profile.get("footer", ""))}</span>
   </div>
 </footer>
+{LIGHTBOX if has_lbx else ''}
 </body>
 </html>
 """
