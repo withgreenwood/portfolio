@@ -18,3 +18,10 @@ cdp_api_key.json
 *.pem
 *.key
 .env
+
+# python bytecode
+__pycache__/
+*.pyc
+
+# screenshots and scratch from Claude sessions
+Claude outputs/
