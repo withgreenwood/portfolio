@@ -296,6 +296,15 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   letter-spacing:.14em}
 .back a{text-decoration:none;border-bottom:1px solid transparent}
 .back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- the rule's right-hand slot, when it is a link back to the grid ----
+   Matches .back: no underline at rest, accent rule on hover. The arrow is a
+   separate span so it can be nudged without letter-spacing pushing it away
+   from the word. */
+.rule-meta a{color:inherit;text-decoration:none;
+  border-bottom:1px solid transparent}
+.rule-meta a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.rule-meta .arw{margin-right:.5em;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -307,7 +316,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 <div class="wrap">
   
   <div class="rule">
-    <div class="rule-in"><span>About</span><span class="rule-meta"><span>Recent Work</span></span></div>
+    <div class="rule-in"><span>About</span><span class="rule-meta"><a href="/"><span class="arw" aria-hidden="true">&larr;</span>Recent Work</a></span></div>
   </div>
   <nav class="pagenav"><a href="" aria-current="page">About</a><a href="story/">Story</a><a href="resume/">Resume</a><a href="work/">Projects</a></nav>
   

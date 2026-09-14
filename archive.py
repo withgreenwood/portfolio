@@ -200,6 +200,15 @@ PROSE_CSS = """
   letter-spacing:.14em}
 .back a{text-decoration:none;border-bottom:1px solid transparent}
 .back a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- the rule's right-hand slot, when it is a link back to the grid ----
+   Matches .back: no underline at rest, accent rule on hover. The arrow is a
+   separate span so it can be nudged without letter-spacing pushing it away
+   from the word. */
+.rule-meta a{color:inherit;text-decoration:none;
+  border-bottom:1px solid transparent}
+.rule-meta a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.rule-meta .arw{margin-right:.5em;letter-spacing:0}
 """
 
 
@@ -583,8 +592,20 @@ def page_html(page, doc, profile, pages):
 
     ticker, idbar = chrome(profile, doc, pfx)
 
-    kicker = page["kicker"] if "kicker" in page else doc.get("kicker", "Archive")
-    kicker_html = ('<span class="rule-meta"><span>%s</span></span>' % esc(kicker)) if kicker else ""
+    # A page that sets its own kicker (the case studies name their client)
+    # keeps it as plain text. A page inheriting the section kicker gets it as
+    # an arrowed link back to the grid, when "kickerHref" is set.
+    own = "kicker" in page
+    kicker = page["kicker"] if own else doc.get("kicker", "Archive")
+    href = "" if own else doc.get("kickerHref", "")
+    if not kicker:
+        kicker_html = ""
+    elif href:
+        kicker_html = ('<span class="rule-meta"><a href="%s">'
+                       '<span class="arw" aria-hidden="true">&larr;</span>%s'
+                       '</a></span>' % (esc(href), esc(kicker)))
+    else:
+        kicker_html = '<span class="rule-meta"><span>%s</span></span>' % esc(kicker)
 
     site_name = esc(profile.get("name", ""))
     title = esc(page.get("title") or site_name)
