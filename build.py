@@ -99,6 +99,18 @@ a{color:inherit}
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
 
+/* The right-hand slot is a two-way toggle between the grid and the archive.
+   The page you are on is stated, not linked: full ink, no pointer. The other
+   half is the link. The pipe is drawn by the flex gap plus a border rather
+   than a literal "|" so it stays put when the labels change length. */
+.rule-tog{display:flex;align-items:baseline;gap:10px}
+.rule-tog span,.rule-tog a{display:inline-block}
+.rule-tog .sep{opacity:.38;letter-spacing:0}
+.rule-tog a{color:inherit;text-decoration:none;opacity:.42;
+  border-bottom:1px solid transparent;transition:opacity .15s,color .15s}
+.rule-tog a:hover{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
+.rule-tog [aria-current="page"]{opacity:1}
+
 /* ---- grid ---- */
 /* The hairlines are a 1px shadow on each tile, not a black container showing
    through the gap -- a part-filled last row would leave a black slab. */
@@ -178,6 +190,24 @@ def stylesheet(lay, tick_dur=34):
     for k, v in subs.items():
         css = css.replace(k, v)
     return css
+
+
+
+def rule_toggle(work_label, work_url, arch_label, arch_url, here):
+    """The RECENT WORK | MORE pair in the right of the section rule.
+
+    `here` is "work" or "archive": that half renders as plain text marked
+    aria-current, the other as the link across. Used by both the grid
+    (build.py) and every archive section page (archive.py), so the two read
+    as one control rather than two labels that happen to match.
+    """
+    def half(label, url, key):
+        if key == here:
+            return '<span aria-current="page">%s</span>' % esc(label)
+        return '<a href="%s">%s</a>' % (esc(url), esc(label))
+    return ('<span class="rule-tog">%s<span class="sep" aria-hidden="true">|</span>%s</span>'
+            % (half(work_label, work_url, "work"),
+               half(arch_label, arch_url, "archive")))
 
 
 def build():
@@ -276,7 +306,11 @@ def build():
 
     name = esc(profile.get("name", "Portfolio"))
     tagline = profile.get("tagline")
-    work_label = esc(profile.get("workLabel", "Selected Work"))
+    work_label = profile.get("workLabel", "Selected Work")
+    rule_tog = rule_toggle(
+        work_label, "/",
+        (arch or {}).get("label", "More"), (arch or {}).get("url", "/archive/"),
+        "work")
     meta = profile.get("metaDescription") or profile.get("bio")
     site_url = str(profile.get("siteUrl", "")).rstrip("/")
     og = ""
@@ -311,7 +345,7 @@ def build():
 </header>
 <div class="wrap">
   <div class="rule">
-    <div class="rule-in"><span>{esc(tagline)}</span><span>{work_label}</span></div>
+    <div class="rule-in"><span>{esc(tagline)}</span>{rule_tog}</div>
   </div>
   {grid}
 </div>

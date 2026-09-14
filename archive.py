@@ -19,7 +19,8 @@ import shutil
 import sys
 from pathlib import Path
 
-from build import CONTENT, FONTS, SITE, die, esc, load, stylesheet
+from build import (CONTENT, FONTS, SITE, die, esc, load, rule_toggle,
+                   stylesheet)
 
 OUT = SITE / "archive"
 
@@ -208,7 +209,6 @@ PROSE_CSS = """
 .rule-meta a{color:inherit;text-decoration:none;
   border-bottom:1px solid transparent}
 .rule-meta a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-.rule-meta .arw{margin-right:.5em;letter-spacing:0}
 """
 
 
@@ -593,19 +593,16 @@ def page_html(page, doc, profile, pages):
     ticker, idbar = chrome(profile, doc, pfx)
 
     # A page that sets its own kicker (the case studies name their client)
-    # keeps it as plain text. A page inheriting the section kicker gets it as
-    # an arrowed link back to the grid, when "kickerHref" is set.
-    own = "kicker" in page
-    kicker = page["kicker"] if own else doc.get("kicker", "Archive")
-    href = "" if own else doc.get("kickerHref", "")
-    if not kicker:
-        kicker_html = ""
-    elif href:
-        kicker_html = ('<span class="rule-meta"><a href="%s">'
-                       '<span class="arw" aria-hidden="true">&larr;</span>%s'
-                       '</a></span>' % (esc(href), esc(kicker)))
+    # keeps it as plain text. A page inheriting the section kicker gets the
+    # grid/archive toggle instead.
+    if "kicker" in page:
+        kicker_html = ('<span class="rule-meta"><span>%s</span></span>'
+                       % esc(page["kicker"])) if page["kicker"] else ""
     else:
-        kicker_html = '<span class="rule-meta"><span>%s</span></span>' % esc(kicker)
+        kicker_html = '<span class="rule-meta">%s</span>' % rule_toggle(
+            doc.get("kicker", "Recent Work"), doc.get("kickerHref", "/"),
+            doc.get("archiveLabel", "More"), doc.get("archiveHref", "/archive/"),
+            "archive")
 
     site_name = esc(profile.get("name", ""))
     title = esc(page.get("title") or site_name)
