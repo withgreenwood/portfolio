@@ -60,9 +60,16 @@
       "title": "Story",
       "label": "Story",
       "nav": true,
-      "lead": "story-01.jpg",
       "metaDescription": "From rural North Carolina to DC, New York and Los Angeles. DJing, Trillectro, Skin Valley, the agency years, JOOPITER and Apple.",
       "blocks": [
+        {
+          "type": "gallery",
+          "items": [
+            "story-01.jpg",
+            "story-02.jpg",
+            "story-04.jpg"
+          ]
+        },
         {
           "type": "p",
           "text": "As a kid in rural North Carolina, my love for Hip-Hop and sneakers stood out like a sore thumb. In college I worked out that throwing parties was the fastest way to meet everyone on campus, so I bought DJ gear and went legit, and ended up putting on some of UNCW’s largest parties and concerts. After graduating I followed a job to DC and fell in love with the city’s cultural diversity. I kept DJing sweaty parties that started in my living room and spilled out onto the block. I joined the GEICO mobile app team, which fed a long-time passion for consumer tech, and used what I learned there to build More than Friends, an R&B party series I grew by funneling RSVPs into an email list that got bigger every month."
@@ -86,23 +93,9 @@
         {
           "type": "p",
           "text": "The budgets have gotten bigger and there are more people who have to say yes, but the room itself is still the smallest part of it. I learned that at Trillectro, where four of us grew a festival with Genius, Hypebeast and an email list, and it’s still how I think about the work. Build something people want to photograph, then make sure it’s everywhere the next morning."
-        },
-        {
-          "type": "h2",
-          "text": "Along the way"
-        },
-        {
-          "type": "gallery",
-          "cols": 2,
-          "items": [
-            "story-02.jpg",
-            "story-03.jpg",
-            "story-04.jpg",
-            "story-05.jpg"
-          ]
         }
       ],
-      "leadSide": true
+      "cover": "story-02.jpg"
     },
     {
       "slug": "resume",
