@@ -28,7 +28,12 @@ DL = next((d for d in (os.path.expanduser("~/Downloads"),
                        os.path.expanduser("~/mnt/Downloads"))
            if os.path.isdir(d)), os.path.expanduser("~/Downloads"))
 OUT = os.path.join(REPO, "content", "monza-images")
-PACKS = ["monza-ig-1.json", "monza-ig-2.json", "monza-ig-3.json", "monza-tt.json"]
+PACKS = ["monza-ig-1.json", "monza-ig-2.json", "monza-ig-3.json",
+         "monza-ig-4.json", "monza-tt.json"]
+# code -> {user, coauth}: Instagram collaborator credits for the whole
+# collection. The first three packs predate collaborator capture, so the
+# credits are carried in this side file rather than in the packs.
+COAUTHORS = "monza-coauthors.json"
 
 # Posts left out on purpose: the cover frame is unusable and the post offers no
 # alternative (no carousel slides, no second candidate).
@@ -37,11 +42,24 @@ EXCLUDE = {
 }
 
 
+def byline(meta, coauthors):
+    """@author, plus collaborators. Instagram shows a collaborator post under
+    the author's handle only, so a post Apple TV co-led reads as somebody
+    else's unless the collaborators are named."""
+    info = coauthors.get(meta.get("code")) or {}
+    user = meta.get("user") or info.get("user") or ""
+    co = [c for c in (meta.get("coauth") or info.get("coauth") or []) if c != user]
+    return " + ".join("@" + h for h in ([user] + co) if h)
+
+
 def main():
     fixes = {}
     for f in sorted(glob.glob(os.path.join(DL, "monza-fix*.json")),
                     key=os.path.getmtime):
         fixes.update(json.load(open(f)))
+
+    cpath = os.path.join(DL, COAUTHORS)
+    coauthors = json.load(open(cpath)) if os.path.exists(cpath) else {}
 
     entries = []
     for fn in PACKS:
@@ -73,7 +91,7 @@ def main():
         items.append({
             "type": "ig" if m["platform"] == "ig" else "tt",
             "url": m["url"],
-            "title": "@" + (m.get("user") or ""),
+            "title": byline(m, coauthors),
             "source": datetime.datetime.utcfromtimestamp(
                 m["taken_at"]).strftime("%d %b %Y"),
             "image": name,
