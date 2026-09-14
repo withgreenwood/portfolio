@@ -2,7 +2,7 @@
   "baseUrl": "https://withgreenwood.com/archive",
   "homeUrl": "/",
   "homeLabel": "Work",
-  "kicker": "",
+  "kicker": "Recent Work",
   "redirects": {
     "/home": "/archive/work/",
     "/story": "/archive/story/",
