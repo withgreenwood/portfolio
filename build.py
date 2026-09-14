@@ -3,12 +3,15 @@
 
 Layout: the "full flip" treatment — flat white ground, black hairline rules,
 one accent colour, a tight uppercase grotesk for the wordmark and a wide
-uppercase monospace for everything else. The page needs no JavaScript.
+uppercase monospace for everything else. The only JavaScript on the page is the
+lightbox: tiles keep their href, so without it every tile still opens the post
+on instagram.com.
 
 Usage:  python3 build.py
 """
 import html
 import json
+import re
 import math
 import shutil
 import sys
@@ -27,6 +30,148 @@ TICKER_SPEED = 13.3   # px/sec, matching the original 34s at two copies
 FONTS = ("https://fonts.googleapis.com/css2"
          "?family=IBM+Plex+Mono:wght@400;500;600"
          "&family=Inter+Tight:wght@500;600;700&display=swap")
+
+
+# Instagram post ids, for the lightbox: /p/<code>/, /reel/<code>/, /tv/<code>/.
+IG_RE = re.compile(r"/(p|reel|tv)/([A-Za-z0-9_-]+)")
+
+
+
+# Kept out of CSS on purpose: archive.py and monza.py share stylesheet(),
+# and those pages have no lightbox.
+LIGHTBOX_CSS = """
+/* ---- lightbox ---- */
+.lbx{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.93);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:16px}
+.lbx[hidden]{display:none}
+.lbx-frame{border:0;display:block;background:#fff;width:400px;height:70vh;max-width:100%}
+.lbx-meta{margin:0;color:#fff;text-align:center;max-width:min(92vw,720px);
+  font:500 10.5px/1.6 var(--mono);letter-spacing:.12em}
+.lbx-meta a{text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);
+  padding-bottom:1px}
+.lbx-meta a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.lbx-meta em{font-style:normal;color:var(--accent)}
+.lbx-meta .n{display:block;margin-top:4px;opacity:.45;letter-spacing:.18em}
+.lbx-btn{position:absolute;appearance:none;background:transparent;border:0;color:#fff;
+  cursor:pointer;font:400 38px/1 var(--disp);padding:10px 16px;opacity:.6;
+  transition:opacity .15s,color .15s}
+.lbx-btn:hover{opacity:1;color:var(--accent)}
+.lbx-btn:focus-visible{opacity:1;outline:2px solid var(--accent);outline-offset:2px}
+.lbx-prev{left:2px;top:50%;transform:translateY(-50%)}
+.lbx-next{right:2px;top:50%;transform:translateY(-50%)}
+.lbx-close{top:4px;right:6px;font-size:28px}
+.lbx-pre{display:none}
+@media(prefers-reduced-motion:reduce){.lbx-btn{transition:none}}
+"""
+
+LIGHTBOX = """
+<div class="lbx" id="lbx" hidden role="dialog" aria-modal="true" aria-label="Instagram post">
+  <button class="lbx-btn lbx-close" id="lbx-close" type="button" aria-label="Close">&times;</button>
+  <button class="lbx-btn lbx-prev" id="lbx-prev" type="button" aria-label="Previous post">&lsaquo;</button>
+  <button class="lbx-btn lbx-next" id="lbx-next" type="button" aria-label="Next post">&rsaquo;</button>
+  <iframe class="lbx-frame" id="lbx-frame" title="Instagram post"
+    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+  <p class="lbx-meta" id="lbx-meta"></p>
+  <iframe class="lbx-pre" id="lbx-pre" tabindex="-1" aria-hidden="true" title=""></iframe>
+</div>
+<script>
+/* Tiles keep their href, so cmd-click, middle-click and no-JS all still open
+   the post on instagram.com. A plain left click opens it here instead.
+
+   Geometry, measured on instagram.com and stable at every width tested
+   (320/360/400/440/560/640): a 54px header, a media box of exactly
+   width x 1.25, then a 45px action row. The caption block below that varies
+   with caption length (~1100px total at 400px wide), so the frame is sized to
+   the viewport and the caption scrolls inside it. */
+(function () {
+  var tiles = [].slice.call(document.querySelectorAll(".pgf-i[data-embed]"));
+  if (!tiles.length) return;
+
+  var lbx = document.getElementById("lbx"),
+      frame = document.getElementById("lbx-frame"),
+      pre = document.getElementById("lbx-pre"),
+      meta = document.getElementById("lbx-meta"),
+      closeBtn = document.getElementById("lbx-close"),
+      idx = 0, opener = null;
+
+  function src(i) {
+    return "https://www.instagram.com/" + tiles[i].getAttribute("data-embed") + "/embed/captioned/";
+  }
+  function avail() { return Math.max(320, window.innerHeight - 96); }
+  function size() {
+    var a = avail(),
+        w = Math.max(280, Math.min(400, window.innerWidth - 48, Math.round((a - 260) / 1.25)));
+    frame.style.width = w + "px";
+    frame.style.height = Math.min(a, Math.round(208 + w * 1.25 + 400)) + "px";
+  }
+  function show(i) {
+    idx = (i + tiles.length) % tiles.length;
+    var t = tiles[idx];
+    size();
+    frame.src = src(idx);
+    meta.textContent = "";
+    var a = document.createElement("a");
+    a.href = t.href; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = t.getAttribute("data-title") || "View on Instagram";
+    meta.appendChild(a);
+    var s = t.getAttribute("data-source");
+    if (s) {
+      meta.appendChild(document.createTextNode(" \u2014 "));
+      var em = document.createElement("em");
+      em.textContent = s;
+      meta.appendChild(em);
+    }
+    var n = document.createElement("span");
+    n.className = "n";
+    n.textContent = (idx + 1) + " / " + tiles.length;
+    meta.appendChild(n);
+    pre.src = src((idx + 1) % tiles.length);
+  }
+  function open(i, tile) {
+    opener = tile;
+    lbx.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    show(i);
+    closeBtn.focus();
+  }
+  function close() {
+    lbx.hidden = true;
+    frame.removeAttribute("src");
+    pre.removeAttribute("src");
+    document.documentElement.style.overflow = "";
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  tiles.forEach(function (t, i) {
+    t.addEventListener("click", function (e) {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      open(i, t);
+    });
+  });
+  closeBtn.addEventListener("click", close);
+  document.getElementById("lbx-prev").addEventListener("click", function () { show(idx - 1); });
+  document.getElementById("lbx-next").addEventListener("click", function () { show(idx + 1); });
+  lbx.addEventListener("click", function (e) { if (e.target === lbx) close(); });
+  document.addEventListener("keydown", function (e) {
+    if (lbx.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") show(idx - 1);
+    else if (e.key === "ArrowRight") show(idx + 1);
+  });
+  window.addEventListener("resize", function () { if (!lbx.hidden) size(); });
+  /* If Instagram announces its own height, honour it rather than the estimate. */
+  window.addEventListener("message", function (e) {
+    if (lbx.hidden || e.origin !== "https://www.instagram.com") return;
+    var d = e.data;
+    try { d = typeof d === "string" ? JSON.parse(d) : d; } catch (err) { return; }
+    var hgt = d && d.details && d.details.height;
+    if (hgt) frame.style.height = Math.min(avail(), hgt) + "px";
+  });
+})();
+</script>
+"""
 
 
 def die(msg):
@@ -251,8 +396,13 @@ def build():
                   + (f'<span class="pgf-s">{s}</span>' if s else "")
                   + "</span>")
         src = esc(it["image"]) if is_remote(it["image"]) else "images/" + esc(it["image"])
+        m = IG_RE.search(str(it.get("url") or "")) if typ == "ig" else None
+        data = ""
+        if m:
+            data = (f' data-embed="{m.group(1)}/{m.group(2)}"'
+                    f' data-title="{t}" data-source="{s}"')
         tiles.append(
-            f'<a class="pgf-i" data-t="{typ}" href="{esc(it.get("url"))}" '
+            f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'
             f'<img src="{src}" alt="{alt}" width="1080" height="1350" '
             f'loading="lazy" decoding="async">'
@@ -304,6 +454,8 @@ def build():
         f'<a href="{esc(l.get("url"))}">{esc(l.get("label"))}</a>'
         for l in foot_only)
 
+    has_lbx = any(" data-embed=" in t for t in tiles)
+
     name = esc(profile.get("name", "Portfolio"))
     tagline = profile.get("tagline")
     work_label = profile.get("workLabel", "Selected Work")
@@ -335,7 +487,7 @@ def build():
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
-<style>{stylesheet(lay, tick_dur)}</style>
+<style>{stylesheet(lay, tick_dur)}{LIGHTBOX_CSS if has_lbx else ''}</style>
 </head>
 <body>
 {ticker}
@@ -355,6 +507,7 @@ def build():
     <span class="push">{esc(profile.get("footer", ""))}</span>
   </div>
 </footer>
+{LIGHTBOX if has_lbx else ''}
 </body>
 </html>
 """

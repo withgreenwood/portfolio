@@ -25,3 +25,6 @@ __pycache__/
 
 # screenshots and scratch from Claude sessions
 Claude outputs/
+
+# local preview scratch, not part of the site
+lightbox-preview.html
