@@ -2,7 +2,7 @@
   "baseUrl": "https://withgreenwood.com/archive",
   "homeUrl": "/",
   "homeLabel": "Work",
-  "kicker": "Archive",
+  "kicker": "",
   "redirects": {
     "/home": "/archive/work/",
     "/story": "/archive/story/",
@@ -103,7 +103,8 @@
             "story-05.jpg"
           ]
         }
-      ]
+      ],
+      "leadSide": true
     },
     {
       "slug": "resume",

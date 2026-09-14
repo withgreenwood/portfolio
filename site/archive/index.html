@@ -177,6 +177,22 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   border-top:0}
 .lead img{display:block;width:100%;height:auto}
 
+/* ---- lead image, side variant ----
+   story-01.jpg is only 540px wide at source, so the full-bleed treatment above
+   stretched it to ~1180px and it went soft. A page with "leadSide" in
+   pages.json drops the image into the prose as a float instead: it renders
+   around 320px, well inside the source width, and the opening paragraphs run
+   up beside it. Headings, galleries and cells clear the float so nothing
+   collides with it, and below 620px it unwraps to a full-width block. */
+.prose .lead-side{float:right;width:min(42%,320px);
+  margin:.3em 0 1.3em 26px}
+.prose .lead-side img{display:block;width:100%;height:auto;
+  border:1px solid var(--line)}
+.prose h2,.prose .gal,.prose .cells,.prose .cards{clear:both}
+@media(max-width:619px){
+  .prose .lead-side{float:none;width:100%;margin:0 0 1.4em}
+}
+
 /* ---- gallery: justified rows ----
    These photographs are 3:2, 2:3, 4:3, square and 16:9 all mixed together, so
    a fixed column grid leaves every short image sitting in a pocket of white --
@@ -291,7 +307,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 <div class="wrap">
   
   <div class="rule">
-    <div class="rule-in"><span>About</span><span class="rule-meta"><span>Archive</span></span></div>
+    <div class="rule-in"><span>About</span></div>
   </div>
   <nav class="pagenav"><a href="" aria-current="page">About</a><a href="story/">Story</a><a href="resume/">Resume</a><a href="work/">Projects</a></nav>
   

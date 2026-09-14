@@ -81,6 +81,22 @@ PROSE_CSS = """
   border-top:0}
 .lead img{display:block;width:100%;height:auto}
 
+/* ---- lead image, side variant ----
+   story-01.jpg is only 540px wide at source, so the full-bleed treatment above
+   stretched it to ~1180px and it went soft. A page with "leadSide" in
+   pages.json drops the image into the prose as a float instead: it renders
+   around 320px, well inside the source width, and the opening paragraphs run
+   up beside it. Headings, galleries and cells clear the float so nothing
+   collides with it, and below 620px it unwraps to a full-width block. */
+.prose .lead-side{float:right;width:min(42%,320px);
+  margin:.3em 0 1.3em 26px}
+.prose .lead-side img{display:block;width:100%;height:auto;
+  border:1px solid var(--line)}
+.prose h2,.prose .gal,.prose .cells,.prose .cards{clear:both}
+@media(max-width:619px){
+  .prose .lead-side{float:none;width:100%;margin:0 0 1.4em}
+}
+
 /* ---- gallery: justified rows ----
    These photographs are 3:2, 2:3, 4:3, square and 16:9 all mixed together, so
    a fixed column grid leaves every short image sitting in a pocket of white --
@@ -541,14 +557,19 @@ def page_html(page, doc, profile, pages):
             for p in navpages)
         nav = '<nav class="pagenav">%s</nav>' % nav
 
-    lead = ""
+    lead = side_lead = ""
     if page.get("lead"):
-        lead = ('<div class="lead">'
-                '<button type="button" class="zoom">'
-                '<img src="%s" alt="%s" decoding="async">'
-                '</button></div>' % (
-                    esc(img_src(page["lead"], pfx)),
-                    esc(page.get("leadAlt") or page.get("title") or "")))
+        lead_img = ('<button type="button" class="zoom">'
+                    '<img src="%s" alt="%s" decoding="async">'
+                    '</button>' % (
+                        esc(img_src(page["lead"], pfx)),
+                        esc(page.get("leadAlt") or page.get("title") or "")))
+        if page.get("leadSide"):
+            # Floated inside the prose rather than full-bleed above it. It has
+            # to be the first node in the article for the text to wrap.
+            side_lead = '<figure class="lead-side">%s</figure>' % lead_img
+        else:
+            lead = '<div class="lead">%s</div>' % lead_img
 
     back = ""
     if page.get("back"):
@@ -557,8 +578,13 @@ def page_html(page, doc, profile, pages):
             esc(page["back"]["label"])))
 
     body = "\n    ".join(block_html(b, pfx) for b in page.get("blocks", []))
+    if side_lead:
+        body = side_lead + "\n    " + body
 
     ticker, idbar = chrome(profile, doc, pfx)
+
+    kicker = page["kicker"] if "kicker" in page else doc.get("kicker", "Archive")
+    kicker_html = ('<span class="rule-meta"><span>%s</span></span>' % esc(kicker)) if kicker else ""
 
     site_name = esc(profile.get("name", ""))
     title = esc(page.get("title") or site_name)
@@ -606,7 +632,7 @@ def page_html(page, doc, profile, pages):
 <div class="wrap">
   %(back)s
   <div class="rule">
-    <div class="rule-in"><span>%(label)s</span><span class="rule-meta"><span>%(kicker)s</span></span></div>
+    <div class="rule-in"><span>%(label)s</span>%(kickerhtml)s</div>
   </div>
   %(nav)s
   %(lead)s
@@ -635,7 +661,9 @@ def page_html(page, doc, profile, pages):
         "idbar": idbar,
         "back": back,
         "label": esc(page.get("title") or ""),
-        "kicker": esc(page.get("kicker") or doc.get("kicker", "Archive")),
+        # An explicit "kicker": "" in pages.json suppresses the block entirely;
+        # a missing key still falls back to the section kicker.
+        "kickerhtml": kicker_html,
         "nav": nav,
         "lead": lead,
         "body": body,
