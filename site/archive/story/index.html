@@ -149,6 +149,16 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   font:400 16px/1.72 var(--disp);letter-spacing:0}
 .prose>*{max-width:68ch}
 .prose p{margin:0 0 1.2em}
+/* "reading": true in pages.json. A page that is one long piece of prose --
+   Story is the only one -- next to a full-width band of photographs leaves a
+   lot of empty column beside 68ch of 16px text. The fix is bigger type, not a
+   longer line: 20px carries the same ~79 characters a line the site sets
+   everywhere else while occupying ~150px more width. Widening the measure
+   instead would have put 102 characters on a line, which is a worse read than
+   the white space it tidied away. */
+/* Wide screens only: on a phone there is no empty column to answer and
+   20px would just make the page longer. */
+@media(min-width:620px){.prose.read>p{font-size:1.25em;line-height:1.62}}
 .prose p+p{margin-top:0}
 .prose .intro{max-width:60ch;font-size:1.17em;line-height:1.6;
   margin:0 0 1.35em}
@@ -331,7 +341,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
   </div>
   <nav class="pagenav"><a href="../">About</a><a href="../story/" aria-current="page">Story</a><a href="../resume/">Resume</a><a href="../work/">Projects</a></nav>
   
-  <article class="prose">
+  <article class="prose read">
     <div class="gal"><div class="gal-row"><figure style="--r:1.3333;flex-basis:calc((100% - 2px) * 0.33333)"><button type="button" class="zoom"><img src="../images/story-01.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.3333;flex-basis:calc((100% - 2px) * 0.33333)"><button type="button" class="zoom"><img src="../images/story-02.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.3333;flex-basis:calc((100% - 2px) * 0.33333)"><button type="button" class="zoom"><img src="../images/story-04.jpg" alt="" loading="lazy" decoding="async"></button></figure></div></div>
     <p>As a kid in rural North Carolina, my love for Hip-Hop and sneakers stood out like a sore thumb. In college I worked out that throwing parties was the fastest way to meet everyone on campus, so I bought DJ gear and went legit, and ended up putting on some of UNCW’s largest parties and concerts. After graduating I followed a job to DC and fell in love with the city’s cultural diversity. I kept DJing sweaty parties that started in my living room and spilled out onto the block. I joined the GEICO mobile app team, which fed a long-time passion for consumer tech, and used what I learned there to build More than Friends, an R&amp;B party series I grew by funneling RSVPs into an email list that got bigger every month.</p>
     <p>The friends I threw parties with started Trillectro, a groundbreaking independent Hip-Hop and Electronic music festival, and I became a core member of their small team. We got known for lineups built around emerging talent, with early performances from Travis Scott and GoldLink, and over six years we grew it to Merriweather Post Pavilion and marquee artists like Kid Cudi, Chance the Rapper and SZA. My part was the audience. I pushed growth across social, email and media partners like Genius and Hypebeast, year over year, and the festival ended up covered by Billboard, Complex and The Fader.</p>

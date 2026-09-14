@@ -42,6 +42,16 @@ PROSE_CSS = """
   font:400 16px/1.72 var(--disp);letter-spacing:0}
 .prose>*{max-width:68ch}
 .prose p{margin:0 0 1.2em}
+/* "reading": true in pages.json. A page that is one long piece of prose --
+   Story is the only one -- next to a full-width band of photographs leaves a
+   lot of empty column beside 68ch of 16px text. The fix is bigger type, not a
+   longer line: 20px carries the same ~79 characters a line the site sets
+   everywhere else while occupying ~150px more width. Widening the measure
+   instead would have put 102 characters on a line, which is a worse read than
+   the white space it tidied away. */
+/* Wide screens only: on a phone there is no empty column to answer and
+   20px would just make the page longer. */
+@media(min-width:620px){.prose.read>p{font-size:1.25em;line-height:1.62}}
 .prose p+p{margin-top:0}
 .prose .intro{max-width:60ch;font-size:1.17em;line-height:1.6;
   margin:0 0 1.35em}
@@ -687,7 +697,7 @@ def page_html(page, doc, profile, pages):
   </div>
   %(nav)s
   %(lead)s
-  <article class="prose">
+  <article class="prose%(proseclass)s">
     %(body)s
   </article>
 </div>
@@ -706,6 +716,7 @@ def page_html(page, doc, profile, pages):
         "ogurl": ('<meta property="og:url" content="%s">' % esc(url)) if url else "",
         "ogimg": ('<meta property="og:image" content="%s">' % esc(og_img)) if og_img else "",
         "card": "summary_large_image" if og_img else "summary",
+        "proseclass": " read" if page.get("reading") else "",
         "fonts": FONTS,
         "css": stylesheet(profile.get("layout", {})) + PROSE_CSS,
         "ticker": ticker,
