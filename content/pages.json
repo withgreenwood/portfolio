@@ -36,11 +36,6 @@
           "text": "I create marketing campaigns and experiences that amplify music and culture for tech brands, music platforms and festivals. I’ve spent over 20 years at the forefront of culture as a DJ, sneakerhead and dot connector, and more than a decade of that working with some of the best known brands in the world. Right now that means Apple Music, Apple TV and Beats. Before it meant JOOPITER, YouTube, Google, and a festival called Trillectro that four of us built from nothing. I bring a creative director’s vision, a music supervisor’s ear and a producer’s type-A structure to every project."
         },
         {
-          "type": "image",
-          "src": "about-portrait.jpg",
-          "alt": "Stephen Greenwood in front of a JOOPITER wheatpaste wall in New York"
-        },
-        {
           "type": "h2",
           "text": "Areas of Expertise"
         },
@@ -55,7 +50,10 @@
             "Artist & Label Relationships"
           ]
         }
-      ]
+      ],
+      "lead": "about-portrait.jpg",
+      "leadAlt": "Stephen Greenwood in front of a JOOPITER wheatpaste wall in New York",
+      "leadSide": true
     },
     {
       "slug": "story",
