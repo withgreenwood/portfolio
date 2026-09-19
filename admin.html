@@ -546,6 +546,7 @@ $('#exportItems').addEventListener('click',()=>{
     url: it.url||'',
     title: it.title||'',
     source: it.source||'',
+    ...(it.brand?{brand:it.brand}:{}),
     image: it.hostedUrl && /^https?:/i.test(it.hostedUrl)
       ? it.hostedUrl              // already hosted elsewhere; build.py leaves it alone
       : fileNameFor(it,i)         // local file exported by "Download thumbnails"

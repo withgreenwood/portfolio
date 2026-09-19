@@ -643,7 +643,7 @@ def page_html(page, doc, profile, pages):
                        % esc(page["kicker"])) if page["kicker"] else ""
     else:
         kicker_html = '<span class="rule-meta">%s</span>' % rule_toggle(
-            doc.get("kicker", "Recent Work"), doc.get("kickerHref", "/"),
+            profile.get("filters"),
             doc.get("archiveLabel", "More"), doc.get("archiveHref", "/archive/"),
             "archive")
 

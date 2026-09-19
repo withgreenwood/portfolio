@@ -104,8 +104,10 @@ LIGHTBOX = """
    with caption length (~1100px total at 400px wide), so the frame is sized to
    the viewport and the caption scrolls inside it. */
 (function () {
-  var tiles = [].slice.call(document.querySelectorAll(".pgf-i[data-embed]"));
-  if (!tiles.length) return;
+  var all = [].slice.call(document.querySelectorAll(".pgf-i[data-embed]"));
+  if (!all.length) return;
+  /* Rebuilt on each open, so prev/next stays inside the active filter. */
+  var tiles = all;
 
   var lbx = document.getElementById("lbx"),
       frame = document.getElementById("lbx-frame"),
@@ -170,11 +172,12 @@ LIGHTBOX = """
     if (opener) { opener.focus(); opener = null; }
   }
 
-  tiles.forEach(function (t, i) {
+  all.forEach(function (t) {
     t.addEventListener("click", function (e) {
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
-      open(i, t);
+      tiles = all.filter(function (x) { return !x.hidden; });
+      open(tiles.indexOf(t), t);
     });
   });
   closeBtn.addEventListener("click", close);
@@ -271,17 +274,17 @@ a{color:inherit}
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
 
-/* The right-hand slot is a two-way toggle between the grid and the archive.
-   The page you are on is stated, not linked: full ink, no pointer. The other
-   half is the link. The pipe is drawn by the flex gap plus a border rather
-   than a literal "|" so it stays put when the labels change length. */
-.rule-tog{display:flex;align-items:baseline;gap:10px}
+/* The right-hand slot: the grid's filters (All Work, then one per brand)
+   followed by MORE, which pages across to the archive. The active entry is
+   full ink with no pointer; the rest are dimmed links. */
+.rule-tog{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .rule-tog span,.rule-tog a{display:inline-block}
 .rule-tog .sep{opacity:.38;letter-spacing:0}
 .rule-tog a{color:inherit;text-decoration:none;opacity:.42;
   border-bottom:1px solid transparent;transition:opacity .15s,color .15s}
 .rule-tog a:hover{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
-.rule-tog [aria-current="page"]{opacity:1}
+.rule-tog [aria-current]{opacity:1;cursor:default}
+.rule-tog a[aria-current]:hover{color:inherit;border-bottom-color:transparent}
 
 /* ---- grid ---- */
 /* The hairlines are a 1px shadow on each tile, not a black container showing
@@ -289,6 +292,7 @@ a{color:inherit}
 .pgf-grid{display:grid;grid-template-columns:repeat(__COLSM__,1fr);
   gap:var(--gap);background:var(--bg);
   margin:18px var(--pad) 0;padding:1px}
+.pgf-i[hidden]{display:none}
 .pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
   overflow:hidden;border-radius:var(--radius);background:var(--panel);
   box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
@@ -365,21 +369,73 @@ def stylesheet(lay, tick_dur=34):
 
 
 
-def rule_toggle(work_label, work_url, arch_label, arch_url, here):
-    """The RECENT WORK | MORE pair in the right of the section rule.
+DEFAULT_FILTERS = [{"key": "all", "label": "All Work"}]
 
-    `here` is "work" or "archive": that half renders as plain text marked
-    aria-current, the other as the link across. Used by both the grid
-    (build.py) and every archive section page (archive.py), so the two read
-    as one control rather than two labels that happen to match.
+
+def rule_toggle(filters, arch_label, arch_url, here):
+    """ALL WORK | APPLE MUSIC | APPLE TV | JOOPITER | MORE, right of the rule.
+
+    `filters` comes from profile.json. On the grid (`here` == "work") each
+    filter is an in-page link (#key) that FILTER_JS picks up; "All Work"
+    starts current. On the archive (`here` == "archive") the same filters
+    link back to the grid pre-filtered (/#key) and MORE is current. Used by
+    both build.py and archive.py so the control reads identically on both.
     """
-    def half(label, url, key):
-        if key == here:
-            return '<span aria-current="page">%s</span>' % esc(label)
-        return '<a href="%s">%s</a>' % (esc(url), esc(label))
-    return ('<span class="rule-tog">%s<span class="sep" aria-hidden="true">|</span>%s</span>'
-            % (half(work_label, work_url, "work"),
-               half(arch_label, arch_url, "archive")))
+    filters = filters or DEFAULT_FILTERS
+    parts = []
+    for f in filters:
+        key, label = str(f.get("key", "all")), esc(f.get("label"))
+        if here == "work":
+            href = "#" if key == "all" else "#" + key
+            cur = ' aria-current="true"' if key == "all" else ""
+            parts.append('<a href="%s" data-f="%s"%s>%s</a>'
+                         % (esc(href), esc(key), cur, label))
+        else:
+            href = "/" if key == "all" else "/#" + key
+            parts.append('<a href="%s">%s</a>' % (esc(href), label))
+    if here == "archive":
+        parts.append('<span aria-current="page">%s</span>' % esc(arch_label))
+    else:
+        parts.append('<a href="%s">%s</a>' % (esc(arch_url), esc(arch_label)))
+    sep = '<span class="sep" aria-hidden="true">|</span>'
+    return '<nav class="rule-tog" aria-label="Filter work">%s</nav>' % sep.join(parts)
+
+
+# Filters the grid by each tile's data-b (brand). The choice lives in the URL
+# hash so a filtered view can be linked to, and so the archive's filter links
+# (/#apple-tv) land already filtered.
+FILTER_JS = """
+<script>
+(function () {
+  var links = [].slice.call(document.querySelectorAll(".rule-tog a[data-f]"));
+  var tiles = [].slice.call(document.querySelectorAll(".pgf-grid .pgf-i"));
+  if (!links.length) return;
+  var keys = links.map(function (a) { return a.getAttribute("data-f"); });
+  function apply(key) {
+    if (keys.indexOf(key) < 0) key = "all";
+    links.forEach(function (a) {
+      if (a.getAttribute("data-f") === key) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+    tiles.forEach(function (t) {
+      t.hidden = key !== "all" && t.getAttribute("data-b") !== key;
+    });
+  }
+  function fromHash() { apply(decodeURIComponent(location.hash.slice(1)) || "all"); }
+  links.forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var key = a.getAttribute("data-f");
+      history.replaceState(null, "", key === "all"
+        ? location.pathname + location.search : "#" + key);
+      apply(key);
+    });
+  });
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();
+</script>
+"""
 
 
 def build():
@@ -426,6 +482,8 @@ def build():
         es = embed_src(it.get("url"), typ)
         data = (f' data-embed="{esc(es)}" data-title="{t}" data-source="{s}"'
                 if es else "")
+        br = esc(it.get("brand"))
+        data += f' data-b="{br}"' if br else ""
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'
@@ -483,11 +541,14 @@ def build():
 
     name = esc(profile.get("name", "Portfolio"))
     tagline = profile.get("tagline")
-    work_label = profile.get("workLabel", "Selected Work")
     rule_tog = rule_toggle(
-        work_label, "/",
+        profile.get("filters"),
         (arch or {}).get("label", "More"), (arch or {}).get("url", "/archive/"),
         "work")
+    untagged = [i.get("title") or i.get("url") for i in items if not i.get("brand")]
+    if untagged:
+        print("note: %d item(s) have no brand, so show under All Work only: %s"
+              % (len(untagged), "; ".join(map(str, untagged))))
     meta = profile.get("metaDescription") or profile.get("bio")
     site_url = str(profile.get("siteUrl", "")).rstrip("/")
     og = ""
@@ -532,6 +593,7 @@ def build():
     <span class="push">{esc(profile.get("footer", ""))}</span>
   </div>
 </footer>
+{FILTER_JS if tiles else ''}
 {LIGHTBOX if has_lbx else ''}
 </body>
 </html>

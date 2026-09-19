@@ -64,17 +64,17 @@ a{color:inherit}
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
 
-/* The right-hand slot is a two-way toggle between the grid and the archive.
-   The page you are on is stated, not linked: full ink, no pointer. The other
-   half is the link. The pipe is drawn by the flex gap plus a border rather
-   than a literal "|" so it stays put when the labels change length. */
-.rule-tog{display:flex;align-items:baseline;gap:10px}
+/* The right-hand slot: the grid's filters (All Work, then one per brand)
+   followed by MORE, which pages across to the archive. The active entry is
+   full ink with no pointer; the rest are dimmed links. */
+.rule-tog{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .rule-tog span,.rule-tog a{display:inline-block}
 .rule-tog .sep{opacity:.38;letter-spacing:0}
 .rule-tog a{color:inherit;text-decoration:none;opacity:.42;
   border-bottom:1px solid transparent;transition:opacity .15s,color .15s}
 .rule-tog a:hover{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
-.rule-tog [aria-current="page"]{opacity:1}
+.rule-tog [aria-current]{opacity:1;cursor:default}
+.rule-tog a[aria-current]:hover{color:inherit;border-bottom-color:transparent}
 
 /* ---- grid ---- */
 /* The hairlines are a 1px shadow on each tile, not a black container showing
@@ -82,6 +82,7 @@ a{color:inherit}
 .pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
   gap:var(--gap);background:var(--bg);
   margin:18px var(--pad) 0;padding:1px}
+.pgf-i[hidden]{display:none}
 .pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
   overflow:hidden;border-radius:var(--radius);background:var(--panel);
   box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
@@ -337,7 +338,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 <div class="wrap">
   
   <div class="rule">
-    <div class="rule-in"><span>Projects</span><span class="rule-meta"><span class="rule-tog"><a href="/">Recent Work</a><span class="sep" aria-hidden="true">|</span><span aria-current="page">More</span></span></span></div>
+    <div class="rule-in"><span>Projects</span><span class="rule-meta"><nav class="rule-tog" aria-label="Filter work"><a href="/">All Work</a><span class="sep" aria-hidden="true">|</span><a href="/#apple-music">Apple Music</a><span class="sep" aria-hidden="true">|</span><a href="/#apple-tv">Apple TV</a><span class="sep" aria-hidden="true">|</span><a href="/#joopiter">JOOPITER</a><span class="sep" aria-hidden="true">|</span><span aria-current="page">More</span></nav></span></div>
   </div>
   <nav class="pagenav"><a href="../">About</a><a href="../story/">Story</a><a href="../resume/">Resume</a><a href="../work/" aria-current="page">Projects</a></nav>
   

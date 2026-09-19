@@ -48,5 +48,23 @@
     "Apple TV",
     "JOOPITER"
   ],
-  "workLabel": "Recent Work"
+  "workLabel": "Recent Work",
+  "filters": [
+    {
+      "key": "all",
+      "label": "All Work"
+    },
+    {
+      "key": "apple-music",
+      "label": "Apple Music"
+    },
+    {
+      "key": "apple-tv",
+      "label": "Apple TV"
+    },
+    {
+      "key": "joopiter",
+      "label": "JOOPITER"
+    }
+  ]
 }
