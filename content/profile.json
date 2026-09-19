@@ -52,7 +52,7 @@
   "filters": [
     {
       "key": "all",
-      "label": "All Work"
+      "label": "Recent"
     },
     {
       "key": "apple-music",
