@@ -17,9 +17,21 @@ import shutil
 import sys
 from pathlib import Path
 
+try:
+    from PIL import Image, ImageOps
+except ImportError:
+    Image = None
+
 ROOT = Path(__file__).parent
 CONTENT = ROOT / "content"
 SITE = ROOT / "site"
+
+# Tiles render at most ~300 CSS px wide, so 800px covers ~2.5x displays.
+IMG_MAX_W = 800
+IMG_QUALITY = 80
+
+# Two rows at 4 columns: the first screenful loads eagerly, the rest lazily.
+EAGER_TILES = 8
 
 # Ticker geometry. MIN_PX is how wide one half of the run must be before it
 # can loop without a gap — 5200 clears a 5K display at 100% scaling.
@@ -221,6 +233,22 @@ def load(name):
 
 def esc(v):
     return html.escape(str(v or ""), quote=True)
+
+
+def shrink_image(src, dst):
+    """Copy an image into site/images, downsizing JPEGs wider than IMG_MAX_W."""
+    if Image is None or src.suffix.lower() not in (".jpg", ".jpeg"):
+        shutil.copy2(src, dst)
+        return
+    im = ImageOps.exif_transpose(Image.open(src))  # bake in rotation before EXIF is dropped
+    if im.width <= IMG_MAX_W:
+        # Re-encoding an already-small JPEG only adds generation loss.
+        shutil.copy2(src, dst)
+        return
+    if im.mode != "RGB":
+        im = im.convert("RGB")
+    im.thumbnail((IMG_MAX_W, IMG_MAX_W * 10), Image.LANCZOS)
+    im.save(dst, "JPEG", quality=IMG_QUALITY, optimize=True, progressive=True)
 
 
 # Written mobile-first with __TOKEN__ placeholders rather than an f-string, so
@@ -461,14 +489,17 @@ def build():
         shutil.rmtree(dest)
     dest.mkdir(parents=True)
     used = {i["image"] for i in items if not is_remote(i["image"])}
+    if Image is None:
+        print("note: Pillow not installed (pip install pillow) — "
+              "copying images at full size instead of resizing them")
     for f in sorted(imgdir.iterdir()):
         if f.name in used:
-            shutil.copy2(f, dest / f.name)
+            shrink_image(f, dest / f.name)
 
     lay = profile.get("layout", {})
 
     tiles = []
-    for it in items:
+    for idx, it in enumerate(items):
         t, s = esc(it.get("title")), esc(it.get("source"))
         typ = "wr" if it.get("type") == "wr" else "ig"
         alt = esc(it.get("title") or ("Article" if typ == "wr" else "Instagram post"))
@@ -484,11 +515,13 @@ def build():
                 if es else "")
         br = esc(it.get("brand"))
         data += f' data-b="{br}"' if br else ""
+        img_attrs = ('fetchpriority="high" loading="eager"' if idx == 0 else
+                     'loading="eager"' if idx < EAGER_TILES else 'loading="lazy"')
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'
             f'<img src="{src}" alt="{alt}" width="1080" height="1350" '
-            f'loading="lazy" decoding="async">'
+            f'{img_attrs} decoding="async">'
             f'<span class="pgf-a" aria-hidden="true">&#8599;</span>{ov}</a>')
 
     if tiles:

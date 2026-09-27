@@ -17,6 +17,10 @@ site/               the built site — this is what Cloudflare serves
 The generated page needs **no JavaScript**. The filter tabs are hidden radio inputs
 driven by CSS sibling selectors, so the grid filters even if scripts fail.
 
+`build.py` resizes and recompresses grid images with Pillow (`pip3 install -r
+requirements.txt`) so the site isn't shipping full-size camera-roll JPEGs. Without
+Pillow installed it still builds, just copying images at full size instead.
+
 ---
 
 ## Everyday workflow

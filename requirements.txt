@@ -1,0 +1,4 @@
+# Optional: build.py resizes and recompresses grid images with Pillow when
+# it's installed, falling back to a plain copy (full-size originals) when
+# it's not.
+Pillow
