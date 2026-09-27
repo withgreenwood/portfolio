@@ -305,9 +305,8 @@ a{color:inherit}
 /* The right-hand slot: the grid's filters (All Work, then one per brand)
    followed by MORE, which pages across to the archive. The active entry is
    full ink with no pointer; the rest are dimmed links. */
-.rule-tog{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.rule-tog{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
 .rule-tog span,.rule-tog a{display:inline-block}
-.rule-tog .sep{opacity:.38;letter-spacing:0}
 .rule-tog a{color:inherit;text-decoration:none;opacity:.42;
   border-bottom:1px solid transparent;transition:opacity .15s,color .15s}
 .rule-tog a:hover{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
@@ -401,7 +400,7 @@ DEFAULT_FILTERS = [{"key": "all", "label": "All Work"}]
 
 
 def rule_toggle(filters, arch_label, arch_url, here):
-    """ALL WORK | APPLE MUSIC | APPLE TV | JOOPITER | MORE, right of the rule.
+    """RECENT  APPLE MUSIC  APPLE TV  JOOPITER  MORE, right of the rule.
 
     `filters` comes from profile.json. On the grid (`here` == "work") each
     filter is an in-page link (#key) that FILTER_JS picks up; "All Work"
@@ -425,8 +424,7 @@ def rule_toggle(filters, arch_label, arch_url, here):
         parts.append('<span aria-current="page">%s</span>' % esc(arch_label))
     else:
         parts.append('<a href="%s">%s</a>' % (esc(arch_url), esc(arch_label)))
-    sep = '<span class="sep" aria-hidden="true">|</span>'
-    return '<nav class="rule-tog" aria-label="Filter work">%s</nav>' % sep.join(parts)
+    return '<nav class="rule-tog" aria-label="Filter work">%s</nav>' % "".join(parts)
 
 
 # Filters the grid by each tile's data-b (brand). The choice lives in the URL
