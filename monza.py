@@ -17,8 +17,9 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build import CONTENT, FONTS, LIGHTBOX, LIGHTBOX_CSS, SITE, TICKER_MIN_PX, \
-    TICKER_SPAN_PAD, TICKER_SPEED, die, embed_src, esc, load, stylesheet
+from build import CONTENT, EAGER_TILES, FONTS, LIGHTBOX, LIGHTBOX_CSS, SITE, \
+    TICKER_MIN_PX, TICKER_SPAN_PAD, TICKER_SPEED, die, embed_src, esc, load, \
+    shrink_image, stylesheet
 
 OUT = SITE / "monza"
 
@@ -101,14 +102,14 @@ def build_monza(quiet=False):
     used = {i["image"] for i in items}
     for f in sorted(imgdir.iterdir()):
         if f.name in used:
-            shutil.copy2(f, dest / f.name)
+            shrink_image(f, dest / f.name)
 
     lay = profile.get("layout", {})
     ticker, tick_dur = ticker_html(doc.get("ticker", profile.get("ticker", [])),
                                    lay.get("tickerSpeed", TICKER_SPEED))
 
     tiles = []
-    for it in items:
+    for idx, it in enumerate(items):
         t, s = esc(it.get("title")), esc(it.get("source"))
         typ = "tt" if it.get("type") == "tt" else "ig"
         plat = "TikTok" if typ == "tt" else "Instagram"
@@ -122,11 +123,13 @@ def build_monza(quiet=False):
         es = embed_src(it.get("url"), typ)
         data = (f' data-embed="{esc(es)}" data-title="{t}" data-source="{s}"'
                 if es else "")
+        img_attrs = ('fetchpriority="high" loading="eager"' if idx == 0 else
+                     'loading="eager"' if idx < EAGER_TILES else 'loading="lazy"')
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
             f'target="_blank" rel="noopener noreferrer">'
             f'<img src="images/{esc(it["image"])}" alt="{alt}" '
-            f'width="720" height="900" loading="lazy" decoding="async">'
+            f'width="720" height="900" {img_attrs} decoding="async">'
             f'<span class="pgf-a" aria-hidden="true">&#8599;</span>{ov}</a>')
     grid = '<main class="pgf-grid">\n    ' + "\n    ".join(tiles) + "\n  </main>"
 
