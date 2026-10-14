@@ -19,7 +19,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from build import (CONTENT, FONTS, SITE, die, esc, load, rule_toggle,
+from build import (CONTENT, SITE, die, esc, head_links, load, rule_toggle,
                    stylesheet)
 
 OUT = SITE / "archive"
@@ -365,18 +365,31 @@ def rel(slug):
     return "../" * (slug.strip("/").count("/") + 1)
 
 
-# Justified rows need every image's shape at build time. Reading the JPEG
-# header directly avoids a Pillow dependency for what is four bytes of data.
-_RATIOS = {}
+# Justified rows need every image's shape at build time, and every <img>
+# carries width/height so the page doesn't shift as photos arrive. Reading the
+# JPEG header directly avoids a Pillow dependency for what is four bytes of data.
+_DIMS = {}
 _SOF = {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
         0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}
 
 
 def ratio(name, default=1.5):
     """Width/height of an image in content/archive-images, 1.5 if unknown."""
-    if name in _RATIOS:
-        return _RATIOS[name]
-    r = default
+    d = dims(name)
+    return round(d[0] / d[1], 4) if d else default
+
+
+def dim_attrs(name):
+    """' width="W" height="H"' for an <img>, or "" if the size is unknown."""
+    d = dims(name)
+    return ' width="%d" height="%d"' % d if d else ""
+
+
+def dims(name):
+    """(width, height) of a JPEG in content/archive-images, None if unknown."""
+    if name in _DIMS:
+        return _DIMS[name]
+    r = None
     path = CONTENT / "archive-images" / str(name)
     try:
         data = path.read_bytes()
@@ -389,16 +402,16 @@ def ratio(name, default=1.5):
             if marker in _SOF:
                 h = (data[i + 5] << 8) | data[i + 6]
                 w = (data[i + 7] << 8) | data[i + 8]
-                if h:
-                    r = round(w / h, 4)
+                if w and h:
+                    r = (w, h)
                 break
             if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
                 i += 2
                 continue
             i += 2 + ((data[i + 2] << 8) | data[i + 3])
-    except (OSError, IndexError, ZeroDivisionError):
+    except (OSError, IndexError):
         pass
-    _RATIOS[name] = r
+    _DIMS[name] = r
     return r
 
 
@@ -481,8 +494,9 @@ def block_html(b, pfx):
         return '<div class="cells">%s</div>' % "".join(ds)
     if t == "image":
         cap = b.get("caption")
-        fig = '<img src="%s" alt="%s" loading="lazy" decoding="async">' % (
-            esc(img_src(b.get("src"), pfx)), esc(b.get("alt") or cap or ""))
+        fig = '<img src="%s" alt="%s"%s loading="lazy" decoding="async">' % (
+            esc(img_src(b.get("src"), pfx)), esc(b.get("alt") or cap or ""),
+            dim_attrs(b.get("src")))
         if cap:
             fig += "<figcaption>%s</figcaption>" % esc(cap)
         return "<figure>%s</figure>" % fig
@@ -508,18 +522,20 @@ def block_html(b, pfx):
                     # the video has loaded and if it never plays at all.
                     f = ('<button type="button" class="zoom">'
                          '<video class="mov" poster="%s" autoplay loop muted '
-                         'playsinline preload="metadata" aria-label="%s">'
+                         'playsinline preload="metadata"%s aria-label="%s">'
                          '%s</video>'
                          '</button>' % (
                              esc(img_src(i.get("src"), pfx)),
+                             dim_attrs(i.get("src")),
                              esc(i.get("alt") or cap or "Animation"),
                              video_sources(i.get("video"), pfx)))
                 else:
                     f = ('<button type="button" class="zoom">'
-                         '<img src="%s" alt="%s" loading="lazy" decoding="async">'
+                         '<img src="%s" alt="%s"%s loading="lazy" decoding="async">'
                          '</button>' % (
                              esc(img_src(i.get("src"), pfx)),
-                             esc(i.get("alt") or cap or "")))
+                             esc(i.get("alt") or cap or ""),
+                             dim_attrs(i.get("src"))))
                 if cap:
                     f += "<figcaption>%s</figcaption>" % esc(cap)
                 # The row's 1px gaps come out of the 100% before it is split,
@@ -612,10 +628,11 @@ def page_html(page, doc, profile, pages):
     lead = side_lead = ""
     if page.get("lead"):
         lead_img = ('<button type="button" class="zoom">'
-                    '<img src="%s" alt="%s" decoding="async">'
+                    '<img src="%s" alt="%s"%s fetchpriority="high" decoding="async">'
                     '</button>' % (
                         esc(img_src(page["lead"], pfx)),
-                        esc(page.get("leadAlt") or page.get("title") or "")))
+                        esc(page.get("leadAlt") or page.get("title") or ""),
+                        dim_attrs(page["lead"])))
         if page.get("leadSide"):
             # Floated inside the prose rather than full-bleed above it. It has
             # to be the first node in the article for the text to wrap.
@@ -682,9 +699,7 @@ def page_html(page, doc, profile, pages):
 %(ogimg)s
 <meta name="twitter:card" content="%(card)s">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9642;</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="%(fonts)s">
+%(headlinks)s
 <style>%(css)s</style>
 </head>
 <body>
@@ -693,7 +708,7 @@ def page_html(page, doc, profile, pages):
 <div class="wrap">
   %(back)s
   <div class="rule">
-    <div class="rule-in"><span>%(label)s</span>%(kickerhtml)s</div>
+    <div class="rule-in">%(label)s%(kickerhtml)s</div>
   </div>
   %(nav)s
   %(lead)s
@@ -717,12 +732,13 @@ def page_html(page, doc, profile, pages):
         "ogimg": ('<meta property="og:image" content="%s">' % esc(og_img)) if og_img else "",
         "card": "summary_large_image" if og_img else "summary",
         "proseclass": " read" if page.get("reading") else "",
-        "fonts": FONTS,
+        "headlinks": head_links(url),
         "css": stylesheet(profile.get("layout", {})) + PROSE_CSS,
         "ticker": ticker,
         "idbar": idbar,
         "back": back,
-        "label": esc(page.get("title") or ""),
+        "label": ('<h1 class="rule-h">%s</h1>' % esc(page["title"])
+                  if page.get("title") else "<span></span>"),
         # An explicit "kicker": "" in pages.json suppresses the block entirely;
         # a missing key still falls back to the section kicker.
         "kickerhtml": kicker_html,

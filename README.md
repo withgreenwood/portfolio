@@ -1,25 +1,31 @@
 # Portfolio Grid
 
-A minimalist 4:5 Instagram-style grid of curated Instagram posts and article links,
-with All / Instagram / Writing filter tabs — as a standalone site deployed to
-Cloudflare Pages.
+withgreenwood.com: a 4:5 grid of selected work, plus the old Squarespace pages
+rebuilt as `/archive` and a single-event page at `/monza`. Plain static HTML,
+built by Python and served by Cloudflare.
 
 ```
-admin.html          local editor: add, crop, reorder, preview, export
-build.py            content/ -> site/index.html
+admin.html          local editor for the grid: add, crop, reorder, export
+build.py            content/ -> site/   (runs archive.py and monza.py too)
+archive.py          content/pages.json -> site/archive/ and site/_redirects
+monza.py            content/monza.json -> site/monza/
+rebuild_monza.py    turns downloaded browser packs into content/monza*
+mkpages.py          one-shot generator for pages.json (don't re-run)
+publish.sh          collect admin exports from ~/Downloads, then build
 content/
-  profile.json      your name, bio, links, layout
+  profile.json      name, bio, links, ticker, layout, siteUrl
   items.json        the grid items
-  images/           thumbnails
-site/               the built site — this is what Cloudflare serves
+  images/           grid images
+  pages.json        archive copy, plus the old-URL redirects
+  archive-images/   archive photos and video loops
+  monza.json        Monza tiles
+  monza-images/     Monza images
+  fonts/            self-hosted web fonts (IBM Plex Mono, Inter Tight; SIL OFL)
+site/               the built site: this is what Cloudflare serves
+wrangler.jsonc      Cloudflare config (static assets only, no server code)
 ```
 
-The generated page needs **no JavaScript**. The filter tabs are hidden radio inputs
-driven by CSS sibling selectors, so the grid filters even if scripts fail.
-
-`build.py` resizes and recompresses grid images with Pillow (`pip3 install -r
-requirements.txt`) so the site isn't shipping full-size camera-roll JPEGs. Without
-Pillow installed it still builds, just copying images at full size instead.
+`site/` is committed, so Cloudflare only serves files and never runs a build.
 
 ---
 
@@ -28,9 +34,13 @@ Pillow installed it still builds, just copying images at full size instead.
 1. Open `admin.html` (double-click it). Add or edit items, drag to reorder.
 2. Click **Download thumbnails**, then **Export items.json**. Both land in
    `~/Downloads`.
-3. Run `./publish.sh` — it moves those files into `content/`, rebuilds the site,
+3. Run `./publish.sh`. It moves those files into `content/`, rebuilds the site,
    and lists any images no longer used.
-4. Publish:
+4. Preview, then push. Every push to `main` deploys.
+
+```bash
+python3 -m http.server 8747 --directory site
+```
 
 ```bash
 git add -A && git commit -m "Update grid" && git push
@@ -38,216 +48,76 @@ git add -A && git commit -m "Update grid" && git push
 
 If macOS blocks access to `~/Downloads`, drag the files in yourself
 (`items.json` → `content/`, `NN-name.jpg` → `content/images/`) and run
-`./publish.sh` anyway — it rebuilds regardless.
+`./publish.sh` anyway. It rebuilds regardless.
 
-Cloudflare rebuilds automatically. Edit `content/profile.json` directly for your
-name, bio, links, columns, and gap.
-
-To preview locally before pushing:
-
-```bash
-python3 -m http.server 8747 --directory site
-```
+Edit `content/profile.json` directly for name, bio, links, columns and gap, and
+`content/pages.json` for archive copy. Then run `python3 build.py`.
 
 ---
 
-## One-time setup
+## What the build produces
 
-These two steps need your accounts, so they're yours to do — I can't create accounts
-or enter credentials.
+Running `python3 build.py` writes everything under `site/`:
 
-**1. GitHub.** Create an empty repository (no README — this folder already has one),
-then connect it:
+- **Pages**: the grid, every archive page, and `/monza`. Each page gets a
+  canonical URL from `siteUrl` in `profile.json` (or `baseUrl` in `pages.json`).
+- **Grid images**: needs Pillow (`pip3 install -r requirements.txt`). Each grid
+  and Monza image goes out as a JPEG capped at 800px wide, plus WebP copies at
+  that size and at 400 and 600px. Tiles are a `<picture>` with a `srcset`, so a
+  phone loads the 400px WebP rather than the 800px JPEG. Images that haven't
+  changed are skipped, so a rebuild is quick. Without Pillow, images are copied
+  at full size and served as a plain `<img>`.
+- **`404.html`**: shown for any unknown URL (`not_found_handling` in
+  `wrangler.jsonc`).
+- **`_redirects`**: old Squarespace URLs → their `/archive` pages, from
+  `pages.json`.
+- **`_headers`**: browser caching (a week for images, a year for fonts) and
+  basic security headers.
+- **`robots.txt` and `sitemap.xml`**: the sitemap lists every built page.
 
-```bash
-git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
-git push -u origin main
-```
-
-**2. Cloudflare Pages.** In the dashboard: *Workers & Pages* → *Create* → *Pages* →
-*Connect to Git*. Pick the repo and set:
-
-- **Framework preset:** None
-- **Build command:** *(leave empty)*
-- **Build output directory:** `site`
-
-The build output is committed, so Cloudflare only has to serve it — no build
-environment, no Python on their side, nothing to break.
-
-After that, every `git push` deploys. You get a `*.pages.dev` URL immediately, plus
-version history and one-click rollback in the Pages dashboard.
-
-Git identity for this repo is set to `sg / smg0254@gmail.com`. Change it with
-`git config user.name "..."` if you'd rather commit under something else.
+The grid's filter links and the lightbox are the only JavaScript. Every tile
+keeps its real `href`, so without scripts a tile simply opens the post.
 
 ---
 
-## Custom domain
+## Cloudflare settings that live in the dashboard
 
-Do this **last**, once the new site is live and you've looked at it. In the Pages
-project: *Custom domains* → *Set up a domain*. Cloudflare walks you through the DNS
-records.
+Some things can't be set from files in this repo:
 
-Don't cancel Squarespace until the domain is switched over and working — moving DNS
-away is reversible, but a lapsed domain registration is painful.
+- **SSL/TLS → Edge Certificates → Always Use HTTPS**: on, so `http://`
+  redirects to `https://`.
+- **Rules → Redirect Rules**: `www.withgreenwood.com/*` →
+  `https://withgreenwood.com/${1}` (301), so www doesn't serve a duplicate copy
+  of the site.
 
----
-
-## Two constraints that shaped this
-
-**1. Squarespace only allows JavaScript in Code blocks on Core plans and above.**
-So the generated embed contains **zero JavaScript**. The filter tabs are hidden radio
-inputs driven by CSS sibling selectors. This runs on *every* Squarespace plan,
-including Basic, and can't break from a script error on someone's phone.
-
-**2. A Squarespace Code block is capped at 400 KB.**
-That cap decides where your images live — see below.
+`_headers` sends `Strict-Transport-Security` without `includeSubDomains` or
+`preload`, so it only affects this exact hostname.
 
 ---
 
-## Where images live
+## Updating the fonts
 
-The admin has a **Hosted / Embedded** switch. This is the one real decision.
-
-### Hosted (recommended)
-
-Images are uploaded to Squarespace and served from its CDN. The embed carries only
-URLs, so it stays around **10 KB regardless of item count** — unlimited posts, and
-full Instagram-grade quality with a retina `srcset` at 300/500/750/1000w.
-
-1. **Download thumbnails** in the admin — each saves as a 1080×1350 JPEG, pre-cropped.
-2. Upload them to Squarespace. Either drop them in any gallery, or use
-   **Link → Files** in any link editor, which accepts an upload and returns a URL.
-3. Copy each image's URL, then **Paste URLs in bulk** — one per line, in grid order.
-
-To get a URL from an uploaded image: view the live page, right-click the image,
-*Copy Image Address*.
-
-**Strip any `?format=` already on the URL you copy** — paste the bare path. The tool
-adds its own sizing. This matters: a bare Squarespace CDN URL serves the *full-size
-original*. Tested against a live CDN image, `?format=500w` returns 500px at 11 KB
-while the bare URL returns 2500px at 200 KB, so the grid pins every tile to an explicit
-width and offers 300/500/750/1000/1500w via `srcset`. Those are real supported sizes;
-anything else snaps up to the next one.
-
-### Embedded
-
-Images are baked into the code block as data URIs. Nothing to upload — paste and done.
-But the 400 KB cap binds hard. Measured against real photographs:
-
-| Quality | Size | Items that fit |
-|---|---|---|
-| Small | 320×400 | ~16 |
-| Medium | 400×500 | ~10 |
-| Large | 480×600 | ~6 |
-| Instagram retina | 640×800 | ~4 |
-
-Detailed, high-contrast photos cost 2–3× more than soft ones, so these are averages.
-**The meter under the embed code is the truth** — it measures your actual bytes and
-tells you how many more will fit.
-
-Embedded mode is good for a small, fixed grid or for trying the design out. Anything
-larger, or anything where you want Instagram-matching sharpness, wants Hosted.
-
----
-
-## Installing on Squarespace
-
-1. Edit the page, add a **Code** block.
-2. Paste the embed. Leave **Display Source** unchecked.
-3. Save.
-
-The grid inherits your site's font and text colour by default, so it should sit
-naturally in your existing design. *Text colour* in Appearance overrides that if the
-section background needs it.
+The fonts are the latin subset of Google Fonts' woff2 files, renamed with their
+version (for example `ibm-plex-mono-500-v20.woff2`). That's why `_headers` can
+cache them as immutable. To change a font, add a file with a new name and update
+`FONT_FILES` in `build.py`. Never overwrite a file in place.
 
 ---
 
 ## About the Instagram API
 
-There's no auto-sync, deliberately. Instagram's Basic Display API was shut down in
-December 2024. Pulling posts now requires the Graph API with a Business or Creator
-account, a linked Facebook Page, and a token refreshed every 60 days — and it would
-need server-side code Squarespace can't host.
-
-Instagram's own CDN URLs are signed and expire, so they can't be hotlinked either.
-For a curated portfolio you're hand-picking anyway, uploading your own image gives
-better quality than Instagram's compressed copy.
-
----
-
-## Hosting the images somewhere other than Squarespace
-
-Squarespace is a perfectly good image host, but its URLs are opaque hashes you must
-copy one at a time off the live page. A plain static host gives *predictable* URLs,
-which is faster to set up and much faster to maintain.
-
-**Recommended: Cloudflare Pages or Netlify.** Both are free, both accept a
-drag-and-dropped folder, and both serve from a global CDN.
-
-1. **Download thumbnails** — you get `01-morning-light.jpg`, `02-studio-detail.jpg`, …
-2. Drag that folder onto Cloudflare Pages or Netlify Drop. You get a URL like
-   `https://your-grid.pages.dev`.
-3. Paste that one URL into **Folder base URL** and hit **Apply**.
-
-Every item is filled at once from its filename — no per-image copying. Adding a post
-later means uploading one more file and clicking Apply again.
-
-Caveat: filenames are derived from the item's title and position. If you rename or
-reorder items after uploading, re-export and re-upload so the names still match.
-
-**If you want on-the-fly resizing** the way Squarespace does it, use Cloudinary's free
-tier — its URLs take transform segments (`w_500,c_fill,ar_4:5`). That only matters for
-very large grids; a 1080×1350 JPEG served lazily is fine for a portfolio.
-
-Non-Squarespace URLs get no `srcset` (those hosts don't resize by URL), so the exported
-1080×1350 file is what loads. That's sharper than Instagram serves and still lazy-loaded.
-
-## Moving the whole site off Squarespace
-
-Different question, and usually not worth it for a grid. The same static hosts will
-serve a complete site free, and you could point a subdomain like
-`work.yourdomain.com` at it via a DNS record while Squarespace keeps the main site.
-
-But you'd be maintaining two sites with two designs, and your Squarespace styling,
-navigation, and fonts wouldn't carry across — the grid is built to inherit them. Only
-worth considering if you already have other reasons to leave.
-
-## Going native instead
-
-If you'd trade the filter tabs for zero code, Squarespace's own **Gallery section**
-covers most of this: up to 250 images, grid layout with column and spacing controls,
-and per-image clickthrough URLs to external links — supported on *any* plan. Set
-**Lightbox off**, or the links won't fire.
-
-What you lose: the All / Instagram / Writing tabs (there's no native filtering), the
-hover caption with a separate source line, and the article badge. What you gain: no
-embed to regenerate when you add a post.
-
-**Upgrading your Squarespace plan does not help here.** Core and above unlock
-JavaScript in Code blocks, but the 400 KB block cap is not plan-dependent — it applies
-on every tier. Don't upgrade for this; use hosted images instead.
+There's no auto-sync, deliberately. Pulling posts needs the Graph API with a
+Business or Creator account, a linked Facebook Page, and a token refreshed every
+60 days. Instagram's CDN URLs are signed and expire, so they can't be hotlinked
+either. For a hand-picked portfolio, uploading your own image also gives better
+quality than Instagram's compressed copy.
 
 ## Notes
 
-- **Back up before switching machines.** *Export project* writes a `.json` holding your
-  full-resolution originals; *Import project* restores it. Browser storage alone is not
-  a backup.
-- **Re-cropping is lossless-ish.** Originals are kept, so changing quality or aspect
-  re-encodes from the source rather than from a compressed copy.
-- **Tabs auto-hide** if you only have one kind of item.
-- **Article tiles** show a small document badge, and on touch devices their titles stay
-  visible — there's no hover on a phone. Instagram tiles stay clean.
-- **Accessibility**: tabs are keyboard-navigable with arrow keys (they're real radio
-  inputs), focus rings are visible, and the grid respects `prefers-reduced-motion`.
-
-### Local preview server
-
-Optional — `admin.html` works fine opened directly. If you want it served:
-
-```bash
-python3 -m http.server 8747 --directory /Users/sg/Claude/portfolio-grid
-```
-
-Then visit `http://localhost:8747/admin.html`. Note that the browser keeps separate
-storage for `file://` and `localhost`, so items added in one won't appear in the other.
+- **Back up before switching machines.** In `admin.html`, *Export project*
+  writes a `.json` holding your full-resolution originals, and *Import project*
+  restores it. Browser storage alone is not a backup.
+- `admin.html` keeps separate storage for `file://` and `localhost`, so items
+  added in one won't appear in the other.
+- This repo is public. `.gitignore` keeps DNS exports and credentials out of
+  it.

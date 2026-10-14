@@ -12,10 +12,13 @@
 <meta property="og:image" content="https://withgreenwood.com/archive/images/google-mixtape-03.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9642;</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
-<style>
+<link rel="canonical" href="https://withgreenwood.com/archive/work/google-mixtape/">
+<link rel="preload" href="/fonts/ibm-plex-mono-500-v20.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/ibm-plex-mono-400-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/ibm-plex-mono-500-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-mono-600-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter Tight";font-style:normal;font-weight:500 700;font-display:swap;src:url(/fonts/inter-tight-var-v9.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
   --ink:#000; --bg:#fff; --accent:#ff5232; --panel:#dedede; --line:#000;
   --max:1180px; --gap:1px; --radius:0px; --pad:15px;
@@ -48,7 +51,7 @@ a{color:inherit}
 .idcell+.idcell{border-left:1px solid var(--line)}
 .idcell-name{width:100%;border-bottom:1px solid var(--line)}
 .idcell+.idcell-links{border-left:0}
-.wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
+.wordmark{margin:0;font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
   letter-spacing:-.045em;white-space:nowrap}
 .links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 .links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
@@ -63,6 +66,8 @@ a{color:inherit}
   align-items:baseline;gap:6px 16px;
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+/* A sub-page's title is its h1 but keeps the rule's small caps. */
+.rule-h{margin:0;font:inherit;letter-spacing:inherit}
 
 /* The right-hand slot: the grid's filters (All Work, then one per brand)
    followed by MORE, which pages across to the archive. The active entry is
@@ -85,6 +90,7 @@ a{color:inherit}
 .pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
   overflow:hidden;border-radius:var(--radius);background:var(--panel);
   box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
+.pgf-i picture{display:block;width:100%;height:100%}
 .pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .5s cubic-bezier(.2,.7,.3,1)}
 .pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
@@ -337,10 +343,10 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
 <div class="wrap">
   <div class="back"><a href="../../work/">&larr; All projects</a></div>
   <div class="rule">
-    <div class="rule-in"><span>Google Mixtape</span><span class="rule-meta"><span>Google · MAS</span></span></div>
+    <div class="rule-in"><h1 class="rule-h">Google Mixtape</h1><span class="rule-meta"><span>Google · MAS</span></span></div>
   </div>
   <nav class="pagenav"><a href="../../">About</a><a href="../../story/">Story</a><a href="../../resume/">Resume</a><a href="../../work/" aria-current="page">Projects</a></nav>
-  <div class="lead"><button type="button" class="zoom"><img src="../../images/google-mixtape-03.jpg" alt="Google Mixtape" decoding="async"></button></div>
+  <div class="lead"><button type="button" class="zoom"><img src="../../images/google-mixtape-03.jpg" alt="Google Mixtape" width="1500" height="1001" fetchpriority="high" decoding="async"></button></div>
   <article class="prose">
     <p class="intro">To provide a surprise and delight moment during Advertising Week, Google invited over 2,000 guests to pull away from their screens by shipping a personalized “Mixtape” experience to pair with the brand’s audio-first content developed specifically for the advertising industry’s top virtual event.</p>
     <p>The Mixtape box included one of six guided activity kits, which matched guests to their interests shared during registration, for them to dive into while listening to their personalized audio content. The packaging ushered guests on a journey using playful design, thoughtful materials, and intriguing reveal moments. The hero item was a retro-style cardboard Walkman with a built-in Bluetooth speaker which transformed the guests’ smartphone screens into cassette tapes.</p>
@@ -348,7 +354,7 @@ footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
     <h2>Project Contributions</h2>
     <ul><li>Oversaw end-to-end project management including creative development, execution, logistics, and COVID safety prep</li><li>Ideated, sourced, and secured elements for activity kits featuring items from small and BIPOC businesses</li><li>Successfully executed fulfillment of 2,231 Mixtape boxes over seven days</li><li>Achieved on-time delivery within a single-day arrival window</li></ul>
     <h2>Gallery</h2>
-    <div class="gal"><div class="gal-row"><figure style="--r:1.8821;flex-basis:calc((100% - 1px) * 0.55624)"><button type="button" class="zoom"><img src="../../images/google-mixtape-01.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 1px) * 0.44376)"><button type="button" class="zoom"><img src="../../images/google-mixtape-02.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/google-mixtape-04.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33311)"><button type="button" class="zoom"><img src="../../images/google-mixtape-05.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/google-mixtape-06.jpg" alt="" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:0.6673;flex-basis:calc((100% - 2px) * 0.18181)"><button type="button" class="zoom"><img src="../../images/google-mixtape-07.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/google-mixtape-08.jpg" alt="" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/google-mixtape-09.jpg" alt="" loading="lazy" decoding="async"></button></figure></div></div>
+    <div class="gal"><div class="gal-row"><figure style="--r:1.8821;flex-basis:calc((100% - 1px) * 0.55624)"><button type="button" class="zoom"><img src="../../images/google-mixtape-01.jpg" alt="" width="1500" height="797" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 1px) * 0.44376)"><button type="button" class="zoom"><img src="../../images/google-mixtape-02.jpg" alt="" width="1500" height="999" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/google-mixtape-04.jpg" alt="" width="1500" height="999" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5;flex-basis:calc((100% - 2px) * 0.33311)"><button type="button" class="zoom"><img src="../../images/google-mixtape-05.jpg" alt="" width="1500" height="1000" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.33344)"><button type="button" class="zoom"><img src="../../images/google-mixtape-06.jpg" alt="" width="1500" height="999" loading="lazy" decoding="async"></button></figure></div><div class="gal-row"><figure style="--r:0.6673;flex-basis:calc((100% - 2px) * 0.18181)"><button type="button" class="zoom"><img src="../../images/google-mixtape-07.jpg" alt="" width="750" height="1124" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/google-mixtape-08.jpg" alt="" width="1500" height="999" loading="lazy" decoding="async"></button></figure><figure style="--r:1.5015;flex-basis:calc((100% - 2px) * 0.40909)"><button type="button" class="zoom"><img src="../../images/google-mixtape-09.jpg" alt="" width="1500" height="999" loading="lazy" decoding="async"></button></figure></div></div>
   </article>
 </div>
 <footer>

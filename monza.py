@@ -13,13 +13,12 @@ Usage:  python3 monza.py        (or just python3 build.py, which chains it)
 """
 import json
 import math
-import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build import CONTENT, EAGER_TILES, FONTS, LIGHTBOX, LIGHTBOX_CSS, SITE, \
-    TICKER_MIN_PX, TICKER_SPAN_PAD, TICKER_SPEED, die, embed_src, esc, load, \
-    shrink_image, stylesheet
+from build import CONTENT, EAGER_TILES, LIGHTBOX, LIGHTBOX_CSS, SITE, \
+    TICKER_MIN_PX, TICKER_SPAN_PAD, TICKER_SPEED, die, embed_src, esc, \
+    grid_sizes, head_links, load, stylesheet, sync_tiles, tile_img
 
 OUT = SITE / "monza"
 
@@ -95,16 +94,11 @@ def build_monza(quiet=False):
     items = sorted(items, key=lambda i: i.get("takenAt") or 0, reverse=True)
 
     OUT.mkdir(parents=True, exist_ok=True)
-    dest = OUT / "images"
-    if dest.exists():
-        shutil.rmtree(dest)
-    dest.mkdir(parents=True)
     used = {i["image"] for i in items}
-    for f in sorted(imgdir.iterdir()):
-        if f.name in used:
-            shrink_image(f, dest / f.name)
+    widths = sync_tiles(imgdir, used, OUT / "images")
 
     lay = profile.get("layout", {})
+    sizes = grid_sizes(lay)
     ticker, tick_dur = ticker_html(doc.get("ticker", profile.get("ticker", [])),
                                    lay.get("tickerSpeed", TICKER_SPEED))
 
@@ -125,11 +119,12 @@ def build_monza(quiet=False):
                 if es else "")
         img_attrs = ('fetchpriority="high" loading="eager"' if idx == 0 else
                      'loading="eager"' if idx < EAGER_TILES else 'loading="lazy"')
+        img = tile_img("images/", it["image"], widths[it["image"]], sizes,
+                       f'alt="{alt}" width="720" height="900" '
+                       f'{img_attrs} decoding="async"')
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
-            f'target="_blank" rel="noopener noreferrer">'
-            f'<img src="images/{esc(it["image"])}" alt="{alt}" '
-            f'width="720" height="900" {img_attrs} decoding="async">'
+            f'target="_blank" rel="noopener noreferrer">{img}'
             f'<span class="pgf-a" aria-hidden="true">&#8599;</span>{ov}</a>')
     grid = '<main class="pgf-grid">\n    ' + "\n    ".join(tiles) + "\n  </main>"
 
@@ -172,9 +167,7 @@ def build_monza(quiet=False):
 <meta name="twitter:card" content="summary_large_image">
 {f'<meta property="og:image" content="{og}">' if og else ''}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>&#9724;</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}">
+{head_links(site_url + "/monza/" if site_url else "")}
 <style>{css}</style>
 </head>
 <body>
@@ -185,7 +178,7 @@ def build_monza(quiet=False):
 </header>
 <div class="wrap">
   <div class="rule">
-    <div class="rule-in"><span>{title}{f' &mdash; {subtitle}' if subtitle else ''}</span><span>{count_label} &middot; {span}</span></div>
+    <div class="rule-in"><h1 class="rule-h">{title}{f' &mdash; {subtitle}' if subtitle else ''}</h1><span>{count_label} &middot; {span}</span></div>
   </div>
   {f'<div class="lede"><p>{standfirst}</p></div>' if standfirst else ''}
   {grid}

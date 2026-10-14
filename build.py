@@ -39,9 +39,30 @@ TICKER_MIN_PX = 5200
 TICKER_SPAN_PAD = 20
 TICKER_SPEED = 13.3   # px/sec, matching the original 34s at two copies
 
-FONTS = ("https://fonts.googleapis.com/css2"
-         "?family=IBM+Plex+Mono:wght@400;500;600"
-         "&family=Inter+Tight:wght@500;600;700&display=swap")
+# Self-hosted from content/fonts (both families are SIL OFL, taken from Google
+# Fonts, latin subset only). Serving them from our own origin drops two extra
+# connections and a render-blocking third-party stylesheet. The version sits in
+# each filename, so _headers can cache them for a year.
+FONT_RANGE = ("U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,"
+              "U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,"
+              "U+2212,U+2215,U+FEFF,U+FFFD")
+FONT_FILES = [
+    ("IBM Plex Mono", "400", "ibm-plex-mono-400-v20.woff2"),
+    ("IBM Plex Mono", "500", "ibm-plex-mono-500-v20.woff2"),
+    ("IBM Plex Mono", "600", "ibm-plex-mono-600-v20.woff2"),
+    ("Inter Tight", "500 700", "inter-tight-var-v9.woff2"),   # variable
+]
+FONT_CSS = "".join(
+    '@font-face{font-family:"%s";font-style:normal;font-weight:%s;'
+    'font-display:swap;src:url(/fonts/%s) format("woff2");unicode-range:%s}\n'
+    % (fam, wt, f, FONT_RANGE) for fam, wt, f in FONT_FILES)
+# Body text is Plex Mono 500, so that one file is worth fetching early.
+BODY_FONT = "/fonts/ibm-plex-mono-500-v20.woff2"
+
+# WebP widths offered below each grid image's full-size copy. A phone showing
+# two columns no longer pulls the 800px file. The full-size JPEG stays as the
+# fallback for the rare browser without WebP, so it needs no smaller sizes.
+TILE_WIDTHS = (400, 600)
 
 
 # Post ids, for the lightbox. Instagram: /p/<code>/, /reel/<code>/, /tv/<code>/.
@@ -235,20 +256,110 @@ def esc(v):
     return html.escape(str(v or ""), quote=True)
 
 
-def shrink_image(src, dst):
-    """Copy an image into site/images, downsizing JPEGs wider than IMG_MAX_W."""
+def head_links(canonical=""):
+    """The <head> lines every page shares: canonical URL and font preload."""
+    out = ['<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>'
+           % BODY_FONT]
+    if canonical:
+        out.insert(0, '<link rel="canonical" href="%s">' % esc(canonical))
+    return "\n".join(out)
+
+
+def _fresh(src, outs):
+    t = src.stat().st_mtime
+    return all(o.exists() and o.stat().st_mtime >= t for o in outs)
+
+
+def _variants(dst, ws):
+    """Every file tile_image writes for one image, given its srcset widths."""
+    return [dst, dst.with_suffix(".webp")] + [
+        dst.with_name("%s-%d.webp" % (dst.stem, w)) for w in ws[:-1]]
+
+
+def tile_image(src, dest):
+    """Write one grid image into `dest`: a JPEG capped at IMG_MAX_W, plus
+    WebP copies at that size and at each smaller TILE_WIDTHS for srcset.
+
+    Returns (widths, files). widths is ascending and ends with the full-size
+    copy's width; it is empty when only a plain copy was made (no Pillow, or
+    not a JPEG). Up-to-date outputs are left alone, so a rebuild only encodes
+    images that changed.
+    """
+    dst = dest / src.name
     if Image is None or src.suffix.lower() not in (".jpg", ".jpeg"):
-        shutil.copy2(src, dst)
-        return
+        if not _fresh(src, [dst]):
+            shutil.copy2(src, dst)
+        return [], [dst]
+
+    if dst.exists():
+        with Image.open(dst) as im:
+            full = im.width
+            if im.getexif().get(0x0112) in (5, 6, 7, 8):  # rotated 90°
+                full = im.height
+        ws = [w for w in TILE_WIDTHS if w < full] + [full]
+        if _fresh(src, _variants(dst, ws)):
+            return ws, _variants(dst, ws)
+
     im = ImageOps.exif_transpose(Image.open(src))  # bake in rotation before EXIF is dropped
+    if im.mode != "RGB":
+        im = im.convert("RGB")
     if im.width <= IMG_MAX_W:
         # Re-encoding an already-small JPEG only adds generation loss.
         shutil.copy2(src, dst)
-        return
-    if im.mode != "RGB":
-        im = im.convert("RGB")
-    im.thumbnail((IMG_MAX_W, IMG_MAX_W * 10), Image.LANCZOS)
-    im.save(dst, "JPEG", quality=IMG_QUALITY, optimize=True, progressive=True)
+    else:
+        im.thumbnail((IMG_MAX_W, IMG_MAX_W * 10), Image.LANCZOS)
+        im.save(dst, "JPEG", quality=IMG_QUALITY, optimize=True, progressive=True)
+    ws = [w for w in TILE_WIDTHS if w < im.width] + [im.width]
+    im.save(dst.with_suffix(".webp"), "WEBP", quality=IMG_QUALITY, method=6)
+    for w in ws[:-1]:
+        s = im.copy()
+        s.thumbnail((w, w * 10), Image.LANCZOS)
+        s.save(dst.with_name("%s-%d.webp" % (dst.stem, w)), "WEBP",
+               quality=IMG_QUALITY, method=6)
+    return ws, _variants(dst, ws)
+
+
+def sync_tiles(srcdir, names, dest):
+    """Bring `dest` in line with the grid images in `names` and delete
+    anything else in it. Returns {name: srcset widths}."""
+    dest.mkdir(parents=True, exist_ok=True)
+    widths, keep = {}, set()
+    for name in sorted(names):
+        widths[name], files = tile_image(srcdir / name, dest)
+        keep.update(f.name for f in files)
+    for f in dest.iterdir():
+        if f.name not in keep:
+            f.unlink()
+    return widths
+
+
+def grid_sizes(lay):
+    """The `sizes` attribute for a tile: one grid column at each breakpoint,
+    matching the media queries in CSS."""
+    cols = int(lay.get("columns", 4))
+    mid = int(lay.get("columnsMid", 3))
+    sm = int(lay.get("columnsMobile", 2))
+    maxw = lay.get("maxWidth", 1180)
+    out = []
+    if maxw not in ("100%", "full"):
+        out.append("(min-width:%dpx) %dpx" % (int(maxw), int(maxw) // cols))
+    out += ["(min-width:940px) %.2fvw" % (100 / cols),
+            "(min-width:620px) %.2fvw" % (100 / mid),
+            "%.2fvw" % (100 / sm)]
+    return ", ".join(out)
+
+
+def tile_img(base, name, ws, sizes, attrs):
+    """A grid tile's image: a <picture> offering WebP at every width, over
+    the full-size JPEG; a plain <img> when tile_image made no WebP copies."""
+    img = '<img src="%s%s" %s>' % (base, esc(name), attrs)
+    if not ws:
+        return img
+    stem = esc(Path(name).stem)
+    srcset = ", ".join("%s%s%s.webp %dw" % (base, stem, "" if w == ws[-1] else "-%d" % w, w)
+                       for w in ws)
+    return ('<picture><source type="image/webp" srcset="%s" sizes="%s">%s</picture>'
+            % (srcset, sizes, img))
 
 
 # Written mobile-first with __TOKEN__ placeholders rather than an f-string, so
@@ -286,7 +397,7 @@ a{color:inherit}
 .idcell+.idcell{border-left:1px solid var(--line)}
 .idcell-name{width:100%;border-bottom:1px solid var(--line)}
 .idcell+.idcell-links{border-left:0}
-.wordmark{font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
+.wordmark{margin:0;font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
   letter-spacing:-.045em;white-space:nowrap}
 .links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 .links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
@@ -301,6 +412,8 @@ a{color:inherit}
   align-items:baseline;gap:6px 16px;
   padding-bottom:10px;border-bottom:1px solid var(--line);
   font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+/* A sub-page's title is its h1 but keeps the rule's small caps. */
+.rule-h{margin:0;font:inherit;letter-spacing:inherit}
 
 /* The right-hand slot: the grid's filters (All Work, then one per brand)
    followed by MORE, which pages across to the archive. The active entry is
@@ -323,6 +436,7 @@ a{color:inherit}
 .pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
   overflow:hidden;border-radius:var(--radius);background:var(--panel);
   box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
+.pgf-i picture{display:block;width:100%;height:100%}
 .pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
   transition:transform .5s cubic-bezier(.2,.7,.3,1)}
 .pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
@@ -389,7 +503,7 @@ def stylesheet(lay, tick_dur=34):
         "__COLSM__": str(int(lay.get("columnsMobile", 2))),
         "__TICKDUR__": "%g" % tick_dur,
     }
-    css = CSS
+    css = FONT_CSS + CSS
     for k, v in subs.items():
         css = css.replace(k, v)
     return css
@@ -482,19 +596,15 @@ def build():
         die("images not found in content/images: %s" % ", ".join(map(str, missing)))
 
     SITE.mkdir(exist_ok=True)
-    dest = SITE / "images"
-    if dest.exists():
-        shutil.rmtree(dest)
-    dest.mkdir(parents=True)
     used = {i["image"] for i in items if not is_remote(i["image"])}
     if Image is None:
         print("note: Pillow not installed (pip install pillow) — "
               "copying images at full size instead of resizing them")
-    for f in sorted(imgdir.iterdir()):
-        if f.name in used:
-            shrink_image(f, dest / f.name)
+    widths = sync_tiles(imgdir, used, SITE / "images")
+    copy_fonts()
 
     lay = profile.get("layout", {})
+    sizes = grid_sizes(lay)
 
     tiles = []
     for idx, it in enumerate(items):
@@ -507,7 +617,6 @@ def build():
                   + (f'<span class="pgf-t">{t}</span>' if t else "")
                   + (f'<span class="pgf-s">{s}</span>' if s else "")
                   + "</span>")
-        src = esc(it["image"]) if is_remote(it["image"]) else "images/" + esc(it["image"])
         es = embed_src(it.get("url"), typ)
         data = (f' data-embed="{esc(es)}" data-title="{t}" data-source="{s}"'
                 if es else "")
@@ -515,11 +624,14 @@ def build():
         data += f' data-b="{br}"' if br else ""
         img_attrs = ('fetchpriority="high" loading="eager"' if idx == 0 else
                      'loading="eager"' if idx < EAGER_TILES else 'loading="lazy"')
+        attrs = f'alt="{alt}" width="1080" height="1350" {img_attrs} decoding="async"'
+        if is_remote(it["image"]):
+            img = f'<img src="{esc(it["image"])}" {attrs}>'
+        else:
+            img = tile_img("images/", it["image"], widths[it["image"]], sizes, attrs)
         tiles.append(
             f'<a class="pgf-i" data-t="{typ}"{data} href="{esc(it.get("url"))}" '
-            f'target="_blank" rel="noopener noreferrer">'
-            f'<img src="{src}" alt="{alt}" width="1080" height="1350" '
-            f'{img_attrs} decoding="async">'
+            f'target="_blank" rel="noopener noreferrer">{img}'
             f'<span class="pgf-a" aria-hidden="true">&#8599;</span>{ov}</a>')
 
     if tiles:
@@ -601,15 +713,13 @@ def build():
 <meta name="twitter:card" content="summary_large_image">
 {f'<meta property="og:image" content="{og}">' if og else ''}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='14'>◼</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}">
+{head_links(site_url + "/" if site_url else "")}
 <style>{stylesheet(lay, tick_dur)}{LIGHTBOX_CSS if has_lbx else ''}</style>
 </head>
 <body>
 {ticker}
 <header class="idbar">
-  <div class="idcell idcell-name"><span class="wordmark">{name}</span></div>
+  <div class="idcell idcell-name"><h1 class="wordmark">{name}</h1></div>
   <div class="idcell idcell-links">{links_html}</div>
 </header>
 <div class="wrap">
@@ -635,8 +745,95 @@ def build():
           % (len(items), kb, len(used)))
 
 
+def copy_fonts():
+    dest = SITE / "fonts"
+    if dest.exists():
+        shutil.rmtree(dest)
+    shutil.copytree(CONTENT / "fonts", dest)
+
+
+def build_404():
+    """site/404.html. wrangler.jsonc's not_found_handling serves it, with a
+    404 status, for any path that matches no file and no redirect."""
+    profile = load("profile.json")
+    lay = profile.get("layout", {})
+    name = esc(profile.get("name", "Portfolio"))
+    page = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Not found &mdash; {name}</title>
+<meta name="robots" content="noindex">
+{head_links()}
+<style>{stylesheet(lay)}
+.nf{{padding:clamp(18px,2.4vw,26px) var(--pad) 0;font:400 12px/1.75 var(--mono);
+  letter-spacing:.045em}}
+.nf a{{color:var(--accent)}}</style>
+</head>
+<body>
+<header class="idbar">
+  <div class="idcell idcell-name"><a class="wordmark" href="/" style="text-decoration:none">{name}</a></div>
+</header>
+<div class="wrap">
+  <div class="rule">
+    <div class="rule-in"><h1 class="rule-h">Page not found</h1><span>404</span></div>
+  </div>
+  <p class="nf">That page doesn&rsquo;t exist. <a href="/">Back to the work &rarr;</a></p>
+</div>
+</body>
+</html>
+"""
+    (SITE / "404.html").write_text(page)
+
+
+# Served by Cloudflare from site/_headers. Images and fonts were going out
+# with max-age=0, so every repeat visit re-checked every tile. Image filenames
+# carry no hash and can be replaced in place, so they get a week rather than
+# forever; font filenames carry their version, so those can be immutable.
+HEADERS = """\
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000
+
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/monza/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/archive/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+"""
+
+
+def write_site_files():
+    """_headers, robots.txt and sitemap.xml, written after every page is
+    built so the sitemap is simply every index.html under site/."""
+    (SITE / "_headers").write_text(HEADERS)
+    site_url = str(load("profile.json").get("siteUrl", "")).rstrip("/")
+    robots = "User-agent: *\nAllow: /\n"
+    if site_url:
+        paths = sorted(str(p.parent.relative_to(SITE)) for p in SITE.rglob("index.html"))
+        urls = "".join("  <url><loc>%s/%s</loc></url>\n"
+                       % (esc(site_url), "" if d == "." else esc(d) + "/")
+                       for d in paths)
+        (SITE / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + urls + "</urlset>\n")
+        robots += "\nSitemap: %s/sitemap.xml\n" % site_url
+    (SITE / "robots.txt").write_text(robots)
+
+
 if __name__ == "__main__":
     build()
+    build_404()
     # The archive pages (the old Squarespace content) are built from the same
     # profile.json so the chrome stays in sync. Absent pages.json, it no-ops.
     from archive import build_archive
@@ -644,3 +841,4 @@ if __name__ == "__main__":
     # Single-event sub-pages, same deal: absent their content JSON they no-op.
     from monza import build_monza
     build_monza(quiet=True)
+    write_site_files()

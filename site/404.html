@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Not found &mdash; Stephen Greenwood</title>
+<meta name="robots" content="noindex">
+<link rel="preload" href="/fonts/ibm-plex-mono-500-v20.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/ibm-plex-mono-400-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/ibm-plex-mono-500-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-mono-600-v20.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter Tight";font-style:normal;font-weight:500 700;font-display:swap;src:url(/fonts/inter-tight-var-v9.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --ink:#000; --bg:#fff; --accent:#ff5232; --panel:#dedede; --line:#000;
+  --max:1180px; --gap:1px; --radius:0px; --pad:15px;
+  --disp:"Helvetica Neue","Inter Tight",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:500 14px/1.5 var(--mono);text-transform:uppercase;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- ticker ---- */
+.ticker{background:var(--accent);border-bottom:1px solid var(--line);
+  overflow:hidden;white-space:nowrap}
+.ticker-run{display:inline-block;padding:6px 0;
+  font:500 11px/1.2 var(--mono);letter-spacing:.14em;
+  animation:ticker 34s linear infinite}
+.ticker-run span{padding:0 20px}
+.ticker-run .dot{padding:0;opacity:.55}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-run{animation:none}}
+
+/* ---- identity bar ---- */
+.idbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;
+  align-items:stretch;border-bottom:1px solid var(--line);background:var(--bg)}
+.idcell{display:flex;align-items:center;padding:0 var(--pad);min-height:52px}
+.idcell+.idcell{border-left:1px solid var(--line)}
+.idcell-name{width:100%;border-bottom:1px solid var(--line)}
+.idcell+.idcell-links{border-left:0}
+.wordmark{margin:0;font:600 clamp(17px,2.1vw,25px)/1 var(--disp);
+  letter-spacing:-.045em;white-space:nowrap}
+.links{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.links a{font:500 11.5px/1 var(--mono);letter-spacing:.12em;text-decoration:none;
+  padding-bottom:2px;border-bottom:1px solid transparent;
+  transition:color .15s,border-color .15s}
+.links a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- section rule ---- */
+.wrap{max-width:var(--max);margin:0 auto}
+.rule{padding:clamp(26px,4vw,44px) var(--pad) 0}
+.rule-in{display:flex;flex-wrap:wrap;justify-content:space-between;
+  align-items:baseline;gap:6px 16px;
+  padding-bottom:10px;border-bottom:1px solid var(--line);
+  font:500 11px/1.4 var(--mono);letter-spacing:.14em}
+/* A sub-page's title is its h1 but keeps the rule's small caps. */
+.rule-h{margin:0;font:inherit;letter-spacing:inherit}
+
+/* The right-hand slot: the grid's filters (All Work, then one per brand)
+   followed by MORE, which pages across to the archive. The active entry is
+   full ink with no pointer; the rest are dimmed links. */
+.rule-tog{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
+.rule-tog span,.rule-tog a{display:inline-block}
+.rule-tog a{color:inherit;text-decoration:none;opacity:.42;
+  border-bottom:1px solid transparent;transition:opacity .15s,color .15s}
+.rule-tog a:hover{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
+.rule-tog [aria-current]{opacity:1;cursor:default}
+.rule-tog a[aria-current]:hover{color:inherit;border-bottom-color:transparent}
+
+/* ---- grid ---- */
+/* The hairlines are a 1px shadow on each tile, not a black container showing
+   through the gap -- a part-filled last row would leave a black slab. */
+.pgf-grid{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:var(--gap);background:var(--bg);
+  margin:18px var(--pad) 0;padding:1px}
+.pgf-i[hidden]{display:none}
+.pgf-i{position:relative;display:block;aspect-ratio:4/5;max-width:100%;
+  overflow:hidden;border-radius:var(--radius);background:var(--panel);
+  box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit}
+.pgf-i picture{display:block;width:100%;height:100%}
+.pgf-i img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover img,.pgf-i:focus-visible img{transform:scale(1.04)}
+.pgf-ov{position:absolute;left:0;right:0;bottom:0;background:var(--ink);
+  color:var(--bg);padding:9px 10px;transform:translateY(101%);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+.pgf-i:hover .pgf-ov,.pgf-i:focus-visible .pgf-ov{transform:translateY(0)}
+.pgf-t{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.05em}
+.pgf-s{display:block;margin-top:4px;font:400 9.5px/1.3 var(--mono);
+  letter-spacing:.1em;color:var(--accent)}
+.pgf-a{position:absolute;top:8px;right:8px;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;background:var(--bg);
+  border:1px solid var(--line);font:500 11px/1 var(--mono);opacity:0;
+  transition:opacity .22s}
+.pgf-i:hover .pgf-a,.pgf-i:focus-visible .pgf-a{opacity:1}
+.pgf-i:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+@media(hover:none){.pgf-ov{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+  .pgf-i img,.pgf-ov,.pgf-a{transition:none}
+  .pgf-i:hover img,.pgf-i:focus-visible img{transform:none}
+}
+.empty{margin:18px var(--pad) 0;text-align:center;font-size:12px;padding:60px 0;
+  border:1px dashed var(--line)}
+
+/* ---- footer ---- */
+footer{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--line);
+  background:var(--ink);color:var(--bg)}
+.foot-in{max-width:var(--max);margin:0 auto;display:flex;flex-wrap:wrap;
+  gap:20px 38px;align-items:baseline;padding-block:28px 32px;
+  padding-left:var(--pad);padding-right:var(--pad);
+  font:500 11px/1.6 var(--mono);letter-spacing:.13em}
+.foot-in a{text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px}
+.foot-in a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.push{margin-left:0}
+
+/* ---- wider ---- */
+@media(min-width:620px){
+  :root{--pad:24px}
+  .idcell{min-height:62px}
+  .idcell-name{width:auto;border-bottom:0}
+  .idcell+.idcell-links{border-left:1px solid var(--line);margin-left:auto}
+  .pgf-grid{grid-template-columns:repeat(3,1fr)}
+  .push{margin-left:auto}
+}
+@media(min-width:940px){
+  .pgf-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+.nf{padding:clamp(18px,2.4vw,26px) var(--pad) 0;font:400 12px/1.75 var(--mono);
+  letter-spacing:.045em}
+.nf a{color:var(--accent)}</style>
+</head>
+<body>
+<header class="idbar">
+  <div class="idcell idcell-name"><a class="wordmark" href="/" style="text-decoration:none">Stephen Greenwood</a></div>
+</header>
+<div class="wrap">
+  <div class="rule">
+    <div class="rule-in"><h1 class="rule-h">Page not found</h1><span>404</span></div>
+  </div>
+  <p class="nf">That page doesn&rsquo;t exist. <a href="/">Back to the work &rarr;</a></p>
+</div>
+</body>
+</html>
