@@ -12,3 +12,9 @@ Run `python3 build.py`, then preview with `python3 -m http.server 8747 --directo
 - Don't re-run `mkpages.py`: it was a one-time generator for `content/pages.json`.
 - The `name` in `wrangler.jsonc` must match the Cloudflare Worker, or a deploy creates a second one.
 - Velvit work never belongs in this repo, even though the shared project memory sits under this folder's name.
+
+## Labels and subtitles
+On a new page, a small label over a heading, or a subtitle under one, stays only when it says something the heading doesn't, such as a case study's client name. A label on every heading and subtext under everything is the default AI look that reviewers now spot.
+
+## Matching a reference
+When the founder gives a reference site or image to match, pull its exact colours, fonts and spacing into named values in the site's styles, with a comment saying where they came from, instead of working from a written description of the look, so the match holds across pages.
