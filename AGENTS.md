@@ -3,7 +3,7 @@
 The founder's portfolio: a 4:5 grid, `/archive` and `/monza`. Plain static HTML built by Python. See `README.md` for the workflow.
 
 ## Check your work
-Run `python3 build.py`, then preview with `python3 -m http.server 8747 --directory site`. There are no tests, so look at the pages you changed at phone and desktop width.
+Run `python3 build.py`, then preview with `python3 -m http.server 8747 --directory site`. There are no tests, so look at the pages you changed at phone and desktop width. Before pushing a change to layout, the viewport meta tag, safe-area padding, touch or scrolling, also have it opened on a real phone (ask the founder; the preview is reachable on the local network): pushes deploy live, and desktop phone-width previews miss real touch, the iOS keyboard and toolbar behaviour.
 
 ## Traps
 - Every push to `main` deploys straight to the live site, so get the founder's go-ahead before pushing.
